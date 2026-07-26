@@ -94,7 +94,7 @@ def validate_generated(path: Path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--online", action="store_true")
-    parser.add_argument("--repository", default="Dream230-1/ShuntRules")
+    parser.add_argument("--repository", default="Dream230-1/shadowrocket")
     parser.add_argument("--source-ref")
     args = parser.parse_args()
 
