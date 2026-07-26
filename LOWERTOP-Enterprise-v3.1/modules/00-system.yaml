@@ -1,0 +1,9 @@
+module:
+  id: system
+  enabled: true
+  description: 泄漏检测、公共网络认证与基础探测规则。
+  rulesets:
+    - kind: local
+      name: Probe-Proxy
+      policy: PROXY
+      stage: 10

@@ -1,0 +1,36 @@
+name: Derive GMOogway proxy-list → AI
+
+on:
+  schedule:
+    - cron: "35 23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  derive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch and transform GMOogway proxy_list module
+        run: |
+          OUTDIR="Shadowrocket/LOWERTOP-Enterprise-v3.1/modules/derived"
+          mkdir -p "$OUTDIR"
+          OUTFILE="$OUTDIR/gmoogway-proxy-list-ai.module"
+          URL="https://raw.githubusercontent.com/GMOogway/shadowrocket-rules/master/sr_proxy_list.module"
+          curl -fsSL "$URL" | sed 's/,PROXY$/,AI/' > "$OUTFILE"
+          COUNT=$(grep -c ',AI$' "$OUTFILE" || true)
+          echo "Derived module written: ${COUNT} AI rules"
+      - name: Commit and push if changed
+        run: |
+          git config user.name "Dream230-1"
+          git config user.email "174472357+Dream230-1@users.noreply.github.com"
+          git add Shadowrocket/LOWERTOP-Enterprise-v3.1/modules/derived/gmoogway-proxy-list-ai.module
+          if git diff --cached --quiet; then
+            echo "No changes — upstream module unchanged."
+          else
+            git commit -m "Auto-derive GMOogway proxy-list → AI ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+            git push
+          fi

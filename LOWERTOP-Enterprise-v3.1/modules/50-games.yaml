@@ -1,0 +1,5 @@
+module:
+  id: games
+  enabled: false
+  description: 游戏模块预留。RC2 不引入新规则或新路由，待 RC3 需求与实机验证后启用。
+  rulesets: []

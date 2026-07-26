@@ -1,0 +1,29 @@
+module:
+  id: media
+  enabled: true
+  description: 流媒体服务模块，保留 RC1 的策略组与 stage。
+  rulesets:
+    - kind: remote
+      name: YouTube
+      policy: YouTube
+      stage: 60
+    - kind: remote
+      name: Netflix
+      policy: Netflix
+      stage: 61
+    - kind: remote
+      name: Disney
+      policy: Disney+
+      stage: 62
+    - kind: remote
+      name: HBO
+      policy: MAX
+      stage: 63
+    - kind: remote
+      name: TikTok
+      policy: TikTok
+      stage: 66
+    - kind: remote
+      name: Spotify
+      policy: Spotify
+      stage: 67

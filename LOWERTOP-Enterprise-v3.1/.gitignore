@@ -1,0 +1,8 @@
+build/
+modular/
+reports/
+experimental/
+dist/
+.cache/
+__pycache__/
+*.pyc

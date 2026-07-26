@@ -1,0 +1,89 @@
+name: LOWERTOP Enterprise v3.1 RC2 Build and Audit
+
+on:
+  push:
+    paths:
+      - "Shadowrocket/LOWERTOP-Enterprise-v3.1/**"
+      - "Shadowrocket/LOWERTOP-Enterprise-v3.0-RC3/**"
+      - ".github/workflows/lowertop-enterprise-v31.yml"
+  pull_request:
+    paths:
+      - "Shadowrocket/LOWERTOP-Enterprise-v3.1/**"
+      - "Shadowrocket/LOWERTOP-Enterprise-v3.0-RC3/**"
+      - ".github/workflows/lowertop-enterprise-v31.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "37 3 * * 1"
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_DIR: Shadowrocket/LOWERTOP-Enterprise-v3.1
+
+concurrency:
+  group: lowertop-v31-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: ${{ env.PROJECT_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ${{ env.PROJECT_DIR }}/requirements.txt
+      - run: pip install -r requirements.txt
+      - run: python scripts/ci.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lowertop-enterprise-v3.1-rc2-offline
+          if-no-files-found: warn
+          path: |
+            ${{ env.PROJECT_DIR }}/build/**
+            ${{ env.PROJECT_DIR }}/modular/**
+            ${{ env.PROJECT_DIR }}/reports/**
+            ${{ env.PROJECT_DIR }}/experimental/**
+            ${{ env.PROJECT_DIR }}/RELEASE-VALIDATION.md
+
+  online-audit:
+    needs: offline-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: ${{ env.PROJECT_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ${{ env.PROJECT_DIR }}/requirements.txt
+      - name: Restore remote-rule conditional cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PROJECT_DIR }}/.cache
+          key: lowertop-v31-rules-${{ runner.os }}-${{ hashFiles('Shadowrocket/LOWERTOP-Enterprise-v3.1/config/release.yaml', 'Shadowrocket/LOWERTOP-Enterprise-v3.0-RC3/manifest.yaml') }}
+          restore-keys: |
+            lowertop-v31-rules-${{ runner.os }}-
+      - run: pip install -r requirements.txt
+      - run: python scripts/ci.py --online
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lowertop-enterprise-v3.1-rc2-online
+          if-no-files-found: warn
+          path: |
+            ${{ env.PROJECT_DIR }}/build/**
+            ${{ env.PROJECT_DIR }}/modular/**
+            ${{ env.PROJECT_DIR }}/reports/**
+            ${{ env.PROJECT_DIR }}/experimental/**
+            ${{ env.PROJECT_DIR }}/RELEASE-VALIDATION.md

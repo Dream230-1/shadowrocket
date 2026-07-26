@@ -1,0 +1,28 @@
+classifications:
+  - winner_source: AdvertisingLite
+    shadowed_source: ChinaMax
+    reason: cidr-overlap
+    severity: medium
+    rationale: AdvertisingLite 的具体广告 IP 有意先于宽泛 ChinaMax 地理网段；完整冲突仍保留在报告中。
+    owner: LOWERTOP
+    min_matches: 160
+    max_matches: 160
+    expires: 2026-12-31
+  - winner_source: Netflix
+    shadowed_source: ChinaMax
+    reason: cidr-overlap
+    severity: medium
+    rationale: Netflix 服务网段有意先于宽泛 ChinaMax，以保持流媒体策略隔离。
+    owner: LOWERTOP
+    min_matches: 2
+    max_matches: 2
+    expires: 2026-12-31
+  - winner_source: AdvertisingLite
+    shadowed_source: Lan
+    reason: cidr-overlap
+    severity: low
+    rationale: 命中的 10.72.25.0/24 已被 General 的 skip-proxy 与 tun-excluded-routes 10.0.0.0/8 前置旁路；保留报告并要求设备侧局域网验证。
+    owner: LOWERTOP
+    min_matches: 1
+    max_matches: 1
+    expires: 2026-10-31

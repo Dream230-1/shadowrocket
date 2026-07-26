@@ -1,0 +1,174 @@
+cases:
+  # Apple Global positive routing and explicit Core exclusion.
+  - name: Apple Private Relay mask
+    host: mask.icloud.com
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple Private Relay H2
+    host: mask-h2.icloud.com
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple Private Relay API
+    host: mask-api.icloud.com
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple Relay suffix
+    host: edge.apple-relay.apple.com
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple News
+    host: news.apple.com
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple News subdomain
+    host: api.news.apple.com
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple News service domain
+    host: api.apple.news
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple Siri
+    host: guzzoni.apple.com
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple Spotlight Smoot
+    host: api.smoot.apple.com
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple DNS global
+    host: resolver.apple-dns.net
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false
+
+  # Apple Core positive routing and explicit Global exclusion.
+  - name: Apple Push Core
+    host: courier.push.apple.com
+    expected_policy: DIRECT
+    expected_source_contains: Apple-Core-Direct
+    forbidden_policies: [AI]
+    forbidden_sources: [Apple-Global-AI]
+    requires_remote: false
+  - name: Apple iCloud Core
+    host: setup.icloud.com
+    expected_policy: DIRECT
+    expected_source_contains: Apple-Core-Direct
+    forbidden_policies: [AI]
+    forbidden_sources: [Apple-Global-AI]
+    requires_remote: false
+  - name: Apple ID Core
+    host: idmsa.apple.com
+    expected_policy: DIRECT
+    expected_source_contains: Apple-Core-Direct
+    forbidden_policies: [AI]
+    forbidden_sources: [Apple-Global-AI]
+    requires_remote: false
+  - name: Apple Software Update Core
+    host: mesu.apple.com
+    expected_policy: DIRECT
+    expected_source_contains: Apple-Core-Direct
+    forbidden_policies: [AI]
+    forbidden_sources: [Apple-Global-AI]
+    requires_remote: false
+  - name: Apple App Store CDN Core
+    host: is1-ssl.mzstatic.com
+    expected_policy: DIRECT
+    expected_source_contains: Apple-Core-Direct
+    forbidden_policies: [AI]
+    forbidden_sources: [Apple-Global-AI]
+    requires_remote: false
+  - name: Apple CloudKit Core
+    host: api.apple-cloudkit.com
+    expected_policy: DIRECT
+    expected_source_contains: Apple-Core-Direct
+    forbidden_policies: [AI]
+    forbidden_sources: [Apple-Global-AI]
+    requires_remote: false
+  - name: Apple China Core
+    host: www.apple.com.cn
+    expected_policy: DIRECT
+    expected_source_contains: Apple-Core-Direct
+    forbidden_policies: [AI]
+    forbidden_sources: [Apple-Global-AI]
+    requires_remote: false
+  - name: Apple DNS China Core
+    host: resolver.apple-dns.cn
+    expected_policy: DIRECT
+    expected_source_contains: Apple-Core-Direct
+    forbidden_policies: [AI]
+    forbidden_sources: [Apple-Global-AI]
+    requires_remote: false
+
+  # Lexical and suffix-boundary negatives: must not overmatch Apple modules.
+  - name: Apple lexical impostor
+    host: notapple.com
+    expected_policy: PROXY
+    expected_source_contains: FINAL
+    forbidden_policies: [AI, DIRECT]
+    forbidden_sources: [Apple-Global-AI, Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple suffix impostor
+    host: apple.com.example.org
+    expected_policy: PROXY
+    expected_source_contains: FINAL
+    forbidden_policies: [AI, DIRECT]
+    forbidden_sources: [Apple-Global-AI, Apple-Core-Direct]
+    requires_remote: false
+  - name: iCloud suffix impostor
+    host: icloud.com.example.org
+    expected_policy: PROXY
+    expected_source_contains: FINAL
+    forbidden_policies: [AI, DIRECT]
+    forbidden_sources: [Apple-Global-AI, Apple-Core-Direct]
+    requires_remote: false
+  - name: Private Relay suffix impostor
+    host: mask.icloud.com.example.org
+    expected_policy: PROXY
+    expected_source_contains: FINAL
+    forbidden_policies: [AI, DIRECT]
+    forbidden_sources: [Apple-Global-AI, Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple News suffix impostor
+    host: news.apple.com.example.org
+    expected_policy: PROXY
+    expected_source_contains: FINAL
+    forbidden_policies: [AI, DIRECT]
+    forbidden_sources: [Apple-Global-AI, Apple-Core-Direct]
+    requires_remote: false
+  - name: Apple domain case folding
+    host: MASK.ICLOUD.COM.
+    expected_policy: AI
+    expected_source_contains: Apple-Global-AI
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct]
+    requires_remote: false

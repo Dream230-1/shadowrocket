@@ -1,0 +1,42 @@
+schema: 1
+observation_id: TEMPLATE-ADBLOCK-72H
+status: pending
+source_commit: null
+configuration:
+  file: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf
+  sha256: null
+started_at: null
+ended_at: null
+duration_hours: 0
+minimum_required_hours: 72
+business_flows:
+  login_registration: pending
+  sms_email_captcha: pending
+  payment_checkout_apple_pay: pending
+  in_app_purchase: pending
+  push_notifications: pending
+  maps_location: pending
+  share_deep_links: pending
+  banking_ecommerce_delivery: pending
+  streaming_login_drm: pending
+  chatgpt_upload_voice: pending
+  apple_id_icloud_app_store: pending
+incidents: []
+summary:
+  p0: 0
+  p1: 0
+  p2: 0
+  unresolved: 0
+  conclusion: pending
+# Incident example:
+# - occurred_at: 2026-07-26T00:00:00+08:00
+#   app_or_site: example
+#   action: login
+#   domain: example.com
+#   matched_rule: DOMAIN-SUFFIX,example.com
+#   reproducible: true
+#   works_when_adblock_disabled: true
+#   severity: P1
+#   decision: allowlist|upstream-report|keep-blocked
+#   evidence: []
+notes: null

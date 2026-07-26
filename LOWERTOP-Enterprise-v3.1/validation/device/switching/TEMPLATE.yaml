@@ -1,0 +1,40 @@
+schema: 1
+record_id: TEMPLATE-SWITCHING
+environment: switching
+status: pending
+started_at: null
+ended_at: null
+source_commit: null
+configuration:
+  file: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf
+  sha256: null
+device:
+  model: null
+  ios_version: null
+  shadowrocket_version: null
+scenarios:
+  - direction: wifi-to-cellular
+    active_workload: chatgpt-session
+    tunnel_recovery_ms: null
+    session_survived: null
+    transient_direct_route_observed: null
+    dns_retested: pending
+    ip_webrtc_retested: pending
+  - direction: cellular-to-wifi
+    active_workload: telegram-file-transfer
+    tunnel_recovery_ms: null
+    session_survived: null
+    transient_direct_route_observed: null
+    dns_retested: pending
+    ip_webrtc_retested: pending
+  - direction: wifi-to-cellular
+    active_workload: app-store-download
+    tunnel_recovery_ms: null
+    session_survived: null
+    transient_direct_route_observed: null
+    dns_retested: pending
+    ip_webrtc_retested: pending
+result: pending
+failures: []
+evidence: []
+notes: null

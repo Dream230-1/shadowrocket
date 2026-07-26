@@ -1,0 +1,9 @@
+module:
+  id: advertising
+  enabled: true
+  description: AdvertisingLite 广告拦截模块，关键业务规则必须先于此模块。
+  rulesets:
+    - kind: remote
+      name: AdvertisingLite
+      policy: REJECT
+      stage: 70

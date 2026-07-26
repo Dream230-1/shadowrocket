@@ -1,0 +1,99 @@
+schema: 1
+record_id: WIFI-20260726-01
+environment: wifi
+status: complete
+started_at: 2026-07-26T18:19:00+08:00
+ended_at: 2026-07-26T18:45:30+08:00
+source_commit: faf9f9aee7c8b49c7a34645c40a00d890a36516d
+configuration:
+  file: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf
+  sha256: 874a88048a0b07646e060257e1248b519d6493d84422ed3b308d08be83c4e1c0
+device:
+  model: iPhone
+  ios_version: unknown
+  shadowrocket_version: unknown
+network:
+  region: Hong Kong egress observed from Wi-Fi test
+  ssid_redacted: Wi-Fi
+  isp: local Wi-Fi ISP not recorded; proxy egress HKBN/CTINETS observed
+  router_model: null
+  ipv4_available: true
+  ipv6_available: false
+  selected_proxy: 香港 HKBN / JP-Tokyo NTT observed in Shadowrocket logs
+observed_egress:
+  ipv4: 58.176.155.201
+  hostname: 058176155201.ctinets.com
+  country: Hong Kong
+  region: Eastern District
+  city: Hing Tung Estate
+  asn: AS9269
+  isp: Hong Kong Broadband Network Limited
+  organisation: Hong Kong Broadband Network Ltd
+  usage_type: Cable/DSL / Residential
+  timezone: Asia/Hong_Kong
+checks:
+  dnsleak_standard:
+    status: pass
+    resolvers:
+      - 203.80.81.166 / Hong Kong Broadband Network Ltd.
+    unexpected_resolvers: []
+    notes: dnsleaktest.org reported No leak detected; 1 resolver found in 42s; resolver organisation matches connection.
+  dnsleak_extended:
+    status: pass
+    resolvers:
+      - 203.80.81.166 / Hong Kong Broadband Network Ltd.
+    unexpected_resolvers: []
+    notes: 407 DNS queries observed, 100% by HKBN resolver.
+  browserleaks_ip:
+    status: pass
+    observed_country: Hong Kong
+    observed_asn: AS9269
+    notes: BrowserLeaks showed remote IPv4 58.176.155.201 via Hong Kong Broadband Network / CTINETS.
+  browserleaks_webrtc:
+    status: pass
+    leaked_local_ip: false
+    leaked_public_ip: false
+    notes: BrowserLeaks WebRTC page showed No Leak; local IP hidden; public IP equals remote egress 58.176.155.201.
+  browserleaks_ipv6:
+    status: pass
+    observed: false
+    notes: IPv6 address reported n/a / dash.
+  apple_push:
+    status: pass
+    notes: User reports other functions normal; Shadowrocket log shows gateway.icloud.com.cn matched DIRECT.
+  icloud:
+    status: pass
+    notes: gateway.icloud.com.cn:443 matched DOMAIN-SUFFIX,icloud.com.cn,DIRECT.
+  app_store_download:
+    status: not_tested
+    notes: Not explicitly provided in this Wi-Fi evidence batch.
+  chatgpt_session_upload_voice:
+    status: not_tested
+    notes: Not explicitly provided in this Wi-Fi evidence batch.
+  telegram_media_file:
+    status: pass_with_observation
+    notes: Telegram video and images load successfully but slower than expected; Shadowrocket log shows Telegram IP-CIDR rules matched Telegram policy.
+  streaming_login_playback:
+    status: pass
+    notes: YouTube playback normal and smooth at 1440p60; Twitter/X also reported normal and smooth.
+  advertising_lite:
+    status: pass
+    notes: Advertising rejection triggered normally; rmonitor.qq.com matched REJECT in Shadowrocket log.
+performance_observations:
+  - Telegram video and images load slower, but remain functional.
+  - Some in-app image loading becomes slower after entering applications.
+  - YouTube 1440p60 playback is smooth.
+  - Twitter/X usage is normal and smooth.
+result: pass
+failures: []
+non_blocking_observations:
+  - Telegram media loading latency.
+  - General app image loading latency after app entry.
+evidence:
+  - validation/evidence/wifi/2026-07-26/browserleaks-ip-summary.png
+  - validation/evidence/wifi/2026-07-26/browserleaks-webrtc.png
+  - validation/evidence/wifi/2026-07-26/dnsleaktest-result.png
+  - validation/evidence/wifi/2026-07-26/youtube-1440p60-playback.png
+  - validation/evidence/wifi/2026-07-26/shadowrocket-live-log-icloud-wechat-adblock.png
+  - validation/evidence/wifi/2026-07-26/shadowrocket-live-log-telegram.png
+notes: Wi-Fi validation evidence supplied by user. Leak protection, WebRTC, IPv6-off behavior, DNS leak guard, Apple Core DIRECT, Telegram routing, AdvertisingLite and YouTube/Twitter usability are acceptable. Telegram/media image loading latency should be tracked as performance observation, not a release blocker by itself.

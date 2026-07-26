@@ -1,0 +1,17 @@
+features:
+  default_profile: performance
+  dns_leak_guard: true
+  advertising_lite: true
+  adblock_collision_audit: true
+  ruleset_drift_audit: true
+  route_regression: true
+  rule_conflict_audit: true
+  behavior_lock: true
+  modular_build: true
+  conditional_remote_cache: true
+  service_health_report: true
+  network_benchmark_report: true
+  ipv6_svcb_experimental: true
+  force_ech: false
+  unverified_dns_protocol_fallback: false
+  dns_dynamic_auto_selection: false

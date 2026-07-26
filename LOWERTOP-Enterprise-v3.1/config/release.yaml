@@ -1,0 +1,15 @@
+meta:
+  version: 3.1.0-rc2
+  generated_date: '2026-07-26'
+  project_path: Shadowrocket/LOWERTOP-Enterprise-v3.1
+  design:
+    - RC3 验证内核兼容层
+    - RC1 Performance 行为契约冻结
+    - AI / Apple / 通信 / 媒体 / 游戏 / 广告 / 基础路由模块化
+    - Apple Global 与 Apple Core 负向回归
+    - 真实离线与在线审计链
+    - 全局规则冲突审计
+    - ETag / Last-Modified 条件缓存
+    - Wi-Fi / 蜂窝 / 网络切换设备验证模板
+    - AdvertisingLite 72 小时误杀观察
+    - Direct / Modular 可复现发布

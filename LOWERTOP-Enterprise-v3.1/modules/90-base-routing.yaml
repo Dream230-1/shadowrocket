@@ -1,0 +1,13 @@
+module:
+  id: base-routing
+  enabled: true
+  description: 局域网与中国大陆直连基础路由；FINAL 仍由 Manifest 固定为 PROXY。
+  rulesets:
+    - kind: remote
+      name: Lan
+      policy: DIRECT
+      stage: 80
+    - kind: remote
+      name: ChinaMax
+      policy: DIRECT
+      stage: 90

@@ -1,0 +1,24 @@
+schema: 1
+feedback_id: FEEDBACK-20260726-01
+date: 2026-07-26
+source: user_report
+category: performance
+configuration: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct
+network_environment: wifi
+app_or_service: Telegram
+symptom: Video and image loading slower than expected
+domain_or_domains:
+  - cdn-telegram.org
+  - api.telegram.org
+matched_policy: Telegram
+expected_behavior: Acceptable media loading speed
+actual_behavior: Video and images load but noticeably slower
+severity: observation
+reproducible: true
+tested_without_module: false
+auto_analysis:
+  routing: correct
+  adblock_collision: false
+  dns_leak: false
+  suggestion: No routing fix needed; monitor or consider proxy tuner optimisation for Telegram
+notes: Related to proxy node performance for Telegram policy

@@ -1,0 +1,37 @@
+schema: 1
+record_id: TEMPLATE-CELLULAR
+environment: cellular
+status: pending
+started_at: null
+ended_at: null
+source_commit: null
+configuration:
+  file: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf
+  sha256: null
+device:
+  model: null
+  ios_version: null
+  shadowrocket_version: null
+network:
+  region: null
+  carrier: null
+  radio_access: null
+  ipv4_available: null
+  ipv6_available: null
+  selected_proxy: null
+checks:
+  dnsleak_standard: {status: pending, resolvers: [], unexpected_resolvers: []}
+  dnsleak_extended: {status: pending, resolvers: [], unexpected_resolvers: []}
+  browserleaks_ip: {status: pending, observed_country: null, observed_asn: null}
+  browserleaks_webrtc: {status: pending, leaked_local_ip: null, leaked_public_ip: null}
+  browserleaks_ipv6: {status: pending, observed: null}
+  apple_push: {status: pending, notes: null}
+  icloud: {status: pending, notes: null}
+  app_store_download: {status: pending, notes: null}
+  chatgpt_session_upload_voice: {status: pending, notes: null}
+  telegram_media_file: {status: pending, notes: null}
+  streaming_login_playback: {status: pending, notes: null}
+result: pending
+failures: []
+evidence: []
+notes: null

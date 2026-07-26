@@ -1,0 +1,11 @@
+schema: 1
+feedback_id: OPTIMIZE-20260726-01
+date: 2026-07-26
+source: user_action
+category: configuration_change
+configuration: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct
+change: Telegram proxy group switched from select to url-test
+test_url: https://telegram.org
+expected_outcome: Improved Telegram media loading performance
+notes: User will report back after usage observation
+status: pending_review

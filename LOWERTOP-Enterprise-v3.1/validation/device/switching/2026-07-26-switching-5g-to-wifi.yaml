@@ -1,0 +1,35 @@
+schema: 1
+record_id: SWITCHING-20260726-01
+environment: switching
+status: complete
+started_at: 2026-07-26T18:58:00+08:00
+ended_at: 2026-07-26T18:59:30+08:00
+source_commit: faf9f9aee7c8b49c7a34645c40a00d890a36516d
+configuration:
+  file: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf
+  sha256: 874a88048a0b07646e060257e1248b519d6493d84422ed3b308d08be83c4e1c0
+device:
+  model: iPhone
+  ios_version: unknown
+  shadowrocket_version: unknown
+scenarios:
+  - direction: cellular-to-wifi
+    active_workload: youtube-video-drag-seek
+    tunnel_recovery_ms: 1000
+    session_survived: true
+    transient_direct_route_observed: false
+    dns_retested: pass
+    ip_webrtc_retested: pass
+    user_description: 5G 切 WiFi 后 YouTube 拖动视频条约 1-2 秒完成加载；之后重新检查 DNS Leak / IP / WebRTC 均正常。
+    evidence_after_switch:
+      - validation/evidence/switching/2026-07-26/dnsleaktest-switching.png
+      - validation/evidence/switching/2026-07-26/browserleaks-ip-switching.png
+      - validation/evidence/switching/2026-07-26/browserleaks-webrtc-switching.png
+result: pass
+failures: []
+notes: |-
+  Switching test (5G → WiFi): YouTube video seek recovered in approx 1-2 seconds.
+  DNS Leak after switch: No leak detected.
+  BrowserLeaks IP after switch: Remote IP still matching expected proxy egress.
+  BrowserLeaks WebRTC after switch: No Leak.
+  No transient DIRECT route observed during or after the switch.

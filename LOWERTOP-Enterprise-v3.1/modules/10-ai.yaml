@@ -1,0 +1,9 @@
+module:
+  id: ai
+  enabled: true
+  description: OpenAI 与 Apple Global 智能/国际服务；保持 RC1 的 AI 策略与顺序。
+  rulesets:
+    - kind: local
+      name: OpenAI-AI
+      policy: AI
+      stage: 20

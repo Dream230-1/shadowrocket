@@ -1,0 +1,9 @@
+module:
+  id: messaging
+  enabled: true
+  description: Telegram 独立通信模块。
+  rulesets:
+    - kind: remote
+      name: Telegram
+      policy: Telegram
+      stage: 50

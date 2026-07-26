@@ -1,0 +1,13 @@
+module:
+  id: apple
+  enabled: true
+  description: Apple Global 与 Apple Core 独立模块；Global 必须先于 Core。
+  rulesets:
+    - kind: local
+      name: Apple-Global-AI
+      policy: AI
+      stage: 30
+    - kind: local
+      name: Apple-Core-Direct
+      policy: DIRECT
+      stage: 40

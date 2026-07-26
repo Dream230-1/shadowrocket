@@ -1,0 +1,41 @@
+name: Self-Review & Feedback Validation
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  self-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: Shadowrocket/LOWERTOP-Enterprise-v3.1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore remote-rule cache
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: lowertop-v31-self-review-${{ runner.os }}-${{ hashFiles('config/release.yaml', '../LOWERTOP-Enterprise-v3.0-RC3/manifest.yaml') }}
+      - name: Run self-review
+        run: |
+          python scripts/self_review.py --json-out reports/self-review.json --markdown-out reports/self-review.md
+          python scripts/release_report.py
+      - name: Upload self-review report
+        uses: actions/upload-artifact@v4
+        with:
+          name: self-review-report
+          path: |
+            Shadowrocket/LOWERTOP-Enterprise-v3.1/reports/self-review.json
+            Shadowrocket/LOWERTOP-Enterprise-v3.1/reports/self-review.md
