@@ -49,6 +49,28 @@
    - 基于明确需求增加游戏平台规则；
    - 默认关闭，完成首条命中和实机联机/语音/NAT 验证后再发布。
 
+### MITM 去广告与功能增强模块
+
+当前 LOWERTOP 的广告拦截基于 DNS 规则级别的 `REJECT`，无法屏蔽应用内原生渲染广告（如 Bilibili 信息流广告、闲鱼页面广告等）。
+参考 Loon 生态中成熟的 MITM + 响应改写方案，RC3 计划将以下功能移植为 Shadowrocket MITM 模块：
+
+| 目标 | MITM 域名 | 原理 |
+|---|---|---|
+| **Bilibili 去广告** | `app.bilibili.com`, `api.bilibili.com`, `grpc.biliapi.net` | 拦截 API 响应，过滤广告 JSON 字段，移除开屏/信息流/视频广告 |
+| **闲鱼去广告** | `market.wapa.taobao.com` | 拦截页面 API，移除广告组件 |
+| **百度网盘去广告** | `pan.baidu.com` | `reject-dict` 模拟空响应拦截配置和推荐 |
+| **Apple 天气增强** | `weatherkit.apple.com` | 替换天气数据源为彩云/和风天气/WAQI |
+| **DNS 泄漏防护** | 无 MITM | 额外规则层阻止 DoH/QUIC 泄漏 |
+
+实现方式：
+
+1. 每个功能独立为一个 Shadowrocket `.module` 文件，用户按需加载。
+2. 使用 Shadowrocket 的 MITM + HTTP Response Scripting 替代 Loon 的 `response-body-json-jq` / `reject-dict` 语法。
+3. 需用户主动开启 Shadowrocket 的 HTTPS 解密（MITM）并信任 CA 证书。
+4. MITM 模块不影响 LOWERTOP 行为锁——它们是独立的功能增强，不改变路由规则。
+
+计划在 RC3 中先实现 Bilibili 和闲鱼去广告，其余逐步追加。
+
 ## RC4：DNS 多协议实验
 
 前提是确认 Shadowrocket 当前版本的真实语法与回退语义，而不是仅确认解析不报错。

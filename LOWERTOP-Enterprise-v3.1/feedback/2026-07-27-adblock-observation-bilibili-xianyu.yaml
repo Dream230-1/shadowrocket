@@ -1,0 +1,31 @@
+schema: 1
+feedback_id: ADBLOCK-OBSERVATION-20260727-01
+date: 2026-07-27
+source: user_report
+category: adblock_false_negative
+configuration: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct
+network_environment: cellular_and_wifi_evening
+observation:
+  - app: 闲鱼 (Xianyu)
+    symptom: 开屏广告偶尔拦截失败，夜间概率较高
+    in_app_ads: not_reported
+    reproducible: true
+    frequency: occasional
+    severity: P2
+    notes: 夜间开屏广告拦截不稳定
+  - app: 哔哩哔哩 (Bilibili)
+    symptom: 开屏广告偶尔拦截失败；应用内广告（信息流、视频页等）无法屏蔽
+    in_app_ads: true
+    in_app_ads_blocked: false
+    reproducible: true
+    frequency: constant
+    severity: P2_in_app / P3_splash
+    notes: 开屏广告概率性失败；应用内信息流广告/视频内嵌广告无法通过规则屏蔽（属于客户端原生渲染广告，非外部域名请求）
+auto_analysis:
+  routing: N/A - ads are native/client-rendered
+  adblock_coverage: partial
+  suggested_action: 开屏广告可尝试补充上游广告规则；应用内广告为客户端原生渲染，不支持 DNS/规则级屏蔽
+  upstream_candidates:
+    - AdvertisingLite upstream (blackmatrix7)
+    - GMOogway reject_list (already loaded)
+recorded_at: 2026-07-27 22:20 CST
