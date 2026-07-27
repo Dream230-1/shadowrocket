@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Fetch and transform GMOogway proxy_list module
         run: |
-          OUTDIR="Shadowrocket/LOWERTOP-Enterprise-v3.1/modules/derived"
+          OUTDIR="LOWERTOP-Enterprise-v3.1/modules/derived"
           mkdir -p "$OUTDIR"
           OUTFILE="$OUTDIR/gmoogway-proxy-list-ai.module"
           URL="https://raw.githubusercontent.com/GMOogway/shadowrocket-rules/master/sr_proxy_list.module"
@@ -27,7 +27,7 @@ jobs:
         run: |
           git config user.name "Dream230-1"
           git config user.email "174472357+Dream230-1@users.noreply.github.com"
-          git add Shadowrocket/LOWERTOP-Enterprise-v3.1/modules/derived/gmoogway-proxy-list-ai.module
+          git add LOWERTOP-Enterprise-v3.1/modules/derived/gmoogway-proxy-list-ai.module
           if git diff --cached --quiet; then
             echo "No changes — upstream module unchanged."
           else

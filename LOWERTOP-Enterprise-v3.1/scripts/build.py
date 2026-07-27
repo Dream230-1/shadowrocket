@@ -64,7 +64,7 @@ def resolve_base_url(project: Path, repository: str, source_ref: str | None) -> 
         ref = result.stdout.strip() if result.returncode == 0 else ""
     if not re.fullmatch(r"[0-9a-f]{40}", ref or ""):
         raise SystemExit("--source-ref 必须是 40 位 Git Commit SHA，Modular URL 不允许引用 main")
-    return f"https://raw.githubusercontent.com/{repository}/{ref}/Shadowrocket/LOWERTOP-Enterprise-v3.1", ref
+    return f"https://raw.githubusercontent.com/{repository}/{ref}/LOWERTOP-Enterprise-v3.1", ref
 
 
 def validate_generated(path: Path):
