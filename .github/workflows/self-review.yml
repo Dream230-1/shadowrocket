@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: Shadowrocket/LOWERTOP-Enterprise-v3.1
+        working-directory: LOWERTOP-Enterprise-v3.1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -37,5 +37,5 @@ jobs:
         with:
           name: self-review-report
           path: |
-            Shadowrocket/LOWERTOP-Enterprise-v3.1/reports/self-review.json
-            Shadowrocket/LOWERTOP-Enterprise-v3.1/reports/self-review.md
+            LOWERTOP-Enterprise-v3.1/reports/self-review.json
+            LOWERTOP-Enterprise-v3.1/reports/self-review.md
