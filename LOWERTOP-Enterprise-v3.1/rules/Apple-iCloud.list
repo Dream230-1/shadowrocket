@@ -1,0 +1,23 @@
+# NAME: Apple-iCloud
+# POLICY: iCloud
+# PURPOSE: iCloud 专用代理分流 — iCloud Drive、照片、云备份、CloudKit、Keychain 等
+#         用户可在 iCloud 策略组中选择 DIRECT（直连）或代理节点。
+# NOTE: 本模块默认关闭；启用前请确认 iCloud 策略组已生效。
+DOMAIN-SUFFIX,icloud.com
+DOMAIN-SUFFIX,icloud.com.cn
+DOMAIN-SUFFIX,icloud-content.com
+DOMAIN-SUFFIX,apple-cloudkit.com
+DOMAIN-SUFFIX,apple-cloudkit.com.cn
+DOMAIN-SUFFIX,icloud.apple.com
+DOMAIN-SUFFIX,ckdatabase.icloud.com
+DOMAIN-SUFFIX,ckcontainer.icloud.com
+DOMAIN-SUFFIX,cvws.icloud-content.com
+DOMAIN-SUFFIX,p72-cdn.icloud-content.com
+DOMAIN-SUFFIX,p72-content.icloud.com
+DOMAIN-SUFFIX,p72.icloud-content.com
+DOMAIN-SUFFIX,p72.icloud.com
+DOMAIN-SUFFIX,setup.icloud.com
+DOMAIN-SUFFIX,idmsa.apple.com
+DOMAIN-SUFFIX,appleid.apple.com
+DOMAIN-SUFFIX,gc.apple.com
+DOMAIN-SUFFIX,icloud-analysis.com

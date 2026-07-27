@@ -11,9 +11,24 @@
 - 收集 Wi-Fi、蜂窝、网络切换与 AdvertisingLite 72 小时证据；
 - 生成并提交真实发布验证报告。
 
-## RC3：观测与韧性增强
+## RC3：功能增强与观测
 
-在不自动改变终端配置的前提下增加观测：
+### iCloud 专用代理分流
+
+当前 iCloud（Drive、照片、云备份、CloudKit、Keychain 等）所有域名走 `Apple-Core-Direct` 直连。对中国大陆用户，`icloud.com` / `icloud-content.com` / `apple-cloudkit.com` 等国际端点经常访问缓慢。
+
+计划：
+
+1. 新增独立 `iCloud` 策略组，用户可自行选择 `DIRECT` 或代理节点。
+2. 从 `Apple-Core-Direct` 中剥离 iCloud 专属域名，归入新的 `Apple-iCloud.list` 规则集。
+3. 新增模块 `25-icloud.yaml`（默认关闭），用户按需启用。
+4. Apple Push、App Store CDN、系统更新等非 iCloud 服务仍保留在 `Apple-Core-Direct` 直连。
+5. 不会影响 `Apple-Global-AI` 中的 Private Relay / Apple News / Siri 路由。
+6. 启用 iCloud 模块后，行为锁会检测到变更，需走 RC3 验证流程而非静默改动。
+
+规则草案：`rules/Apple-iCloud.list` 已在仓库中就绪。
+
+### 观测与韧性增强
 
 1. **DNS Health Observatory**
    - 分网络环境记录 RTT、成功率、超时率、HTTP 状态和出口一致性；

@@ -1,0 +1,12 @@
+module:
+  id: icloud
+  enabled: false
+  description: iCloud 专用代理分流。启用后 iCloud Drive、iCloud 照片、云备份、CloudKit、
+   Keychain 等走独立 iCloud 策略组，用户可自行选择 DIRECT 或代理节点。
+   适用于中国大陆用户访问国际 iCloud 端点（icloud.com、icloud-content.com、apple-cloudkit.com）
+   需要加速的场景。启用后需同步将 Apple-Core-Direct 中的对应域名迁移至此模块。
+  rulesets:
+    - kind: local
+      name: Apple-iCloud
+      policy: iCloud
+      stage: 35
