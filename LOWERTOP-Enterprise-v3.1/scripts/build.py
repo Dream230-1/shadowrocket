@@ -100,7 +100,7 @@ def main():
 
     project = Path(__file__).resolve().parents[1]
     modular_base_url, _source_ref = resolve_base_url(project, args.repository, args.source_ref)
-    repo_root = project.parents[0]
+    repo_root = project.parent
     rc3 = repo_root / "LOWERTOP-Enterprise-v3.0-RC3"
     if not rc3.exists():
         raise SystemExit(f"RC3 build kernel not found: {rc3}")

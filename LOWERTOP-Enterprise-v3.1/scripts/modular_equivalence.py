@@ -9,7 +9,7 @@ import sys
 try:
     from common import load_yaml, parse_rule
 except ModuleNotFoundError:
-    kernel_scripts = Path(__file__).resolve().parents[1] / "LOWERTOP-Enterprise-v3.0-RC3" / "scripts"
+    kernel_scripts = Path(__file__).resolve().parents[2] / "LOWERTOP-Enterprise-v3.0-RC3" / "scripts"
     sys.path.insert(0, str(kernel_scripts))
     from common import load_yaml, parse_rule
 
