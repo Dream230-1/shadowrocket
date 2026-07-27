@@ -1,0 +1,17 @@
+{
+  "version": "3.0.0-rc2",
+  "captured_at": "2026-07-26",
+  "upstream_commit": "8f67b6419fe1cc2277e59347b0d59d26e160b023",
+  "rulesets": {
+    "Telegram": {"sha256": "09f093cce5b3e2994147a2640e03040aac75e1db7bf2103fd1c9a2509b0176ab", "rule_count": 40, "bytes": 1338},
+    "YouTube": {"sha256": "f764cd91a779982225b3553ece8033c86a6545f4990f5fefd356805de962aee9", "rule_count": 190, "bytes": 5436},
+    "Netflix": {"sha256": "ec37f90727e7db062d754487c4bed68ae8bba28f349aef0995f10c06f5e8b231", "rule_count": 1157, "bytes": 40351},
+    "Disney": {"sha256": "65ededc7b608e440f3d918f6e95b19ca52460c8fe368dbd9e840b4bc8669f753", "rule_count": 173, "bytes": 5565},
+    "HBO": {"sha256": "f89c50e9a1f433dc1acb8a75aa2cab27d4e2fd82f4fed6ba2820ce9b923680e2", "rule_count": 49, "bytes": 1738},
+    "TikTok": {"sha256": "403dccb2d51606d73db9e669e82cc1d9030c7e697756ae13d9f8f5fea53c151a", "rule_count": 32, "bytes": 1100},
+    "Spotify": {"sha256": "577afc9442a38c578e0aa8769b192d2f935e808114c60cbd5afd2294c79b74d0", "rule_count": 30, "bytes": 1197},
+    "AdvertisingLite": {"sha256": "43a1fa95f398684cdc2f40a7307e3ed81dc93c870905fa79386a4271b72c4b0a", "rule_count": 376, "bytes": 12869},
+    "Lan": {"sha256": "e524edec216ed7f2fa2f3eb3fe09fe70121acf88408c2394d19b3e2331c54de7", "rule_count": 140, "bytes": 4776},
+    "ChinaMax": {"sha256": "3e9023e153c1c55d754bf474e6cf08c4f73b5da7bfd98de1e4974f0d758248fa", "rule_count": 12567, "bytes": 448651}
+  }
+}

@@ -3,13 +3,13 @@ name: LOWERTOP Enterprise v3.1 RC2 Build and Audit
 on:
   push:
     paths:
-      - "Shadowrocket/LOWERTOP-Enterprise-v3.1/**"
-      - "Shadowrocket/LOWERTOP-Enterprise-v3.0-RC3/**"
+      - "LOWERTOP-Enterprise-v3.1/**"
+      - "LOWERTOP-Enterprise-v3.0-RC3/**"
       - ".github/workflows/lowertop-enterprise-v31.yml"
   pull_request:
     paths:
-      - "Shadowrocket/LOWERTOP-Enterprise-v3.1/**"
-      - "Shadowrocket/LOWERTOP-Enterprise-v3.0-RC3/**"
+      - "LOWERTOP-Enterprise-v3.1/**"
+      - "LOWERTOP-Enterprise-v3.0-RC3/**"
       - ".github/workflows/lowertop-enterprise-v31.yml"
   workflow_dispatch:
   schedule:
@@ -19,7 +19,7 @@ permissions:
   contents: read
 
 env:
-  PROJECT_DIR: Shadowrocket/LOWERTOP-Enterprise-v3.1
+  PROJECT_DIR: LOWERTOP-Enterprise-v3.1
 
 concurrency:
   group: lowertop-v31-${{ github.workflow }}-${{ github.ref }}
@@ -71,7 +71,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.PROJECT_DIR }}/.cache
-          key: lowertop-v31-rules-${{ runner.os }}-${{ hashFiles('Shadowrocket/LOWERTOP-Enterprise-v3.1/config/release.yaml', 'Shadowrocket/LOWERTOP-Enterprise-v3.0-RC3/manifest.yaml') }}
+          key: lowertop-v31-rules-${{ runner.os }}-${{ hashFiles('LOWERTOP-Enterprise-v3.1/config/release.yaml', 'LOWERTOP-Enterprise-v3.0-RC3/manifest.yaml') }}
           restore-keys: |
             lowertop-v31-rules-${{ runner.os }}-
       - run: pip install -r requirements.txt

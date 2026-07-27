@@ -1,0 +1,8 @@
+{
+  "version": "3.0.0-rc3",
+  "status": "development",
+  "recommended_profile": "performance",
+  "source_of_truth": "manifest.yaml",
+  "publish_method": "scripts/publish.py with a 40-character Git commit SHA",
+  "rollback": "LOWERTOP Enterprise v3.0 RC2"
+}
