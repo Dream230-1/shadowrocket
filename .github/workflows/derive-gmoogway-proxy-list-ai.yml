@@ -20,8 +20,8 @@ jobs:
           mkdir -p "$OUTDIR"
           OUTFILE="$OUTDIR/gmoogway-proxy-list-ai.module"
           URL="https://raw.githubusercontent.com/GMOogway/shadowrocket-rules/master/sr_proxy_list.module"
-          TODAY=$(date '+%m-%d %H:%M')
-          curl -fsSL "$URL" | sed 's/,PROXY$/,AI/' | sed "s/Created:[0-9: -]*/Created:${TODAY} /" > "$OUTFILE"
+          TODAY=$(date '+%m-%d')
+          curl -fsSL "$URL" | sed 's/,PROXY$/,AI/' | sed "s/Created:[0-9: -]*/Created:${TODAY} 07:35 /" > "$OUTFILE"
           COUNT=$(grep -c ',AI$' "$OUTFILE" || true)
           echo "Derived module written: ${COUNT} AI rules"
       - name: Commit and push if changed
