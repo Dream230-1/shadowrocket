@@ -61,19 +61,19 @@ def apply_modules(manifest: dict[str, Any], directory: Path) -> tuple[dict[str, 
             identity = (kind, name)
             if identity in claimed:
                 raise ValueError(f"规则集 {kind}/{name} 同时属于 {claimed[identity]} 与 {module['id']}")
-            source = lookup.get(identity)
-            if source is None:
-                raise ValueError(f"模块 {module['id']} 引用了不存在的规则集：{kind}/{name}")
-            for field in ("policy", "stage"):
-                if field in ref and ref[field] != source.get(field):
-                    raise ValueError(
-                        f"模块 {module['id']} 的 {name}.{field}={ref[field]!r} "
-                        f"与行为基线 {source.get(field)!r} 不一致"
-                    )
+            if enabled:
+                source = lookup.get(identity)
+                if source is None:
+                    raise ValueError(f"模块 {module['id']} 引用了不存在的规则集：{kind}/{name}")
+                for field in ("policy", "stage"):
+                    if field in ref and ref[field] != source.get(field):
+                        raise ValueError(
+                            f"模块 {module['id']} 的 {name}.{field}={ref[field]!r} "
+                            f"与行为基线 {source.get(field)!r} 不一致"
+                        )
+                assembled[kind].append(dict(source))
             claimed[identity] = module["id"]
             names.append(f"{kind}/{name}")
-            if enabled:
-                assembled[kind].append(dict(source))
         summary.append({
             "id": module["id"],
             "enabled": enabled,
