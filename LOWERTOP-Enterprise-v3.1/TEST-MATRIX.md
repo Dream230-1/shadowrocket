@@ -9,6 +9,7 @@
 | 行为锁 | RC2 Performance 与 RC1 语义契约完全一致 |
 | DNS 审计 | 无系统回退、无明文 DNS、主力 IPv6 关闭、UDP 不直连回落 |
 | Apple 负向回归 | Global/Core 正向、禁止策略、伪装域名和边界用例全部通过 |
+| iCloud AI 路由 | iCloud 独立规则首条命中 AI；Apple Push、App Store、系统更新仍为 DIRECT |
 | 离线回归 | OpenAI、Apple、检测站和 FINAL 首条命中正确 |
 | 远程审计 | 固定 Commit 可下载、规则数和语法正常 |
 | 漂移审计 | 规则数和字节变化未越阈值 |
@@ -60,6 +61,16 @@
 - 处理结论与证据进入记录。
 
 模板：`validation/adblock/TEMPLATE-72H.yaml`。
+
+## iCloud AI 专项验证
+
+1. 日志确认 Drive、照片、CloudKit、iWork、连接检测和 Apple Account 首条命中 `Apple-iCloud → AI`。
+2. Wi-Fi 与蜂窝分别完成文件上传下载、照片/Live Photo 同步、备份和登录认证。
+3. 切换网络后重复同步，确认无瞬时直连及账号异常。
+4. 负向确认 Apple Push、App Store 和系统更新仍为 `DIRECT`。
+5. 确认 iCloud 与 Apple Account 主机未进入 `[MITM]`。
+
+模板：`validation/modules/TEMPLATE-ICLOUD-AI.yaml`。
 
 ## RC2 发布门槛
 

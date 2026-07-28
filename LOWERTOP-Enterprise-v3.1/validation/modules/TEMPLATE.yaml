@@ -30,7 +30,8 @@ checks:
 result: pass
 incidents: []
 notes: |
-  RC4 主线模块当前仅允许：
+  RC4 发布闸门当前允许：
   - apple-weather-qweather
+  - icloud-ai-routing
 
   每个模块应建立独立记录；configuration 必须包含 RC4，且不得写入 API Key、Token 或其他凭证。

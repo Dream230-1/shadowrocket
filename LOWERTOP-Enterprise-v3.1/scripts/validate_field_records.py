@@ -12,6 +12,7 @@ import yaml
 
 REQUIRED_MODULES = {
     "apple-weather-qweather",
+    "icloud-ai-routing",
 }
 
 

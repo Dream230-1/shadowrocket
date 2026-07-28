@@ -26,6 +26,7 @@ def load(name: str):
 behavior_lock = load("behavior_lock")
 module_config = load("module_config")
 rule_conflicts = load("rule_conflicts")
+build = load("build")
 
 
 class BehaviorLockTests(unittest.TestCase):
@@ -65,6 +66,34 @@ class ModuleTests(unittest.TestCase):
             ]}}), encoding="utf-8")
             with self.assertRaises(ValueError):
                 module_config.apply_modules(manifest, Path(temp))
+
+    def test_routing_overrides_move_icloud_to_ai_and_remove_legacy_group(self):
+        manifest = {
+            "proxy_groups": [
+                {"name": "AI", "type": "fallback"},
+                {"name": "iCloud", "type": "select"},
+            ],
+            "local_rulesets": [
+                {"name": "Apple-iCloud", "policy": "iCloud", "stage": 35},
+            ],
+        }
+        config = {
+            "routing_overrides": {
+                "remove_proxy_groups": ["iCloud"],
+                "local_ruleset_policies": {"Apple-iCloud": "AI"},
+            }
+        }
+        result = build.apply_routing_overrides(manifest, config)
+        self.assertEqual([group["name"] for group in result["proxy_groups"]], ["AI"])
+        self.assertEqual(result["local_rulesets"][0]["policy"], "AI")
+
+    def test_routing_overrides_reject_unknown_targets(self):
+        manifest = {"proxy_groups": [], "local_rulesets": []}
+        with self.assertRaises(ValueError):
+            build.apply_routing_overrides(
+                manifest,
+                {"routing_overrides": {"local_ruleset_policies": {"missing": "AI"}}},
+            )
 
 
 class ConflictTests(unittest.TestCase):

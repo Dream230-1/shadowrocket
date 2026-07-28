@@ -102,11 +102,12 @@ def main() -> None:
         "switching_record": evidence_gate("switching"),
         "adblock_observation": evidence_gate("adblock-72h"),
         "apple_weather_module": evidence_gate("module:apple-weather-qweather"),
+        "icloud_ai_routing": evidence_gate("module:icloud-ai-routing"),
     }
 
     mandatory_static = ["behavior_lock", "dns_audit", "offline_regression", "rule_conflicts", "modular_equivalence"]
     automation_ok = all(gates[key] is True for key in mandatory_static)
-    module_gate_names = ["apple_weather_module"]
+    module_gate_names = ["apple_weather_module", "icloud_ai_routing"]
     module_values = [gates[key] for key in module_gate_names]
     modules_ready = False if any(value is False for value in module_values) else (True if all(value is True for value in module_values) else None)
 
@@ -141,7 +142,7 @@ def main() -> None:
         "device_records": [str(p.relative_to(root)) for p in real_device],
         "adblock_records": [str(p.relative_to(root)) for p in real_ad],
         "module_records": [str(p.relative_to(root)) for p in real_modules],
-        "note": f"{release_label} remains pending until current-version network, 72-hour advertising and Apple Weather validation records are complete.",
+        "note": f"{release_label} remains pending until current-version network, 72-hour advertising, Apple Weather and iCloud AI routing validation records are complete.",
     }
     json_out = root / args.json_out
     json_out.parent.mkdir(parents=True, exist_ok=True)
@@ -157,7 +158,7 @@ def main() -> None:
 ## 结论
 
 - 自动化基线：**{mark(automation_ok)}**
-- Apple Weather 模块实机验证：**{mark(modules_ready)}**
+- RC4 模块实机验证：**{mark(modules_ready)}**
 - {release_label} 可发布：**{mark(release_ready)}**
 - Source commit：`{payload['source_commit']}`
 - Source branch：`{payload['source_branch']}`
@@ -181,11 +182,13 @@ def main() -> None:
 1. 使用 {release_label} 主配置完成 Wi-Fi、蜂窝及双向网络切换记录。
 2. 使用 {release_label} 配置完成连续至少 72 小时广告误杀观察。
 3. 验证 Apple 天气模块并提交对应记录，覆盖当前、小时、每日、降水、空气质量、定位与小组件。
+4. 验证 iCloud Drive、照片、备份、CloudKit、iWork 与 Apple Account 均命中 AI，同时 Apple Push、App Store 与系统更新保持 DIRECT。
 
 ## 边界
 
 - Performance 的 DNS、QUIC、IPv6、UDP 与核心路由继承既有基线，RC4 对最终规范化配置建立独立行为锁。
 - Apple Weather 不会自动注入 Direct 主配置，可单独禁用和回滚。
+- iCloud AI 路由会进入 Direct 主配置，但不加入 MITM；发布前必须完成独立实机记录。
 - Bilibili Next 与 BaiduNetdisk Next 保持独立实验分支，不计入 RC4 发布闸门。
 - DoQ/DoH3/DoH/DoT 自动回退、动态 DNS 选优及 IPv6/ECH 不进入 RC4 默认配置。
 """

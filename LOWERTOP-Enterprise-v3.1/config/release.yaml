@@ -21,3 +21,11 @@ meta:
     - 公开仓库凭证泄漏防护
     - Developer Toolkit
     - 规则精简去重
+
+routing_overrides:
+  # RC4 将 iCloud 独立规则集直接交给 AI fallback，避免旧 iCloud select
+  # 组缓存为 DIRECT 后使“专用代理”名义启用、实际直连。
+  remove_proxy_groups:
+    - iCloud
+  local_ruleset_policies:
+    Apple-iCloud: AI

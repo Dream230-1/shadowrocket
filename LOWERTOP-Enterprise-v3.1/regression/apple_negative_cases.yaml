@@ -79,18 +79,18 @@ cases:
     forbidden_policies: [AI]
     forbidden_sources: [Apple-Global-AI]
     requires_remote: false
-  - name: Apple iCloud Core
+  - name: Apple iCloud via AI
     host: setup.icloud.com
-    expected_policy: iCloud
+    expected_policy: AI
     expected_source_contains: Apple-iCloud
-    forbidden_policies: [AI, DIRECT]
+    forbidden_policies: [DIRECT]
     forbidden_sources: [Apple-Global-AI, Apple-Core-Direct]
     requires_remote: false
-  - name: Apple ID Core
+  - name: Apple ID via AI
     host: idmsa.apple.com
-    expected_policy: iCloud
+    expected_policy: AI
     expected_source_contains: Apple-iCloud
-    forbidden_policies: [AI, DIRECT]
+    forbidden_policies: [DIRECT]
     forbidden_sources: [Apple-Global-AI, Apple-Core-Direct]
     requires_remote: false
   - name: Apple Software Update Core
@@ -109,9 +109,9 @@ cases:
     requires_remote: false
   - name: Apple CloudKit Core
     host: api.apple-cloudkit.com
-    expected_policy: iCloud
+    expected_policy: AI
     expected_source_contains: Apple-iCloud
-    forbidden_policies: [AI, DIRECT]
+    forbidden_policies: [DIRECT]
     forbidden_sources: [Apple-Global-AI, Apple-Core-Direct]
     requires_remote: false
   - name: Apple China Core
@@ -132,23 +132,51 @@ cases:
   # Apple iCloud positive routing.
   - name: Apple iCloud Drive
     host: ckdatabase.icloud.com
-    expected_policy: iCloud
+    expected_policy: AI
     expected_source_contains: Apple-iCloud
-    forbidden_policies: [DIRECT, AI]
+    forbidden_policies: [DIRECT]
     forbidden_sources: [Apple-Core-Direct, Apple-Global-AI]
     requires_remote: false
   - name: Apple iCloud Photos
     host: cvws.icloud-content.com
-    expected_policy: iCloud
+    expected_policy: AI
     expected_source_contains: Apple-iCloud
-    forbidden_policies: [DIRECT, AI]
+    forbidden_policies: [DIRECT]
     forbidden_sources: [Apple-Core-Direct, Apple-Global-AI]
     requires_remote: false
   - name: Apple iCloud Account
     host: appleid.apple.com
-    expected_policy: iCloud
+    expected_policy: AI
     expected_source_contains: Apple-iCloud
-    forbidden_policies: [DIRECT, AI]
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct, Apple-Global-AI]
+    requires_remote: false
+  - name: Apple iCloud Live Photos
+    host: sync.apple-livephotoskit.com
+    expected_policy: AI
+    expected_source_contains: Apple-iCloud
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct, Apple-Global-AI]
+    requires_remote: false
+  - name: Apple iCloud China service zone
+    host: content.apzones.com
+    expected_policy: AI
+    expected_source_contains: Apple-iCloud
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct, Apple-Global-AI]
+    requires_remote: false
+  - name: Apple iWork documents
+    host: sync.iwork.apple.com
+    expected_policy: AI
+    expected_source_contains: Apple-iCloud
+    forbidden_policies: [DIRECT]
+    forbidden_sources: [Apple-Core-Direct, Apple-Global-AI]
+    requires_remote: false
+  - name: Apple Account
+    host: account.apple.com
+    expected_policy: AI
+    expected_source_contains: Apple-iCloud
+    forbidden_policies: [DIRECT]
     forbidden_sources: [Apple-Core-Direct, Apple-Global-AI]
     requires_remote: false
 

@@ -1,8 +1,16 @@
 # RC4 独立模块安装与验证
 
-RC4 主配置继续维持 RC3 的稳定路由基线。当前主线仅保留 Apple 天气 QWeather 可选模块，需要在 Shadowrocket 中单独安装、启用和回滚，不会自动写入 Direct 配置。
+RC4 当前包含两类能力：内置的 iCloud AI 分流，以及需单独安装的 Apple 天气 QWeather 可选模块。iCloud 规则随 Direct 配置生效，不需要另装模块；Apple 天气仍需在 Shadowrocket 中单独安装、启用和回滚。
 
 哔哩哔哩与百度网盘旧模块已从 RC4 移除。后续分别在 `bilibili-next` 与 `baidunetdisk-next` 实验分支中基于最新客户端抓包结果重新开发，不继续修补或安装 RC4 旧模块。
+
+## iCloud AI 分流
+
+- `Apple-iCloud` 独立规则集直接使用 `AI` fallback。
+- 覆盖 Drive、照片、备份、CloudKit、Live Photos、iWork、连接检测及 Apple Account 认证。
+- Apple Push、App Store、系统更新与中国区 Apple Core 保持 `DIRECT`。
+- 不需要开启 HTTPS 解密，iCloud 与 Apple Account 域名不得加入 MITM。
+- 正式发布前按 `validation/modules/TEMPLATE-ICLOUD-AI.yaml` 完成 Wi-Fi、蜂窝、网络切换与负向对照。
 
 ## 安装前准备
 

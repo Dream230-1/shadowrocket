@@ -1,13 +1,14 @@
-# LOWERTOP Enterprise v3.1 RC2 发布验证报告
+# LOWERTOP Enterprise 3.1.0-rc4 发布验证报告
 
-> 自动生成骨架；设备实测与 AdvertisingLite 观察必须由真实记录补齐，不能由 CI 代填。
+> 自动化测试与真实设备证据分开计算；旧版本记录不能证明 RC4 新模块有效。
 
 ## 结论
 
 - 自动化基线：**PASS**
-- RC2 可发布：**PENDING**
-- Source commit：`unknown`
-- Source branch：`unknown`
+- RC4 模块实机验证：**PENDING**
+- RC4 可发布：**PENDING**
+- Source commit：`41a79719bc731d22841d8007d61c40300f5c26f3`
+- Source branch：`release/v3.1-rc4`
 
 ## 发布闸门
 
@@ -25,31 +26,41 @@
 | network_benchmark | PENDING |
 | rule_conflicts | PASS |
 | modular_equivalence | PASS |
-| wifi_record | PASS |
-| cellular_record | PASS |
-| switching_record | PASS |
-| adblock_observation | PASS |
+| wifi_record | PENDING |
+| cellular_record | PENDING |
+| switching_record | PENDING |
+| adblock_observation | PENDING |
+| apple_weather_module | PENDING |
+| icloud_ai_routing | PENDING |
 
 ## 构建产物
 
-- `build/LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf` — `874a88048a0b07646e060257e1248b519d6493d84422ed3b308d08be83c4e1c0`
-- `build/LOWERTOP-Enterprise-v3.1-RC2-Strict-Direct.conf` — `6f23f7713171338fe4d10696f9b927b852d82379dcc40c48d5e58517cfcf7f6c`
-- `build/LOWERTOP-Enterprise-v3.1-RC3-Performance-Direct.conf` — `d45bd32dc9c48f8ef0278e08ab250e174519e70c7f1981dce09566f84f08397d`
-- `build/LOWERTOP-Enterprise-v3.1-RC3-Strict-Direct.conf` — `5960d8864b8375e64094a0368db981ff01b00d2fd90e36666c6cd9882be899ff`
-- `modular/LOWERTOP-Enterprise-v3.1-RC3-Performance-Modular.conf` — `6b4a2ce0a117c6ab14b772312ca0c904a11413fa1b415a3e1bb9b773b38e9dd0`
-- `modular/LOWERTOP-Enterprise-v3.1-RC3-Strict-Modular.conf` — `38149dbf9c6e97a85cbb0f44b6602290c251b8d7d0d678a96dd748e8088a7af9`
-- `experimental/LOWERTOP-Enterprise-v3.1-RC2-IPv6-SVCB-Experimental-Direct.conf` — `414e42ccdf573d3aa29106f93f4118956eeca0dccdec9327f8372c9ed4f1fe55`
-- `experimental/LOWERTOP-Enterprise-v3.1-RC3-IPv6-SVCB-Experimental-Direct.conf` — `7c9860841abf203c600feba91a722b142a5ef38237fcb4748804b2cb3be03820`
+- `build/LOWERTOP-Enterprise-v3.1-RC4-Performance-Direct.conf` — `9cfb0c4c2449e6fb753011d94ae2c02d48a65d4ac575008c1de99808445ce264`
+- `build/LOWERTOP-Enterprise-v3.1-RC4-Strict-Direct.conf` — `b09d0712333a1bd616224696a065ab6a94c5231d61b620129556c405d78305d5`
+- `modular/LOWERTOP-Enterprise-v3.1-RC4-Performance-Modular.conf` — `eca8fa0002ba42b15796fa50f0d32d39a2b93bafffb5fed45d186cab5e9bf4a6`
+- `modular/LOWERTOP-Enterprise-v3.1-RC4-Strict-Modular.conf` — `c467d86d61cd7deb7e23c6bf3a3587cbf5bb00c28bff0ac34c25ba402df3f47e`
+- `experimental/LOWERTOP-Enterprise-v3.1-RC4-IPv6-SVCB-Experimental-Direct.conf` — `f972c5e9fbc3e8b19ccc39006edf58761ce7e1033d3e2541aac99ad43b22eafc`
 
-## 尚需真实设备完成
+## 尚缺证据
 
-1. 家庭/办公 Wi-Fi 实测记录。
-2. 蜂窝网络实测记录。
-3. Wi-Fi → 蜂窝与蜂窝 → Wi-Fi 网络切换记录。
-4. AdvertisingLite 连续 72 小时误杀观察和处理结论。
+- `adblock-72h`
+- `cellular`
+- `module:apple-weather-qweather`
+- `module:icloud-ai-routing`
+- `switching`
+- `wifi`
+
+## 必须完成的真实设备验证
+
+1. 使用 RC4 主配置完成 Wi-Fi、蜂窝及双向网络切换记录。
+2. 使用 RC4 配置完成连续至少 72 小时广告误杀观察。
+3. 验证 Apple 天气模块并提交对应记录，覆盖当前、小时、每日、降水、空气质量、定位与小组件。
+4. 验证 iCloud Drive、照片、备份、CloudKit、iWork 与 Apple Account 均命中 AI，同时 Apple Push、App Store 与系统更新保持 DIRECT。
 
 ## 边界
 
-- Performance 的 DNS、QUIC、IPv6、UDP 和路由行为受 RC1 行为锁保护。
-- DoQ/DoH3/DoH/DoT 自动回退、动态 DNS 选优、IPv6/ECH 不进入 RC2 默认配置。
-- Experimental 仅提供 IPv6/SVCB 验证，不宣称强制或确认 ECH。
+- Performance 的 DNS、QUIC、IPv6、UDP 与核心路由继承既有基线，RC4 对最终规范化配置建立独立行为锁。
+- Apple Weather 不会自动注入 Direct 主配置，可单独禁用和回滚。
+- iCloud AI 路由会进入 Direct 主配置，但不加入 MITM；发布前必须完成独立实机记录。
+- Bilibili Next 与 BaiduNetdisk Next 保持独立实验分支，不计入 RC4 发布闸门。
+- DoQ/DoH3/DoH/DoT 自动回退、动态 DNS 选优及 IPv6/ECH 不进入 RC4 默认配置。

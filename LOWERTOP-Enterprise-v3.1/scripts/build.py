@@ -25,6 +25,36 @@ def deep_merge(base, overlay):
     return overlay
 
 
+def apply_routing_overrides(manifest: dict, config: dict) -> dict:
+    """Apply RC-specific named routing changes without mutating the RC3 kernel."""
+    overrides = config.get("routing_overrides", {}) or {}
+    remove_groups = set(overrides.get("remove_proxy_groups", []) or [])
+    policy_overrides = overrides.get("local_ruleset_policies", {}) or {}
+    if not isinstance(policy_overrides, dict):
+        raise ValueError("routing_overrides.local_ruleset_policies must be a mapping")
+
+    groups = manifest.get("proxy_groups", []) or []
+    known_groups = {str(group.get("name", "")) for group in groups}
+    unknown_groups = sorted(remove_groups - known_groups)
+    if unknown_groups:
+        raise ValueError(f"cannot remove unknown proxy groups: {', '.join(unknown_groups)}")
+    manifest["proxy_groups"] = [
+        group for group in groups if str(group.get("name", "")) not in remove_groups
+    ]
+
+    rulesets = manifest.get("local_rulesets", []) or []
+    by_name = {str(item.get("name", "")): item for item in rulesets}
+    unknown_rulesets = sorted(set(policy_overrides) - set(by_name))
+    if unknown_rulesets:
+        raise ValueError(f"cannot override unknown local rulesets: {', '.join(unknown_rulesets)}")
+    for name, policy in policy_overrides.items():
+        value = str(policy).strip()
+        if not value:
+            raise ValueError(f"empty policy override for local ruleset: {name}")
+        by_name[name]["policy"] = value
+    return manifest
+
+
 def run(command, cwd, *, allow_failure: bool = False):
     print("+", " ".join(map(str, command)), flush=True)
     result = subprocess.run(command, cwd=cwd, text=True, capture_output=True)
@@ -106,9 +136,15 @@ def main():
         raise SystemExit(f"RC3 build kernel not found: {rc3}")
 
     merged = yaml.safe_load((rc3 / "manifest.yaml").read_text(encoding="utf-8"))
-    for name in ("release.yaml", "dns.yaml"):
-        overlay = yaml.safe_load((project / "config" / name).read_text(encoding="utf-8")) or {}
+    release_config = yaml.safe_load(
+        (project / "config" / "release.yaml").read_text(encoding="utf-8")
+    ) or {}
+    for name, overlay in (
+        ("release.yaml", release_config),
+        ("dns.yaml", yaml.safe_load((project / "config" / "dns.yaml").read_text(encoding="utf-8")) or {}),
+    ):
         merged = deep_merge(merged, overlay)
+    merged = apply_routing_overrides(merged, release_config)
     merged, modules = apply_modules(merged, project / "modules")
 
     features = yaml.safe_load((project / "config" / "features.yaml").read_text(encoding="utf-8")) or {}

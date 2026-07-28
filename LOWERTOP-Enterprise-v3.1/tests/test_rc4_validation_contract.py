@@ -19,9 +19,12 @@ def load_script(name: str):
 
 
 class RC4ValidationContractTests(unittest.TestCase):
-    def test_only_apple_weather_is_a_required_mainline_module(self) -> None:
+    def test_required_mainline_modules_match_rc4_scope(self) -> None:
         validator = load_script("validate_field_records")
-        self.assertEqual(validator.REQUIRED_MODULES, {"apple-weather-qweather"})
+        self.assertEqual(
+            validator.REQUIRED_MODULES,
+            {"apple-weather-qweather", "icloud-ai-routing"},
+        )
 
     def test_release_report_does_not_restore_frozen_module_gates(self) -> None:
         source = (ROOT / "scripts" / "release_report.py").read_text(encoding="utf-8")

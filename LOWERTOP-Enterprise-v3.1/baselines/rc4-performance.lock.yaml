@@ -1,9 +1,9 @@
 schema: 1
-source_commit: 7c6de81c5a93e4354a3398d584e070f3ed967eb2
+source_commit: 41a79719bc731d22841d8007d61c40300f5c26f3
 artifact: LOWERTOP-Enterprise-v3.1-RC4-Performance-Direct.conf
-raw_sha256: aaedf312b1967562af3ece8615b7198aa65a14fe6a3dce9887898ceaa7162372
-semantic_sha256: 2c9027586548b6eeb02c364a1dc133f16a2bb0f7647e4f07a2261201aa63efaf
-semantic_line_count: 128
+raw_sha256: 9cfb0c4c2449e6fb753011d94ae2c02d48a65d4ac575008c1de99808445ce264
+semantic_sha256: 3d8222cc794446a28447ea5ab9dd86d9382084b74513db2bee57f00685f8ecee
+semantic_line_count: 124
 contract:
   general:
     skip-proxy: 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local
@@ -24,7 +24,6 @@ contract:
     block-quic: always-allow
   proxy_groups:
     AI: fallback,🎏JP-TOKYO「NTT🏡」-B,🎏JP-TOKYO「NTT🏡」-D,🎏JP-TOKYO「NTT🏡」-C,🎏JP-TOKYO「NTT🏡」-A,美国ATT-原生家宽-A3,美国ATT-原生家宽-A1,美国ATT-原生家宽-A2,url=https://chatgpt.com,interval=300,timeout=8
-    iCloud: select,DIRECT,PROXY,AI,媒体,🚋香港『HKBN🏡』独享2.5G-B,🎏JP-TOKYO「NTT🏡」-B,policy-select-name=DIRECT
     媒体: select,🚋香港『HKBN🏡』独享2.5G-B,🚋香港『HKBN🏡』独享2.5G-A,🚋香港『HKBN🏡』独享2.5G-C,🚋香港『HKBN🏡』独享2.5G-D,🎏JP-TOKYO「NTT🏡」-B,🎏JP-TOKYO「NTT🏡」-C,policy-select-name=🚋香港『HKBN🏡』独享2.5G-B
     Telegram: select,🚋香港『HKBN🏡』独享2.5G-B,媒体,PROXY,香港节点,日本节点,台湾节点,新加坡节点,韩国节点,美国节点,policy-select-name=🚋香港『HKBN🏡』独享2.5G-B
     YouTube: select,媒体,PROXY,香港节点,日本节点,台湾节点,新加坡节点,韩国节点,美国节点,policy-select-name=媒体
@@ -76,24 +75,21 @@ contract:
   - DOMAIN-SUFFIX,news.apple.com,AI
   - DOMAIN-SUFFIX,smoot.apple.com,AI
   - DOMAIN-SUFFIX,guzzoni.apple.com,AI
-  - DOMAIN-SUFFIX,icloud.com,iCloud
-  - DOMAIN-SUFFIX,icloud.com.cn,iCloud
-  - DOMAIN-SUFFIX,icloud-content.com,iCloud
-  - DOMAIN-SUFFIX,apple-cloudkit.com,iCloud
-  - DOMAIN-SUFFIX,apple-cloudkit.com.cn,iCloud
-  - DOMAIN-SUFFIX,icloud.apple.com,iCloud
-  - DOMAIN-SUFFIX,ckdatabase.icloud.com,iCloud
-  - DOMAIN-SUFFIX,ckcontainer.icloud.com,iCloud
-  - DOMAIN-SUFFIX,cvws.icloud-content.com,iCloud
-  - DOMAIN-SUFFIX,p72-cdn.icloud-content.com,iCloud
-  - DOMAIN-SUFFIX,p72-content.icloud.com,iCloud
-  - DOMAIN-SUFFIX,p72.icloud-content.com,iCloud
-  - DOMAIN-SUFFIX,p72.icloud.com,iCloud
-  - DOMAIN-SUFFIX,setup.icloud.com,iCloud
-  - DOMAIN-SUFFIX,idmsa.apple.com,iCloud
-  - DOMAIN-SUFFIX,appleid.apple.com,iCloud
-  - DOMAIN-SUFFIX,gc.apple.com,iCloud
-  - DOMAIN-SUFFIX,icloud-analysis.com,iCloud
+  - DOMAIN-SUFFIX,icloud.com,AI
+  - DOMAIN-SUFFIX,icloud.com.cn,AI
+  - DOMAIN-SUFFIX,icloud-content.com,AI
+  - DOMAIN-SUFFIX,apple-cloudkit.com,AI
+  - DOMAIN-SUFFIX,apple-cloudkit.com.cn,AI
+  - DOMAIN-SUFFIX,apple-livephotoskit.com,AI
+  - DOMAIN-SUFFIX,apzones.com,AI
+  - DOMAIN-SUFFIX,iwork.apple.com,AI
+  - DOMAIN-SUFFIX,gc.apple.com,AI
+  - DOMAIN-SUFFIX,icloud-analysis.com,AI
+  - DOMAIN,account.apple.com,AI
+  - DOMAIN,appleid.cdn-apple.com,AI
+  - DOMAIN,idmsa.apple.com,AI
+  - DOMAIN,appleid.apple.com,AI
+  - DOMAIN,gsa.apple.com,AI
   - DOMAIN-SUFFIX,push.apple.com,DIRECT
   - DOMAIN-SUFFIX,apple.com,DIRECT
   - DOMAIN-SUFFIX,apple.com.cn,DIRECT

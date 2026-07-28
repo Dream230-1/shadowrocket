@@ -13,9 +13,15 @@ RC4 以 RC3 的稳定路由和 DNS 基线为前提，聚焦生成配置结构、
 
 2. Configuration hardening
    - Validate independent `[Rule]`, `[Script]` and `[MITM]` sections.
-   - Preserve RC3 routing, DNS, proxy groups and `FINAL,PROXY` behavior.
+   - Preserve RC3 DNS and `FINAL,PROXY` behavior.
+   - Apply the approved RC4 routing delta: `Apple-iCloud` routes directly to `AI`; the unused legacy `iCloud` select group is removed.
 
-3. Developer Toolkit
+3. iCloud AI routing
+   - Cover iCloud Drive, Photos, Backup, CloudKit, Live Photos, iWork, connection probes and Apple Account authentication.
+   - Keep Apple Push, App Store, software updates and China Apple Core on `DIRECT`.
+   - Never add iCloud or Apple Account hosts to MITM.
+
+4. Developer Toolkit
    - Module static validation.
    - MITM hostname extraction and risk checks.
    - Shadowrocket text-log analysis and regression tests.
@@ -42,6 +48,7 @@ RC4 以 RC3 的稳定路由和 DNS 基线为前提，聚焦生成配置结构、
 - Configuration-section validation.
 - Duplicate and conflicting rule checks.
 - Apple Weather current, hourly, daily, precipitation and air-quality verification.
+- iCloud AI routing and Apple Core negative-control verification.
 - RC4 Wi-Fi, cellular and bidirectional switching verification.
 - AdvertisingLite observation for at least 72 hours without unresolved P0/P1 regressions.
 - Secret scanning before release.

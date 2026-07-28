@@ -1,16 +1,4 @@
 approved:
-  - key: "Apple-Global-AI:DOMAIN,mask.icloud.com|Apple-iCloud:DOMAIN-SUFFIX,icloud.com"
-    reason: Apple Private Relay 必须由 AI 策略处理；Global stage 30 有意覆盖 iCloud stage 35。
-    owner: LOWERTOP
-    expires: 2026-12-31
-  - key: "Apple-Global-AI:DOMAIN,mask-h2.icloud.com|Apple-iCloud:DOMAIN-SUFFIX,icloud.com"
-    reason: Apple Private Relay HTTP/2 端点有意走 AI。
-    owner: LOWERTOP
-    expires: 2026-12-31
-  - key: "Apple-Global-AI:DOMAIN,mask-api.icloud.com|Apple-iCloud:DOMAIN-SUFFIX,icloud.com"
-    reason: Apple Private Relay API 端点有意走 AI。
-    owner: LOWERTOP
-    expires: 2026-12-31
   - key: "Apple-Global-AI:DOMAIN-SUFFIX,news.apple.com|Apple-Core-Direct:DOMAIN-SUFFIX,apple.com"
     reason: Apple News 国际内容有意先于 Apple Core。
     owner: LOWERTOP
@@ -21,5 +9,33 @@ approved:
     expires: 2026-12-31
   - key: "Apple-Global-AI:DOMAIN-SUFFIX,guzzoni.apple.com|Apple-Core-Direct:DOMAIN-SUFFIX,apple.com"
     reason: Siri 国际端点有意走 AI。
+    owner: LOWERTOP
+    expires: 2026-12-31
+  - key: "Apple-iCloud:DOMAIN-SUFFIX,iwork.apple.com|Apple-Core-Direct:DOMAIN-SUFFIX,apple.com"
+    reason: Apple 官方将 iWork 文档列为 iCloud 服务；RC4 有意先于 Apple Core 交给 AI。
+    owner: LOWERTOP
+    expires: 2026-12-31
+  - key: "Apple-iCloud:DOMAIN-SUFFIX,gc.apple.com|Apple-Core-Direct:DOMAIN-SUFFIX,apple.com"
+    reason: Apple 官方将该通配域列为 iCloud 服务；RC4 有意先于 Apple Core 交给 AI。
+    owner: LOWERTOP
+    expires: 2026-12-31
+  - key: "Apple-iCloud:DOMAIN,account.apple.com|Apple-Core-Direct:DOMAIN-SUFFIX,apple.com"
+    reason: Apple Account 是 iCloud 认证必需端点；仅精确主机走 AI，不扩大 apple.com 范围。
+    owner: LOWERTOP
+    expires: 2026-12-31
+  - key: "Apple-iCloud:DOMAIN,appleid.cdn-apple.com|Apple-Core-Direct:DOMAIN-SUFFIX,cdn-apple.com"
+    reason: Apple Account 认证 CDN 精确主机随 iCloud 会话走 AI，其余 CDN 保持 DIRECT。
+    owner: LOWERTOP
+    expires: 2026-12-31
+  - key: "Apple-iCloud:DOMAIN,idmsa.apple.com|Apple-Core-Direct:DOMAIN-SUFFIX,apple.com"
+    reason: Apple 官方列出的 Apple Account 认证端点；仅精确主机走 AI。
+    owner: LOWERTOP
+    expires: 2026-12-31
+  - key: "Apple-iCloud:DOMAIN,appleid.apple.com|Apple-Core-Direct:DOMAIN-SUFFIX,apple.com"
+    reason: 既有 iCloud 登录端点改为精确匹配并走 AI。
+    owner: LOWERTOP
+    expires: 2026-12-31
+  - key: "Apple-iCloud:DOMAIN,gsa.apple.com|Apple-Core-Direct:DOMAIN-SUFFIX,apple.com"
+    reason: Apple 官方列出的 Apple Account 认证端点；仅精确主机走 AI。
     owner: LOWERTOP
     expires: 2026-12-31
