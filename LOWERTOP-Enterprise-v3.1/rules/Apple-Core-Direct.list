@@ -1,10 +1,7 @@
 # NAME: Apple-Core-Direct
 # POLICY: DIRECT
-# PURPOSE: APNs、iCloud、App Store、系统服务与内容分发
+# PURPOSE: APNs、App Store、系统服务与内容分发（不含 iCloud，iCloud 已归入 Apple-iCloud 模块）
 DOMAIN-SUFFIX,push.apple.com
-DOMAIN-SUFFIX,icloud.com
-DOMAIN-SUFFIX,icloud.com.cn
-DOMAIN-SUFFIX,icloud-content.com
 DOMAIN-SUFFIX,apple.com
 DOMAIN-SUFFIX,apple.com.cn
 DOMAIN-SUFFIX,mzstatic.com
@@ -13,8 +10,6 @@ DOMAIN-SUFFIX,me.com
 DOMAIN-SUFFIX,mac.com
 DOMAIN-SUFFIX,aaplimg.com
 DOMAIN-SUFFIX,cdn-apple.com
-DOMAIN-SUFFIX,apple-cloudkit.com
-DOMAIN-SUFFIX,apple-cloudkit.com.cn
 DOMAIN-SUFFIX,apple-dns.cn
 DOMAIN-SUFFIX,appsto.re
 DOMAIN-SUFFIX,appstore.com

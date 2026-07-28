@@ -1,0 +1,5 @@
+module:
+  id: dns-leak-protection
+  enabled: true
+  description: "DNS 泄漏防护模块。阻止 DNS 请求通过非代理通道泄露。LOWERTOP Enterprise 的 General 设置已包含 hijack-dns 和禁止 system 回退，此模块在规则层提供额外防护。注意：本模块仅为规则声明参考，实际防护规则需额外加载 derived/dns-leak-protection.module 到 Shadowrocket 中。"
+  rulesets: []

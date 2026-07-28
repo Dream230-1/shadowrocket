@@ -1,0 +1,21 @@
+#!name=DNS 泄漏防护
+#!desc=在 LOWERTOP Enterprise 基础上增加 DNS 泄漏防护规则。
+#! 阻止 Apple 分析服务、QUIC 绕过代理、已知 DNS 泄漏路径。
+#! LOWERTOP 的 General 设置已包含 hijack-dns 和禁止 system 回退，
+#! 此模块在规则层提供额外保护层。
+#!homepage=https://github.com/Dream230-1/shadowrocket
+#!author=LOWERTOP
+#!date=2026-07-28
+
+[Rule]
+# 阻止 Apple 遥测分析——可能泄漏 DNS 查询
+DOMAIN,weather-analytics-events.apple.com,REJECT-DROP
+# 阻止 Apple tether.edge 设备直连
+DOMAIN,tether.edge.apple,REJECT-DROP
+# 阻止 Apple tthr（可能绕过代理）
+DOMAIN-SUFFIX,tthr.apple.com,REJECT-DROP
+# 阻止 QUIC 连接绕过代理 DNS（AS714=Apple, AS6185=Google）
+AND,((OR,((IP-ASN,714,no-resolve),(IP-ASN,6185,no-resolve))),(PROTOCOL,QUIC)),REJECT-DROP
+# 阻止已知可能泄漏 DNS 的域
+DOMAIN-SUFFIX,utun.apple.com,REJECT-DROP
+DOMAIN-SUFFIX,captive.apple.com,DIRECT

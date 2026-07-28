@@ -1,6 +1,6 @@
 module:
   id: icloud
-  enabled: false
+  enabled: true
   description: iCloud 专用代理分流。启用后 iCloud Drive、iCloud 照片、云备份、CloudKit、
    Keychain 等走独立 iCloud 策略组，用户可自行选择 DIRECT 或代理节点。
    适用于中国大陆用户访问国际 iCloud 端点（icloud.com、icloud-content.com、apple-cloudkit.com）

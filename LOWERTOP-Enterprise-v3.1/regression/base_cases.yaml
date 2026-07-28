@@ -71,8 +71,8 @@ cases:
   requires_remote: false
 - name: Apple iCloud
   host: setup.icloud.com
-  expected_policy: DIRECT
-  expected_source_contains: Apple-Core-Direct
+  expected_policy: iCloud
+  expected_source_contains: Apple-iCloud
   requires_remote: false
 - name: Apple App Store CDN
   host: is1-ssl.mzstatic.com

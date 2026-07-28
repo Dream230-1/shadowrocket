@@ -4,8 +4,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from pathlib import Path
 import re
+from pathlib import Path
 import shutil
 import subprocess
 import sys
@@ -137,8 +137,18 @@ def main():
         run([py, "scripts/generate.py", "--profile", "all-release", "--mode", "remote", "--base-url", modular_base_url, "--out-dir", "modular"], workspace)
         run([py, "scripts/generate.py", "--profile", "ipv6_svcb_experimental", "--mode", "inline", "--out-dir", "experimental"], workspace)
 
-        performance = workspace / "build" / "LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf"
-        modular_performance = workspace / "modular" / "LOWERTOP-Enterprise-v3.1-RC2-Performance-Modular.conf"
+        def _artifact_label(meta):
+            v = str(meta.get("version", "3.0.0"))
+            m = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:-(.+))?", v)
+            if not m: return "v3.0"
+            ma, mi, _p, sx = m.groups()
+            label = f"v{ma}.{mi}"
+            if sx: label += "-" + sx.upper()
+            return label
+
+        version_label = _artifact_label(merged["meta"])
+        performance = workspace / "build" / f"LOWERTOP-Enterprise-{version_label}-Performance-Direct.conf"
+        modular_performance = workspace / "modular" / f"LOWERTOP-Enterprise-{version_label}-Performance-Modular.conf"
         errors = validate_generated(performance)
         if errors:
             print(json.dumps({"ok": False, "errors": errors}, ensure_ascii=False, indent=2))
@@ -149,7 +159,7 @@ def main():
         copy_tree_files(workspace / "experimental", experimental, "*.conf")
 
         # Release behavior lock and offline negative route regression are mandatory.
-        run([py, "scripts/behavior_lock.py", "--config", str(performance), "--baseline", str(project / "baselines/rc1-performance.lock.yaml"), "--json-out", str(reports / "behavior-lock.json")], project)
+        run([py, "scripts/behavior_lock.py", "--config", str(performance), "--baseline", str(project / "baselines/rc3-performance.lock.yaml"), "--json-out", str(reports / "behavior-lock.json")], project)
         run([py, "scripts/regression_v31.py", "--kernel-root", str(workspace), "--config", str(performance),
              "--cases", "regression/base_cases.yaml", "--cases", "regression/apple_negative_cases.yaml",
              "--json-out", "reports/regression-offline.json"], project)

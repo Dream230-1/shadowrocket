@@ -78,6 +78,17 @@ proxy_groups:
     url: https://chatgpt.com
     interval: 300
     timeout: 8
+- name: iCloud
+  type: select
+  members:
+  - DIRECT
+  - PROXY
+  - AI
+  - 媒体
+  - 🚋香港『HKBN🏡』独享2.5G-B
+  - 🎏JP-TOKYO「NTT🏡」-B
+  params:
+    policy-select-name: DIRECT
 - name: 媒体
   type: select
   members:
@@ -254,6 +265,10 @@ local_rulesets:
   file: rules/Apple-Global-AI.list
   policy: AI
   stage: 30
+- name: Apple-iCloud
+  file: rules/Apple-iCloud.list
+  policy: iCloud
+  stage: 35
 - name: Apple-Core-Direct
   file: rules/Apple-Core-Direct.list
   policy: DIRECT

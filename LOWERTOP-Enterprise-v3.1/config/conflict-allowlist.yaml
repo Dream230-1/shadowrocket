@@ -1,13 +1,13 @@
 approved:
-  - key: "Apple-Global-AI:DOMAIN,mask.icloud.com|Apple-Core-Direct:DOMAIN-SUFFIX,icloud.com"
-    reason: Apple Private Relay 必须由 AI 策略处理；Global stage 30 有意覆盖 Core stage 40。
+  - key: "Apple-Global-AI:DOMAIN,mask.icloud.com|Apple-iCloud:DOMAIN-SUFFIX,icloud.com"
+    reason: Apple Private Relay 必须由 AI 策略处理；Global stage 30 有意覆盖 iCloud stage 35。
     owner: LOWERTOP
     expires: 2026-12-31
-  - key: "Apple-Global-AI:DOMAIN,mask-h2.icloud.com|Apple-Core-Direct:DOMAIN-SUFFIX,icloud.com"
+  - key: "Apple-Global-AI:DOMAIN,mask-h2.icloud.com|Apple-iCloud:DOMAIN-SUFFIX,icloud.com"
     reason: Apple Private Relay HTTP/2 端点有意走 AI。
     owner: LOWERTOP
     expires: 2026-12-31
-  - key: "Apple-Global-AI:DOMAIN,mask-api.icloud.com|Apple-Core-Direct:DOMAIN-SUFFIX,icloud.com"
+  - key: "Apple-Global-AI:DOMAIN,mask-api.icloud.com|Apple-iCloud:DOMAIN-SUFFIX,icloud.com"
     reason: Apple Private Relay API 端点有意走 AI。
     owner: LOWERTOP
     expires: 2026-12-31

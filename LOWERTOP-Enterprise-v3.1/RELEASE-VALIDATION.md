@@ -5,7 +5,7 @@
 ## 结论
 
 - 自动化基线：**PASS**
-- RC2 可发布：**PASS**
+- RC2 可发布：**PENDING**
 - Source commit：`unknown`
 - Source branch：`unknown`
 
@@ -16,13 +16,13 @@
 | behavior_lock | PASS |
 | dns_audit | PASS |
 | offline_regression | PASS |
-| cache_refresh | PASS |
-| online_regression | PASS |
-| remote_audit | PASS |
-| ruleset_drift | PASS |
-| adblock_collisions | PASS |
-| service_health | PASS |
-| network_benchmark | PASS |
+| cache_refresh | PENDING |
+| online_regression | PENDING |
+| remote_audit | PENDING |
+| ruleset_drift | PENDING |
+| adblock_collisions | PENDING |
+| service_health | PENDING |
+| network_benchmark | PENDING |
 | rule_conflicts | PASS |
 | modular_equivalence | PASS |
 | wifi_record | PASS |
@@ -34,9 +34,12 @@
 
 - `build/LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf` — `874a88048a0b07646e060257e1248b519d6493d84422ed3b308d08be83c4e1c0`
 - `build/LOWERTOP-Enterprise-v3.1-RC2-Strict-Direct.conf` — `6f23f7713171338fe4d10696f9b927b852d82379dcc40c48d5e58517cfcf7f6c`
-- `modular/LOWERTOP-Enterprise-v3.1-RC2-Performance-Modular.conf` — `34944d83184f9fe2332841f48f6de55423fead7b6d5c8d6bdbecee0dd9d082e6`
-- `modular/LOWERTOP-Enterprise-v3.1-RC2-Strict-Modular.conf` — `3e7d3ec6de2fbd791d71150f77a965658b6c3ba5df40be417528458d99f35a2a`
+- `build/LOWERTOP-Enterprise-v3.1-RC3-Performance-Direct.conf` — `d45bd32dc9c48f8ef0278e08ab250e174519e70c7f1981dce09566f84f08397d`
+- `build/LOWERTOP-Enterprise-v3.1-RC3-Strict-Direct.conf` — `5960d8864b8375e64094a0368db981ff01b00d2fd90e36666c6cd9882be899ff`
+- `modular/LOWERTOP-Enterprise-v3.1-RC3-Performance-Modular.conf` — `6b4a2ce0a117c6ab14b772312ca0c904a11413fa1b415a3e1bb9b773b38e9dd0`
+- `modular/LOWERTOP-Enterprise-v3.1-RC3-Strict-Modular.conf` — `38149dbf9c6e97a85cbb0f44b6602290c251b8d7d0d678a96dd748e8088a7af9`
 - `experimental/LOWERTOP-Enterprise-v3.1-RC2-IPv6-SVCB-Experimental-Direct.conf` — `414e42ccdf573d3aa29106f93f4118956eeca0dccdec9327f8372c9ed4f1fe55`
+- `experimental/LOWERTOP-Enterprise-v3.1-RC3-IPv6-SVCB-Experimental-Direct.conf` — `7c9860841abf203c600feba91a722b142a5ef38237fcb4748804b2cb3be03820`
 
 ## 尚需真实设备完成
 
