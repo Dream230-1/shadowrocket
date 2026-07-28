@@ -1,10 +1,10 @@
 schema: 1
 record_id: RC4-MODULE-YYYYMMDD-001
 status: pending
-module_id: bilibili-adblock
+module_id: apple-weather-qweather
 source_commit: REPLACE_WITH_40_CHAR_COMMIT
 configuration: LOWERTOP-Enterprise-v3.1-RC4-Performance-Direct
-module_file: modules/optional/Bilibili.ADBlock.RC4.sgmodule
+module_file: modules/optional/AppleWeather.QWeather.RC4.sgmodule
 device:
   model: iPhone
   os_version: iOS 27.x
@@ -15,10 +15,13 @@ network:
 started_at: '2026-07-28T00:00:00+08:00'
 ended_at: '2026-07-28T00:30:00+08:00'
 checks:
-  - name: cold_start
+  - name: current_weather
     result: pass
     notes: REPLACE
-  - name: primary_business_flow
+  - name: hourly_daily_forecast
+    result: pass
+    notes: REPLACE
+  - name: precipitation_and_air_quality
     result: pass
     notes: REPLACE
   - name: rollback
@@ -27,10 +30,7 @@ checks:
 result: pass
 incidents: []
 notes: |
-  module_id 可选：
-  - bilibili-adblock
-  - baidu-netdisk-adblock
+  RC4 主线模块当前仅允许：
   - apple-weather-qweather
-  - ip-quality-current-egress
 
   每个模块应建立独立记录；configuration 必须包含 RC4，且不得写入 API Key、Token 或其他凭证。

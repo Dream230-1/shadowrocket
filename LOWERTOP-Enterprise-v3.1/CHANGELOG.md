@@ -4,31 +4,31 @@
 
 ### Added
 
-- 独立的哔哩哔哩 JSON/gRPC 结构化去广告模块，覆盖开屏、信息流、搜索、动态、视频相关推荐、直播推广和评论区广告。
-- 百度网盘保守实验模块，仅拦截已识别推广接口。
 - Apple 天气 QWeather 参数化模块，基于 NSRingo WeatherKit v3.1.0。
-- Shadowrocket 当前出口 IP 质量检测模块。
+- Developer Toolkit v0.1：模块静态校验、MITM Hostname 提取、日志分析和最小回归测试。
 - RC4 模块安全审计与公开仓库凭证扫描。
 - 生成配置 `[Rule]`、`[Script]`、`[MITM]` 分段规范化与校验。
 
 ### Changed
 
-- 哔哩哔哩、百度网盘和 Apple 天气由主配置自动注入改为独立模块，默认不启用。
+- Apple 天气由主配置自动注入改为独立模块，默认不启用。
 - 自维护脚本 URL 切换至 `release/v3.1-rc4`。
-- 功能开关区分“模块已提供”和“默认启用”。
+- RC4 模块审计收缩为仅校验仍属主线的 Apple 天气模块。
 
 ### Removed
 
+- 从 RC4 主线移除哔哩哔哩与百度网盘旧模块；后续分别在 `bilibili-next`、`baidunetdisk-next` 基于最新客户端抓包结果重新开发。
 - 删除会对播放、推荐、搜索和评论接口整段返回空 JSON 的旧 `bilibili_full.js`。
 - 删除哔哩哔哩会员状态伪造逻辑。
 - 删除过宽的 `DOMAIN-KEYWORD,baidustatic` 拦截。
+- 移除缺乏可靠节点切换触发与手动触发机制的当前出口 IP 质量模块方案。
 
 ### Release gates
 
-- 哔哩哔哩需完成首页、播放页、评论、搜索、直播和登录回归。
-- 百度网盘需完成登录、下载、分享和在线播放回归，验证前保持 Experimental。
 - Apple 天气真实 API Token 不得进入 Git 历史。
-- 稳定版前将 BiliUniverse 运行包从 `latest` 固定至已验证版本。
+- 完成 RC4 Wi-Fi、蜂窝及双向切换验证。
+- 完成 AdvertisingLite 连续至少 72 小时误杀观察。
+- 完成 Apple 天气当前、小时、每日、降水和空气质量实机验证。
 
 ## 3.1.0-rc2
 

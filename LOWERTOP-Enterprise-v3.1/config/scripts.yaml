@@ -2,8 +2,7 @@
 # script_rules、extra_rules 与 mitm_hostname 必须由生成器分别写入正确配置段。
 # RC4 禁止向公开仓库写入 API Key、Token 或私钥。
 #
-# 哔哩哔哩、百度网盘与 Apple 天气增强已迁移为 modules/ 下的独立模块，
-# 不再自动注入主配置，以便单独启停、验证和回滚。
+# Apple 天气增强位于 modules/ 下，不自动注入主配置，以便单独启停、验证和回滚。
 
 script_rules:
   - "http-request ^https://market\\.wapa\\.taobao\\.com/ script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/scripts/mitm/xianyu.js, tag=Xianyu"
@@ -11,7 +10,7 @@ script_rules:
 mitm_hostname:
   - market.wapa.taobao.com
 
-# 仅保留明确广告主机，不使用 baidu/baidustatic 关键词级拦截。
+# 保留 RC3 的明确广告主机，移除 baidustatic 关键词级拦截。
 extra_rules:
   - DOMAIN-SUFFIX,pos.baidu.com,REJECT
   - DOMAIN-SUFFIX,cpro.baidu.com,REJECT

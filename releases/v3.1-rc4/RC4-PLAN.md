@@ -2,47 +2,46 @@
 
 ## Scope
 
-RC4 focuses on modular MITM enhancements while preserving the stable routing and DNS baseline from RC3.
+RC4 以 RC3 的稳定路由和 DNS 基线为前提，聚焦生成配置结构、主线模块审计、Developer Toolkit 与可回滚验证。
 
-### Planned modules
+### 主线范围
 
-1. Bilibili ad filtering
-   - Feed advertisements
-   - Video-page recommendation advertisements
-   - Membership-shopping cards
-   - Comment-area promotional links
-   - JSON and gRPC responses must be filtered structurally; core playback, comments and normal recommendations must remain intact.
-
-2. Baidu Netdisk ad filtering
-   - Splash and launch advertisements
-   - Feed and activity cards
-   - Playback advertisements where endpoint behaviour is verified
-   - Experimental and disabled by default until packet-log validation is complete.
-
-3. Current-egress IP quality inspection
-   - Shadowrocket-compatible adaptation of MaYIHEI/paperclip ipquality.
-   - Detects the currently active proxy egress only; Loon node-context APIs are not available in Shadowrocket.
-
-4. Apple Weather enhancement
+1. Apple Weather enhancement
    - QWeather-backed optional module.
    - API host and API key remain local parameters and must never be committed to this public repository.
    - The previously disclosed QWeather API key must be rotated before use.
 
+2. Configuration hardening
+   - Validate independent `[Rule]`, `[Script]` and `[MITM]` sections.
+   - Preserve RC3 routing, DNS, proxy groups and `FINAL,PROXY` behavior.
+
+3. Developer Toolkit
+   - Module static validation.
+   - MITM hostname extraction and risk checks.
+   - Shadowrocket text-log analysis and regression tests.
+
+### Excluded from RC4
+
+- Bilibili ad filtering is frozen on RC4 and moved to `bilibili-next`.
+- Baidu Netdisk ad filtering is frozen on RC4 and moved to `baidunetdisk-next`.
+- Both modules must be redesigned from current client packet captures, not by patching the removed RC4 rules.
+- Current-egress IP quality inspection is excluded because Shadowrocket lacks a reliable node-switch trigger and direct manual trigger for the intended workflow.
+
 ## Safety constraints
 
-- Do not return empty JSON for complete Bilibili playback, view, recommendation or comment APIs.
-- Do not fabricate VIP membership state.
-- Do not apply broad Baidu domain blocking that can disrupt login, downloads, sharing or risk control.
+- Do not fabricate VIP membership or paid account state.
+- Do not apply broad domain blocking that can disrupt login, downloads, sharing, playback or risk control.
+- Prefer field-level JSON or protobuf modification over clearing complete responses.
 - Keep third-party scripts pinned to a release or commit when feasible.
 - Keep MITM hostnames additive and scoped to required endpoints.
 - Do not commit secrets, private keys or personal API credentials.
 
 ## Release gates
 
-- JavaScript syntax validation
-- Configuration-section validation
-- Duplicate and conflicting rule checks
-- Bilibili playback, feed, search, comments and login regression tests
-- Baidu Netdisk login, download, sharing and playback regression tests
-- Apple Weather current, hourly, daily and air-quality verification
-- Secret scanning before release
+- JavaScript syntax validation.
+- Configuration-section validation.
+- Duplicate and conflicting rule checks.
+- Apple Weather current, hourly, daily, precipitation and air-quality verification.
+- RC4 Wi-Fi, cellular and bidirectional switching verification.
+- AdvertisingLite observation for at least 72 hours without unresolved P0/P1 regressions.
+- Secret scanning before release.
