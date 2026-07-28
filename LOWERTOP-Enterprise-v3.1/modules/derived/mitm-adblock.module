@@ -1,14 +1,20 @@
 #!name=LOWERTOP MITM 去广告
-#!desc=百度网盘 MITM 去广告模块（需开启 HTTPS 解密并信任 CA 证书）
+#!desc=百度网盘去广告（http-request 模式）
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!author=LOWERTOP
 #!date=2026-07-28
 
 [Script]
-# 百度网盘去广告
-http-response ^https?:\/\/pan\.baidu\.com\/(api\/getconfig|api\/getsyscfg|api\/taskscore\/tasklist|act\/api\/activityentry|rest\/\d\.\d\/pcs\/adv|api\/plugin\/get) requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_netdisk.js, tag=百度网盘去广告
+http-request ^https?:\/\/(pan\.baidu\.com|pos\.baidu\.com|cpro\.baidu\.com|nsclick\.baidu\.com|wangmeng\.baidu\.com|e\.baidu\.com)\/api\/(getconfig|getsyscfg|taskscore\/tasklist|splash|ad|plugin\/get|activity) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘拦截
 
-http-response ^https?:\/\/pan\.baidu\.com\/(recommend\/query\/list|feed\/kingkongdistrict) requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_netdisk.js, tag=百度网盘过滤
+http-request ^https?:\/\/pan\.baidu\.com\/(act\/api\/activityentry|rest\/\d\.\d\/pcs\/adv) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘拦截
 
 [MitM]
-hostname = pan.baidu.com
+hostname = pan.baidu.com, pos.baidu.com, cpro.baidu.com, nsclick.baidu.com, wangmeng.baidu.com, e.baidu.com
+
+[Rule]
+# DNS 级也拦截常见广告域名（双重保障）
+DOMAIN-SUFFIX,pos.baidu.com,REJECT
+DOMAIN-SUFFIX,cpro.baidu.com,REJECT
+DOMAIN-SUFFIX,n1.bdstatic.com,REJECT
+DOMAIN-KEYWORD,baidu_ad,REJECT
