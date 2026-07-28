@@ -1,6 +1,6 @@
 // ==Shadowrocket==
 // Name: Current Egress IP Quality
-// Description: Inspect the currently active Shadowrocket egress. Select the target node before running.
+// Description: Inspect the currently active Shadowrocket egress after a network or proxy change.
 // Source inspiration: MaYIHEI/paperclip ipquality
 // ==/Shadowrocket==
 
@@ -9,16 +9,21 @@ const UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/6
 
 function requestJSON(url) {
   return new Promise((resolve, reject) => {
-    $httpClient.get({ url, headers: { Accept: "application/json", "User-Agent": UA }, timeout: TIMEOUT_MS / 1000 },
+    $httpClient.get(
+      { url, headers: { Accept: "application/json", "User-Agent": UA }, timeout: TIMEOUT_MS / 1000 },
       (error, response, body) => {
         if (error) return reject(new Error(String(error)));
         const status = Number(response && (response.status || response.statusCode));
         if (!Number.isFinite(status) || status < 200 || status >= 300) {
           return reject(new Error(`HTTP ${status || "?"}`));
         }
-        try { resolve(JSON.parse(body || "{}")); }
-        catch (_) { reject(new Error("JSON parse failed")); }
-      });
+        try {
+          resolve(JSON.parse(body || "{}"));
+        } catch (_) {
+          reject(new Error("JSON parse failed"));
+        }
+      }
+    );
   });
 }
 
@@ -35,6 +40,12 @@ function riskLevel(score, flags) {
   if (score >= 40) return "中风险";
   if (Number.isFinite(score)) return "低风险";
   return "未确认";
+}
+
+function notify(title, subtitle, body) {
+  if (typeof $notification !== "undefined" && $notification.post) {
+    $notification.post(title, subtitle, body);
+  }
 }
 
 async function main() {
@@ -66,24 +77,25 @@ async function main() {
   const region = clean(location.state || ipwho.region);
   const city = clean(location.city || ipwho.city);
   const scoreText = Number.isFinite(fraudScore) ? String(fraudScore) : "未返回";
+  const risk = riskLevel(fraudScore, flags);
 
   const lines = [
     `出口 IP：${ip}`,
-    `风险结论：${riskLevel(fraudScore, flags)}`,
+    `风险结论：${risk}`,
     `IPPure 评分：${scoreText}`,
     `国家/地区：${countryCode} ${region} ${city}`,
-    `ASN：${clean(asn.asn || ipwho.connection && ipwho.connection.asn)}`,
-    `运营组织：${clean(company.name || asn.org || ipwho.connection && ipwho.connection.org)}`,
+    `ASN：${clean(asn.asn || (ipwho.connection && ipwho.connection.asn))}`,
+    `运营组织：${clean(company.name || asn.org || (ipwho.connection && ipwho.connection.org))}`,
     `网络类型：${clean(company.type || ipapi.type)}`,
     `代理：${boolFlag(flags.proxy)}  VPN：${boolFlag(flags.vpn)}`,
     `Tor：${boolFlag(flags.tor)}  数据中心：${boolFlag(flags.datacenter)}`,
-    "",
-    "说明：检测对象是当前实际出口。请先在 Shadowrocket 中切换到目标节点，再运行本脚本。",
   ];
 
-  $done({ title: "节点 IP 质量检测", content: lines.join("\n"), icon: "shield.lefthalf.filled" });
+  notify("节点 IP 质量检测", `${risk} · ${ip}`, lines.join("\n"));
+  $done();
 }
 
 main().catch((error) => {
-  $done({ title: "节点 IP 质量检测失败", content: String(error && error.message ? error.message : error), icon: "network.slash" });
+  notify("节点 IP 质量检测失败", "请确认网络已连接", String(error && error.message ? error.message : error));
+  $done();
 });
