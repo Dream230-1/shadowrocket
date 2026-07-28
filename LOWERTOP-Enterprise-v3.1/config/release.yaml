@@ -1,5 +1,5 @@
 meta:
-  version: 3.1.0-rc3
+  version: 3.1.0-rc4
   generated_date: '2026-07-28'
   project_path: LOWERTOP-Enterprise-v3.1
   design:
@@ -16,6 +16,8 @@ meta:
     - MITM 去广告模块（Bilibili / 闲鱼 / 百度网盘）
     - iCloud 专用代理分流
     - DNS 泄漏防护
-    - Apple 天气增强（QWeather API）
-    - IP 节点质量检测
+    - Apple 天气增强（QWeather，本地密钥）
+    - Shadowrocket 当前出口 IP 质量检测
+    - Script / Rule / MITM 分段结构校验
+    - 公开仓库凭证泄漏防护
     - 规则精简去重
