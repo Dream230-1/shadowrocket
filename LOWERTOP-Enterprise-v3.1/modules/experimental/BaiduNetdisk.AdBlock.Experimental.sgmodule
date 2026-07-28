@@ -1,12 +1,16 @@
-#!name=百度网盘去广告 RC4.1 Experimental
-#!desc=移除开屏配置、首页活动卡片、任务福利、游戏中心和广告接口；不修改会员状态，不触碰登录、上传下载、分享、转存及在线播放主链路。
+#!name=百度网盘去广告 RC4.2 Experimental
+#!desc=保留精确接口去广告，并补充百度移动广告 SDK 域名拦截以处理开屏广告；不修改会员状态，不触碰登录、文件、上传下载、分享、转存及在线播放主链路。
 #!author=Dream230-1 / LOWERTOP
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!category=LOWERTOP RC4 Experimental
-#!version=3.1.0-rc4.1
+#!version=3.1.0-rc4.2
 
-# 接口参考：Kelee / Luminous / sooyaaabo 公开模块快照。
-# 本模块默认不并入主配置。启用前请开启 Shadowrocket HTTPS 解密并保留回滚入口。
+# 仍属实验模块。出现登录、文件列表、下载或播放异常时立即禁用。
+
+[Rule]
+# 百度移动广告 SDK。用于补足 pan.baidu.com 接口未覆盖的开屏广告。
+DOMAIN,mobads.baidu.com,REJECT
+DOMAIN,afd.baidu.com,REJECT
 
 [URL Rewrite]
 # 开屏与客户端广告配置。
