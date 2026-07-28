@@ -1,8 +1,8 @@
 #!name=节点 IP 质量检测（当前出口）
-#!desc=检测 Shadowrocket 当前实际出口的 IP、ASN、网络类型与风险标记。运行前请先切换到目标节点。
+#!desc=Shadowrocket 网络或代理出口变化后自动检测当前实际出口 IP，并通过系统通知显示风险结果。
 #!author=Dream230-1 / LOWERTOP
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!category=工具
 
 [Script]
-节点 IP 质量检测 = type=generic, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/scripts/tools/ipquality_current.js, timeout=30, enable=true
+节点 IP 质量检测 = type=event, event-name=network-changed, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/scripts/tools/ipquality_current.js, timeout=30, enable=true
