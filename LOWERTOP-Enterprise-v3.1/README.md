@@ -16,13 +16,11 @@ RC4 在保留 RC3 路由、DNS、策略组和 `FINAL,PROXY` 行为的基础上�
 ```text
 modules/optional/
 ├── Bilibili.ADBlock.RC4.sgmodule
-└── AppleWeather.QWeather.RC4.sgmodule
+├── AppleWeather.QWeather.RC4.sgmodule
+└── IPQuality.CurrentEgress.sgmodule
 
 modules/experimental/
 └── BaiduNetdisk.AdBlock.Experimental.sgmodule
-
-modules/tools/
-└── IPQuality.CurrentEgress.sgmodule
 ```
 
 模块安装、启用顺序、验证项目和回滚方法见 `releases/v3.1-rc4/MODULES.md`。
