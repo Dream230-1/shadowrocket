@@ -1,4 +1,4 @@
-name: LOWERTOP Enterprise v3.1 RC2 Build and Audit
+name: LOWERTOP Enterprise v3.1 RC4 Build and Audit
 
 on:
   push:
@@ -44,7 +44,7 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lowertop-enterprise-v3.1-rc2-offline
+          name: lowertop-enterprise-v3.1-rc4-offline
           if-no-files-found: warn
           path: |
             ${{ env.PROJECT_DIR }}/build/**
@@ -79,7 +79,7 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lowertop-enterprise-v3.1-rc2-online
+          name: lowertop-enterprise-v3.1-rc4-online
           if-no-files-found: warn
           path: |
             ${{ env.PROJECT_DIR }}/build/**
