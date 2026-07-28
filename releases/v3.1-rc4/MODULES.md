@@ -96,7 +96,7 @@ https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWER
 安装链接：
 
 ```text
-https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/modules/tools/IPQuality.CurrentEgress.sgmodule
+https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/modules/optional/IPQuality.CurrentEgress.sgmodule
 ```
 
 使用方法：
