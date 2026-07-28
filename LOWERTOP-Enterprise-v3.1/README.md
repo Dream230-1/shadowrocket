@@ -1,39 +1,41 @@
-# LOWERTOP Enterprise v3.1 RC2
+# LOWERTOP Enterprise v3.1 RC4
 
-RC2 是 **验证收口与行为固化版本**。默认 Performance 网络参数、DNS、QUIC、IPv6、UDP 回退和路由结果继承 RC1；本轮主要增强工程化验证，不把未经 Shadowrocket 实机证明的新协议写进主力配置。
+RC4 在保留 RC3 路由、DNS、策略组和 `FINAL,PROXY` 行为的基础上，重点改进 MITM 模块安全性、工具模块和可回滚能力。主配置继续保持稳定，广告增强与天气增强以独立模块提供，不会自动启用。
 
-## RC2 核心变化
+## RC4 主要变化
 
-1. **RC1 Performance 行为锁**：固定 `[General]`、`[Proxy Group]`、首条命中规则顺序、策略绑定、`[Host]` 与 `FINAL,PROXY`。
-2. **真实审计链**：`--online` 会实际运行远程规则、漂移、在线回归、广告碰撞、全局冲突、服务健康和性能报告，不再只打印继承提示。
-3. **Apple 负向回归**：覆盖 Apple Global/Core 优先级、禁止策略、域名边界、大小写和尾点语义。
-4. **规则模块化**：AI、Apple、通信、媒体、游戏、广告和基础路由分别声明；RC2 装配后必须与 RC1 行为等价。
-5. **全局冲突检测**：检测跨策略精确域名、后缀、关键词和 CIDR 遮蔽；有意重叠必须在带原因、负责人和期限的 allowlist 中登记。
-6. **条件缓存**：支持 ETag、Last-Modified、304、本地哈希、原子写入和 stale-if-error。
-7. **真实验证记录**：提供 Wi-Fi、蜂窝、网络切换与 AdvertisingLite 72 小时观察模板。
-8. **发布验证报告**：自动绑定 Commit、配置 SHA-256、自动化结果和实机证据状态。
+1. **哔哩哔哩结构化去广告模块**：基于 BiliUniverse 官方 Shadowrocket 模板处理 JSON 与 gRPC，覆盖开屏、信息流、视频相关推荐、搜索、动态、直播推广及评论区广告；不再整接口返回空 JSON，也不伪造会员状态。
+2. **百度网盘保守实验模块**：只拦截已识别的活动入口、福利推广、游戏中心和广告配置接口，不修改账号、会员、下载、分享或视频主链路。
+3. **Apple 天气 QWeather 模块**：基于 NSRingo WeatherKit v3.1.0，API Host 与 Token 通过 Shadowrocket 本地模块参数填写，仓库中不保存真实凭证。
+4. **当前出口 IP 质量检测**：检测当前实际出口 IP、ASN、网络类型和风险标记；运行前需先切换至目标节点。
+5. **生成器结构修复**：`[Rule]`、`[Script]` 与 `[MITM]` 分段独立校验，避免规则误写入脚本段或遗漏解密主机。
+6. **安全审计**：CI 阻止会员伪造、整接口清空、明文 API Key、过宽百度规则以及非 `%APPEND%` MITM 模块进入 RC4。
+
+## 模块目录
+
+```text
+modules/optional/
+├── Bilibili.ADBlock.RC4.sgmodule
+└── AppleWeather.QWeather.RC4.sgmodule
+
+modules/experimental/
+└── BaiduNetdisk.AdBlock.Experimental.sgmodule
+
+modules/tools/
+└── IPQuality.CurrentEgress.sgmodule
+```
+
+模块安装、启用顺序、验证项目和回滚方法见 `releases/v3.1-rc4/MODULES.md`。
 
 ## 保持不变
 
 - Performance 允许 QUIC/HTTP3。
 - 禁止系统 DNS 回退。
 - 境外备用 DoH 继续通过 `#proxy`。
-- Performance 与 Strict 关闭 IPv6。
-- UDP 策略不支持时 `REJECT`，不回落到直连。
-- AdvertisingLite 为默认广告规则。
-- OpenAI、Apple、Telegram、流媒体、中国大陆与 FINAL 的策略和顺序保持 RC1 行为。
-
-## 目录
-
-```text
-config/       DNS、功能、发布与冲突豁免
-modules/      规则模块声明
-rules/        V3.1 自维护本地规则
-regression/   基础与 Apple 负向回归
-baselines/    RC1 Performance 行为契约
-validation/   设备与广告观察记录
-scripts/      构建、审计、缓存和报告工具
-```
+- 发布配置关闭 IPv6。
+- UDP 策略不支持时使用 `REJECT`，不回落至直连。
+- AdvertisingLite 默认启用。
+- OpenAI、Apple、Telegram、流媒体、中国大陆与最终规则的顺序保持现有行为。
 
 ## 构建与验证
 
@@ -43,30 +45,19 @@ python scripts/ci.py
 python scripts/ci.py --online
 ```
 
-生成发布验证报告：
+RC4 自动检查包括：
 
-```bash
-python scripts/release_report.py
-```
+- 单元测试与行为锁；
+- DNS、远程规则和冲突审计；
+- 脚本配置与模块安全审计；
+- 生成配置分段校验；
+- API Key 与疑似凭证扫描；
+- 设备验证记录和发布报告。
 
-真实设备记录完成后执行严格证据闸门：
+## 发布边界
 
-```bash
-python scripts/validate_field_records.py --require-complete
-```
-
-## RC2 发布条件
-
-- 自动化行为锁、DNS 审计、Apple 负向回归、全局冲突和在线审计通过；
-- Wi-Fi、蜂窝、双向切换记录完成；
-- AdvertisingLite 连续至少 72 小时，无未解决 P0/P1 误杀；
-- 发布报告与本次 Commit 和配置 SHA-256 绑定。
-
-## 准确边界
-
-- `allow-dns-svcb=true` 只允许 HTTPS/SVCB 查询，不等于强制或确认 ECH。
-- DoQ → DoH3 → DoH → DoT 的严格自动回退尚未完成 Shadowrocket 实机语义验证，不进入 RC2 默认配置。
-- DNS 健康评分在后续版本先做观测和建议，不在 RC2 自动改写终端配置。
-- IPv6/SVCB 仍只在 Experimental 生成物中存在。
-
-后续路线见 [ROADMAP.md](ROADMAP.md)，实机步骤见 [TEST-MATRIX.md](TEST-MATRIX.md)。
+- 三个增强模块在 RC4 阶段均为手动安装，不自动写入 Direct 主配置。
+- 哔哩哔哩模块运行包在 RC 验证期跟随官方最新 Release；稳定版前必须固定到已验证版本。
+- 百度网盘模块在完成登录、下载、分享和在线播放回归前保持 Experimental。
+- Apple 天气模块的真实 QWeather Token 只能保存在本机参数中；此前公开过的 Token 应先轮换。
+- 请采用替换导入，不要与旧配置合并。
