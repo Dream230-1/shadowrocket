@@ -1,11 +1,11 @@
 module:
   id: icloud
   enabled: true
-  description: iCloud 专用代理分流。iCloud Drive、照片、云备份、CloudKit、Keychain、
-   iWork 文档及 Apple Account 认证端点直接走 AI fallback；Apple Push、App Store、
-   系统更新和中国区 Apple Core 仍保持 DIRECT。该模块只做路由，不启用 HTTPS 解密。
+  description: iCloud 分层分流。普通 iCloud Drive、照片、云备份、CloudKit、Keychain、
+   iWork 文档及 Apple Account 认证端点保持 DIRECT；专用代理 mask 端点由更靠前的
+   Apple-Global-AI 精确规则交给 AI。该模块只做路由，不启用 HTTPS 解密。
   rulesets:
     - kind: local
       name: Apple-iCloud
-      policy: AI
+      policy: DIRECT
       stage: 35

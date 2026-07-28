@@ -1,8 +1,8 @@
 schema: 1
-source_commit: 41a79719bc731d22841d8007d61c40300f5c26f3
+source_commit: 9a2fd78a5600218bc38b1563e128f97ecde1a509
 artifact: LOWERTOP-Enterprise-v3.1-RC4-Performance-Direct.conf
-raw_sha256: 73875a26e06ed0ea18680492bfa78a11ae9a21aba2fa3763ee47cb3bf4b6f396
-semantic_sha256: 5e463fc6b3e1769d678fdc4c9be6591ab997cdd23c91a2be0b9ae388f8f38066
+raw_sha256: 91bd23fd50346647b3c3e032fc2b6df663e38fef8d5ec03caf8f386df40b524f
+semantic_sha256: 75e99e20478c096e729867b7a53e1dd24a8d6066288124178b22b461fc49d7b0
 semantic_line_count: 125
 contract:
   general:
@@ -75,22 +75,22 @@ contract:
   - DOMAIN-SUFFIX,news.apple.com,AI
   - DOMAIN-SUFFIX,smoot.apple.com,AI
   - DOMAIN-SUFFIX,guzzoni.apple.com,AI
-  - DOMAIN-SUFFIX,icloud.com,AI
-  - DOMAIN-SUFFIX,icloud.com.cn,AI
-  - DOMAIN-SUFFIX,icloud-content.com,AI
-  - DOMAIN-SUFFIX,icloud-content.com.cn,AI
-  - DOMAIN-SUFFIX,apple-cloudkit.com,AI
-  - DOMAIN-SUFFIX,apple-cloudkit.com.cn,AI
-  - DOMAIN-SUFFIX,apple-livephotoskit.com,AI
-  - DOMAIN-SUFFIX,apzones.com,AI
-  - DOMAIN-SUFFIX,iwork.apple.com,AI
-  - DOMAIN-SUFFIX,gc.apple.com,AI
-  - DOMAIN-SUFFIX,icloud-analysis.com,AI
-  - DOMAIN,account.apple.com,AI
-  - DOMAIN,appleid.cdn-apple.com,AI
-  - DOMAIN,idmsa.apple.com,AI
-  - DOMAIN,appleid.apple.com,AI
-  - DOMAIN,gsa.apple.com,AI
+  - DOMAIN-SUFFIX,icloud.com,DIRECT
+  - DOMAIN-SUFFIX,icloud.com.cn,DIRECT
+  - DOMAIN-SUFFIX,icloud-content.com,DIRECT
+  - DOMAIN-SUFFIX,icloud-content.com.cn,DIRECT
+  - DOMAIN-SUFFIX,apple-cloudkit.com,DIRECT
+  - DOMAIN-SUFFIX,apple-cloudkit.com.cn,DIRECT
+  - DOMAIN-SUFFIX,apple-livephotoskit.com,DIRECT
+  - DOMAIN-SUFFIX,apzones.com,DIRECT
+  - DOMAIN-SUFFIX,iwork.apple.com,DIRECT
+  - DOMAIN-SUFFIX,gc.apple.com,DIRECT
+  - DOMAIN-SUFFIX,icloud-analysis.com,DIRECT
+  - DOMAIN,account.apple.com,DIRECT
+  - DOMAIN,appleid.cdn-apple.com,DIRECT
+  - DOMAIN,idmsa.apple.com,DIRECT
+  - DOMAIN,appleid.apple.com,DIRECT
+  - DOMAIN,gsa.apple.com,DIRECT
   - DOMAIN-SUFFIX,push.apple.com,DIRECT
   - DOMAIN-SUFFIX,apple.com,DIRECT
   - DOMAIN-SUFFIX,apple.com.cn,DIRECT

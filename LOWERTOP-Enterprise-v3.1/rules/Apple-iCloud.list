@@ -1,8 +1,8 @@
 # NAME: Apple-iCloud
-# POLICY: AI
-# PURPOSE: iCloud 专用代理分流 — Drive、照片、云备份、CloudKit、Keychain、iWork
-#         与 Apple Account 认证端点；Apple Push、App Store 和系统更新不在此范围。
-# NOTE: RC4 默认启用且直接走 AI；仅路由，不做 HTTPS 解密。
+# POLICY: DIRECT
+# PURPOSE: 普通 iCloud 同步 — Drive、照片、云备份、CloudKit、Keychain、iWork
+#         与 Apple Account 认证端点；专用代理 mask 端点由 Apple-Global-AI 优先处理。
+# NOTE: RC4 默认启用并保持直连；仅路由，不做 HTTPS 解密。
 DOMAIN-SUFFIX,icloud.com
 DOMAIN-SUFFIX,icloud.com.cn
 DOMAIN-SUFFIX,icloud-content.com

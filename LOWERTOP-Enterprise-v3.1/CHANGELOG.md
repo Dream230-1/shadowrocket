@@ -18,7 +18,7 @@
 - RC4 模块审计收缩为仅校验仍属主线的 Apple 天气模块。
 - RC4 实机证据与发布报告收缩为仅要求 Apple 天气模块，不再引用已冻结或移除的模块。
 - GitHub Actions 切换至 Node 24 运行时的 Checkout、Setup Python、Cache 与 Artifact 主版本。
-- `Apple-iCloud` 由旧 `iCloud` 选择组改为直接走 `AI` fallback，并移除未再使用的 `iCloud` 策略组。
+- 移除未再使用的 `iCloud` 选择组；普通 `Apple-iCloud` 同步固定 `DIRECT`，仅专用代理 `mask*` 精确端点走 `AI` fallback。
 
 ### Removed
 

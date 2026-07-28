@@ -71,27 +71,27 @@ cases:
   requires_remote: false
 - name: Apple iCloud
   host: setup.icloud.com
-  expected_policy: AI
+  expected_policy: DIRECT
   expected_source_contains: Apple-iCloud
   requires_remote: false
 - name: Apple iCloud China content CDN
   host: edge-064.xacan2.icloud-content.com.cn
-  expected_policy: AI
+  expected_policy: DIRECT
   expected_source_contains: Apple-iCloud
   requires_remote: false
 - name: Apple iCloud Live Photos
   host: sync.apple-livephotoskit.com
-  expected_policy: AI
+  expected_policy: DIRECT
   expected_source_contains: Apple-iCloud
   requires_remote: false
 - name: Apple iCloud connection probe
   host: probe.icloud.com
-  expected_policy: AI
+  expected_policy: DIRECT
   expected_source_contains: Apple-iCloud
   requires_remote: false
 - name: Apple Account authentication
   host: account.apple.com
-  expected_policy: AI
+  expected_policy: DIRECT
   expected_source_contains: Apple-iCloud
   requires_remote: false
 - name: Apple App Store CDN

@@ -8,7 +8,7 @@ RC4 在保留 RC3 路由、DNS、策略组和 `FINAL,PROXY` 行为的基础上�
 2. **生成器结构修复**：`[Rule]`、`[Script]` 与 `[MITM]` 分段独立校验，避免规则误写入脚本段或遗漏解密主机。
 3. **模块安全审计**：CI 检查模块元数据、脚本类型、MITM `%APPEND%`、远程脚本地址和疑似凭证。
 4. **Developer Toolkit v0.1**：提供模块静态校验、MITM Hostname 提取与风险检查、Shadowrocket 文本日志分析和最小回归测试。
-5. **iCloud 专用代理**：独立 `Apple-iCloud` 规则集默认启用并直接走 `AI` fallback；补齐 Live Photos、iWork、Apple Account 与 2026 年 iCloud 连接检测端点，且不启用 HTTPS 解密。
+5. **iCloud 分层分流**：普通 iCloud 同步及 Apple Account 保持 `DIRECT`；仅专用代理 `mask*` 精确端点优先走 `AI` fallback，且不启用 HTTPS 解密。
 
 ## 模块目录
 
@@ -51,7 +51,7 @@ RC4 自动检查包括：
 ## 发布边界
 
 - Apple 天气模块为手动安装，不自动写入 Direct 主配置。
-- iCloud 专用规则默认写入主配置并走 `AI`；Apple Push、App Store、系统更新及中国区 Apple Core 继续直连。
+- iCloud 同步规则默认写入主配置并保持 `DIRECT`；仅专用代理 `mask*` 端点走 `AI`。
 - iCloud 与 Apple Account 域名不得加入 `[MITM]`，避免 Apple 服务因 HTTPS 解密失败。
 - 真实 QWeather Token 只能保存在本机参数中；此前公开过的 Token 应先轮换。
 - 自动检查不能替代 Apple 天气及 RC4 主配置的真实设备验证。

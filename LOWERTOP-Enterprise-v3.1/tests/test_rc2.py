@@ -67,7 +67,7 @@ class ModuleTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 module_config.apply_modules(manifest, Path(temp))
 
-    def test_routing_overrides_move_icloud_to_ai_and_remove_legacy_group(self):
+    def test_routing_overrides_keep_icloud_direct_and_remove_legacy_group(self):
         manifest = {
             "proxy_groups": [
                 {"name": "AI", "type": "fallback"},
@@ -80,12 +80,12 @@ class ModuleTests(unittest.TestCase):
         config = {
             "routing_overrides": {
                 "remove_proxy_groups": ["iCloud"],
-                "local_ruleset_policies": {"Apple-iCloud": "AI"},
+                "local_ruleset_policies": {"Apple-iCloud": "DIRECT"},
             }
         }
         result = build.apply_routing_overrides(manifest, config)
         self.assertEqual([group["name"] for group in result["proxy_groups"]], ["AI"])
-        self.assertEqual(result["local_rulesets"][0]["policy"], "AI")
+        self.assertEqual(result["local_rulesets"][0]["policy"], "DIRECT")
 
     def test_routing_overrides_reject_unknown_targets(self):
         manifest = {"proxy_groups": [], "local_rulesets": []}

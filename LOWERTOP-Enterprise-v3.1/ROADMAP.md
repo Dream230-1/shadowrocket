@@ -15,7 +15,7 @@
 
 ### iCloud 专用代理分流
 
-RC4 已将 iCloud 从 Apple Core 直连范围中拆分为独立 `Apple-iCloud.list`，并直接交给 `AI` fallback。规则覆盖 Drive、照片、备份、CloudKit、Live Photos、iWork、连接检测和 Apple Account 认证；Apple Push、App Store、系统更新及中国区 Apple Core 保持直连。该能力只做路由，不做 HTTPS 解密，并由行为锁、首条命中回归及真机同步测试共同约束。
+RC4 已将普通 iCloud 同步拆分为独立 `Apple-iCloud.list` 并保持 `DIRECT`，同时由更靠前的精确规则仅将专用代理 `mask*` 端点交给 `AI` fallback。规则覆盖 Drive、照片、备份、CloudKit、Live Photos、iWork、连接检测和 Apple Account 认证；Apple Push、App Store、系统更新及中国区 Apple Core同样保持直连。该能力只做路由，不做 HTTPS 解密，并由行为锁、首条命中回归及真机同步测试共同约束。
 
 ### 观测与韧性增强
 

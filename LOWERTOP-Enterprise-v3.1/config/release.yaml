@@ -23,9 +23,9 @@ meta:
     - 规则精简去重
 
 routing_overrides:
-  # RC4 将 iCloud 独立规则集直接交给 AI fallback，避免旧 iCloud select
-  # 组缓存为 DIRECT 后使“专用代理”名义启用、实际直连。
+  # RC4 删除旧 iCloud select，普通 iCloud 同步固定 DIRECT。
+  # 专用代理 mask 端点由更靠前的 Apple-Global-AI 精确规则交给 AI。
   remove_proxy_groups:
     - iCloud
   local_ruleset_policies:
-    Apple-iCloud: AI
+    Apple-iCloud: DIRECT
