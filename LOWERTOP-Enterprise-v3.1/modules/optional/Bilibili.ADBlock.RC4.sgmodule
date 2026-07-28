@@ -1,28 +1,24 @@
-#!name=哔哩哔哩去广告 RC4
-#!desc=基于 BiliUniverse 官方 Shadowrocket 模板，按 JSON/gRPC 结构过滤开屏、信息流、视频推荐、会员购/直播推广及评论区广告。独立模块，便于回滚。
+#!name=哔哩哔哩去广告 RC4.1
+#!desc=按 JSON/gRPC 结构过滤开屏、信息流、视频推荐广告、会员购/直播推广及评论区广告；保留正常热搜、动态话题、视频、评论与账号功能。
 #!author=Dream230-1 / LOWERTOP; upstream BiliUniverse contributors
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!category=LOWERTOP RC4
-#!version=3.1.0-rc4
-#!arguments=Splash:true,Feed.AD:true,Feed.Activity:false,Feed.Vertical:false,Feed.BlockUpLiveList:"",Feed.Story:true,Search.AD:true,Search.HotSearch:true,PGC.AD:true,Xlive.AD:true,Dynamic.HotTopics:true,Dynamic.MostVisited:false,Dynamic.MostVisitedLiveOnly:false,Dynamic.AdCard:true,View.AD:true,DM.Command:false,DM.Colorful:false,Reply.AD:true,LogLevel:"WARN"
-#!arguments-desc=默认仅去除广告与推广内容，不移除正常视频、评论、相关推荐或伪造会员状态。首次启用后应依次验证首页、播放页、评论区、搜索、直播和登录。
+#!version=3.1.0-rc4.1
+#!arguments=Splash:true,Feed.AD:true,Feed.Activity:false,Feed.Vertical:false,Feed.BlockUpLiveList:"",Feed.Story:true,Search.AD:true,Search.HotSearch:false,PGC.AD:true,Xlive.AD:true,Dynamic.HotTopics:false,Dynamic.MostVisited:false,Dynamic.MostVisitedLiveOnly:false,Dynamic.AdCard:true,View.AD:true,DM.Command:false,DM.Colorful:false,Reply.AD:true,LogLevel:"WARN"
+#!arguments-desc=默认只过滤广告及商业推广。保留正常视频、相关推荐、热搜、动态话题、评论、弹幕、直播和账号功能，不伪造会员状态。
 
 # Upstream template snapshot: BiliUniverse/ADBlock@43b07841fa55ba77e29d478cab0be44c8b49a3c2
 # License: Apache-2.0. Runtime bundles use the official latest release during RC validation;
 # before stable release, replace latest with a verified immutable version tag.
 
 [URL Rewrite]
-# 去除搜索中的默认关键词
+# 去除搜索框默认商业关键词，不影响用户主动搜索及正常热搜。
 ^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$ - reject
 
 [Map Local]
-# 去除搜索中的大家都在搜
+# 搜索推荐词接口可能混入推广词，返回空对象不影响主动搜索。
 ^https?:\/\/api\.vc\.bilibili\.com\/search_svr\/v\d\/Search\/recommend_words data-type=text data="{}" header="application/json"
-# 去除动态中的话题
-^https?:\/\/api\.vc\.bilibili\.com\/topic_svr\/v1\/topic_svr data-type=text data="{}" header="application/json"
-# 去除动态中的最常访问
-^https?:\/\/api\.vc\.bilibili\.com\/dynamic_svr\/v1\/dynamic_svr\/mix_uplist data-type=text data="{}" header="application/json"
-# 漫画与直播购物推广
+# 漫画与直播购物推广。
 ^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/(Flash|ListFlash) data-type=text data="{}" header="application/json"
 ^https?:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\? data-type=text data="{}" header="application/json"
 
