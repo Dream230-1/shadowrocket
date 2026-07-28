@@ -1,9 +1,9 @@
 schema: 1
 source_commit: 41a79719bc731d22841d8007d61c40300f5c26f3
 artifact: LOWERTOP-Enterprise-v3.1-RC4-Performance-Direct.conf
-raw_sha256: 9cfb0c4c2449e6fb753011d94ae2c02d48a65d4ac575008c1de99808445ce264
-semantic_sha256: 3d8222cc794446a28447ea5ab9dd86d9382084b74513db2bee57f00685f8ecee
-semantic_line_count: 124
+raw_sha256: 73875a26e06ed0ea18680492bfa78a11ae9a21aba2fa3763ee47cb3bf4b6f396
+semantic_sha256: 5e463fc6b3e1769d678fdc4c9be6591ab997cdd23c91a2be0b9ae388f8f38066
+semantic_line_count: 125
 contract:
   general:
     skip-proxy: 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local
@@ -78,6 +78,7 @@ contract:
   - DOMAIN-SUFFIX,icloud.com,AI
   - DOMAIN-SUFFIX,icloud.com.cn,AI
   - DOMAIN-SUFFIX,icloud-content.com,AI
+  - DOMAIN-SUFFIX,icloud-content.com.cn,AI
   - DOMAIN-SUFFIX,apple-cloudkit.com,AI
   - DOMAIN-SUFFIX,apple-cloudkit.com.cn,AI
   - DOMAIN-SUFFIX,apple-livephotoskit.com,AI
