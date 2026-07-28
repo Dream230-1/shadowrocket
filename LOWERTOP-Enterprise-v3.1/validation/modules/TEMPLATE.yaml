@@ -1,0 +1,36 @@
+schema: 1
+record_id: RC4-MODULE-YYYYMMDD-001
+status: pending
+module_id: bilibili-adblock
+source_commit: REPLACE_WITH_40_CHAR_COMMIT
+configuration: LOWERTOP-Enterprise-v3.1-RC4-Performance-Direct
+module_file: modules/optional/Bilibili.ADBlock.RC4.sgmodule
+device:
+  model: iPhone
+  os_version: iOS 27.x
+  shadowrocket_version: REPLACE
+network:
+  type: wifi
+  proxy_node: REPLACE
+started_at: '2026-07-28T00:00:00+08:00'
+ended_at: '2026-07-28T00:30:00+08:00'
+checks:
+  - name: cold_start
+    result: pass
+    notes: REPLACE
+  - name: primary_business_flow
+    result: pass
+    notes: REPLACE
+  - name: rollback
+    result: pass
+    notes: 禁用模块后恢复原行为
+result: pass
+incidents: []
+notes: |
+  module_id 可选：
+  - bilibili-adblock
+  - baidu-netdisk-adblock
+  - apple-weather-qweather
+  - ip-quality-current-egress
+
+  每个模块应建立独立记录；configuration 必须包含 RC4，且不得写入 API Key、Token 或其他凭证。
