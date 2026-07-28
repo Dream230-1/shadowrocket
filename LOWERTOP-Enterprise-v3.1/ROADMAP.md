@@ -49,6 +49,25 @@
    - 基于明确需求增加游戏平台规则；
    - 默认关闭，完成首条命中和实机联机/语音/NAT 验证后再发布。
 
+### 规则精简与去重
+
+当前 LOWERTOP 与 GMOogway 三模块之间存在大量规则重叠，尤其以下区域：
+
+| 规则集 | 规则数 | 被 GMOogway 覆盖 |
+|---|---|---|
+| `AdvertisingLite` | 376 REJECT | ✅ `reject_list` 169k 全覆盖 |
+| `ChinaMax` | 12,567 DIRECT | ⚠️ `direct_list` 覆盖域名部分，IP-CIDR 部分不覆盖 |
+| `Lan` | 140 DIRECT | ✅ `direct_list` 覆盖大部分域名 |
+| `OpenAI-AI` | 17 AI | ⚠️ `proxy_list→AI` 部分覆盖 |
+| `Apple-*` | 37 | ❌ 未被 GMOogway 覆盖 |
+
+计划（不影响独立使用场景）：
+
+1. **去重分析脚本**：新增 `scripts/dedup_analysis.py`，自动对比 LOWERTOP 规则与 GMOogway 模块的重叠度
+2. **标注可选规则**：GMOogway 已覆盖的 LOWERTOP 规则标记为 `# covered by GMOogway` 注释
+3. **可选开启的"精简模式"**：当检测到 GMOogway 模块已启用时，跳过已覆盖的规则
+4. **不影响行为锁**：去重仅在 GMOogway 模块存在时生效，独立使用时规则不变
+
 ### MITM 去广告与功能增强模块
 
 当前 LOWERTOP 的广告拦截基于 DNS 规则级别的 `REJECT`，无法屏蔽应用内原生渲染广告（如 Bilibili 信息流广告、闲鱼页面广告等）。
