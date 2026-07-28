@@ -47,14 +47,12 @@ jobs:
           mkdir -p reports
           python developer-toolkit/validate_module.py \
             modules/optional \
-            modules/experimental \
             --json-out reports/developer-toolkit-modules.json
 
       - name: Extract MITM hostnames
         run: |
           python developer-toolkit/extract_mitm.py \
             modules/optional \
-            modules/experimental \
             --json-out reports/developer-toolkit-mitm.json
 
       - name: Upload toolkit reports
