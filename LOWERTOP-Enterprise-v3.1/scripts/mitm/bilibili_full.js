@@ -124,4 +124,18 @@ if (url.indexOf('/vip/ads/materials') >= 0) { emptyJson(); return; }
 // 游戏大卡广告
 if (url.indexOf('/game/live/large_card_material') >= 0) { emptyJson(); return; }
 
+// === gRPC 视频广告拦截 ===
+// 视频播放页 unite 信息（含广告）
+if (url.indexOf('playerunite') >= 0 || url.indexOf('PlayViewUnite') >= 0) { emptyJson(); return; }
+// 视频播放地址（可能含广告）
+if (url.indexOf('PlayURL') >= 0 || url.indexOf('playurl') >= 0) { emptyJson(); return; }
+// 视频 View 信息（可能含广告推荐）
+if (url.indexOf('View/View') >= 0 || url.indexOf('ViewUnite') >= 0) { emptyJson(); return; }
+// 相关推荐
+if (url.indexOf('RelatesFeed') >= 0) { emptyJson(); return; }
+// 搜索
+if (url.indexOf('SearchAll') >= 0) { emptyJson(); return; }
+// 评论列表
+if (url.indexOf('Reply/MainList') >= 0) { emptyJson(); return; }
+
 $done();
