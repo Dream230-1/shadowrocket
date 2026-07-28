@@ -19,6 +19,7 @@ try:
     project = Path(__file__).resolve().parents[1]
     run_tests(project)
     subprocess.run([sys.executable, "scripts/validate_scripts_config.py"], cwd=project, check=True)
+    subprocess.run([sys.executable, "scripts/validate_rc4_modules.py"], cwd=project, check=True)
     build.main()
     subprocess.run([sys.executable, "scripts/normalize_generated_sections.py"], cwd=project, check=True)
     subprocess.run([sys.executable, "scripts/validate_field_records.py"], cwd=project, check=True)
