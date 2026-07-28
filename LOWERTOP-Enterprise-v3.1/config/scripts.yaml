@@ -1,18 +1,16 @@
-# MITM 去广告脚本注入配置
-# 这些规则会在生成 .conf 文件时自动注入到 [Script] 和 [MitM] 段
-# 用户无需手动导入模块，配置更新即同步更新
+# MITM 脚本注入配置
+# script_rules、extra_rules 与 mitm_hostname 必须由生成器分别写入正确配置段。
+# RC4 禁止向公开仓库写入 API Key、Token 或私钥。
 
-# 脚本规则（每行一条完整的 Script 规则）
 script_rules:
-  - "http-request ^https://app\\.bilibili\\.com/x/v2/splash/ script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=BiliSplash"
-  - "http-request ^https://market\\.wapa\\.taobao\\.com/ script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/xianyu.js, tag=Xianyu"
+  - "http-request ^https://app\\.bilibili\\.com/x/v2/splash/ script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=BiliSplash"
+  - "http-request ^https://market\\.wapa\\.taobao\\.com/ script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/scripts/mitm/xianyu.js, tag=Xianyu"
 
-# MITM 解密主机名
 mitm_hostname:
   - app.bilibili.com
   - market.wapa.taobao.com
 
-# 额外规则（写入 [Rule] 段，广告域名 DNS 拦截）
+# 仅保留明确广告主机，不使用 baidu/baidustatic 关键词级拦截。
 extra_rules:
   - DOMAIN-SUFFIX,pos.baidu.com,REJECT
   - DOMAIN-SUFFIX,cpro.baidu.com,REJECT
@@ -20,4 +18,3 @@ extra_rules:
   - DOMAIN-SUFFIX,wangmeng.baidu.com,REJECT
   - DOMAIN-SUFFIX,e.baidu.com,REJECT
   - DOMAIN-SUFFIX,cb.baidu.com,REJECT
-  - DOMAIN-KEYWORD,baidustatic,REJECT
