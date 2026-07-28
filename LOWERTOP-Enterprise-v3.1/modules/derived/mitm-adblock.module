@@ -1,19 +1,17 @@
 #!name=LOWERTOP MITM 去广告
-#!desc=百度网盘去广告（精确匹配原版 Loon 插件全部路径）
+#!desc=百度网盘 + Bilibili 开屏去广告（需开启 HTTPS 解密）
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!author=LOWERTOP
 #!date=2026-07-28
 
 [Script]
-# 精确匹配 Loon 插件的每一条路径
-http-request ^https:\/\/pan\.baidu\.com\/api\/getconfig script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
-http-request ^https:\/\/pan\.baidu\.com\/api\/getsyscfg script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
-http-request ^https:\/\/pan\.baidu\.com\/api\/taskscore\/tasklist script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
-http-request ^https:\/\/pan\.baidu\.com\/act\/api\/activityentry script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
-http-request ^https:\/\/pan\.baidu\.com\/rest\/\d\.\d\/pcs\/adv script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
-http-request ^https:\/\/pan\.baidu\.com\/api\/plugin\/get script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
-http-request ^https:\/\/pan\.baidu\.com\/recommend\/query\/list script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
-http-request ^https:\/\/pan\.baidu\.com\/feed\/kingkongdistrict script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
+# === 百度网盘 ===
+http-request ^https:\/\/pan\.baidu\.com\/api\/(getconfig|getsyscfg|taskscore\/tasklist|plugin\/get) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
+http-request ^https:\/\/pan\.baidu\.com\/(act\/api\/activityentry|rest\/\d\.\d\/pcs\/adv|recommend\/query\/list|feed\/kingkongdistrict) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
+
+# === Bilibili 开屏广告 ===
+http-request ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_splash.js, tag=Bilibili开屏拦截
+http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(show|event\/list2) requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_splash.js, tag=Bilibili开屏清空
 
 [MitM]
-hostname = pan.baidu.com
+hostname = pan.baidu.com, app.bilibili.com, api.bilibili.com
