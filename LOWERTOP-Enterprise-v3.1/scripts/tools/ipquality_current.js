@@ -1,11 +1,12 @@
 // ==Shadowrocket==
 // Name: Current Egress IP Quality
-// Description: Inspect the currently active Shadowrocket egress after a network or proxy change.
+// Description: Inspect the currently active Shadowrocket egress. Detect on network change and scheduled polling.
 // Source inspiration: MaYIHEI/paperclip ipquality
 // ==/Shadowrocket==
 
 const TIMEOUT_MS = 10000;
 const UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148";
+const STORE_KEY = "LOWERTOP_RC4_LAST_EGRESS_IP";
 
 function requestJSON(url) {
   return new Promise((resolve, reject) => {
@@ -17,11 +18,8 @@ function requestJSON(url) {
         if (!Number.isFinite(status) || status < 200 || status >= 300) {
           return reject(new Error(`HTTP ${status || "?"}`));
         }
-        try {
-          resolve(JSON.parse(body || "{}"));
-        } catch (_) {
-          reject(new Error("JSON parse failed"));
-        }
+        try { resolve(JSON.parse(body || "{}")); }
+        catch (_) { reject(new Error("JSON parse failed")); }
       }
     );
   });
@@ -31,7 +29,7 @@ function clean(value) {
   return value === null || value === undefined || value === "" ? "-" : String(value);
 }
 
-function boolFlag(value) {
+function yesNo(value) {
   return value === true ? "是" : value === false ? "否" : "未知";
 }
 
@@ -48,10 +46,20 @@ function notify(title, subtitle, body) {
   }
 }
 
+function shouldNotify(ip) {
+  const argument = typeof $argument === "string" ? $argument : "";
+  const force = /(?:^|&)force=1(?:&|$)/.test(argument);
+  const previous = $persistentStore.read(STORE_KEY);
+  $persistentStore.write(ip, STORE_KEY);
+  return force || !previous || previous !== ip;
+}
+
 async function main() {
   const ipResult = await requestJSON("https://api4.ipify.org?format=json");
   const ip = clean(ipResult.ip);
   if (ip === "-") throw new Error("无法获取当前出口 IP");
+
+  if (!shouldNotify(ip)) return;
 
   const results = await Promise.allSettled([
     requestJSON(`https://api.ipapi.is/?q=${encodeURIComponent(ip)}`),
@@ -70,32 +78,35 @@ async function main() {
     tor: Boolean(ipapi.is_tor),
     datacenter: Boolean(ipapi.is_datacenter || ipapi.is_hosting || ipwho.hosting),
   };
+
   const company = ipapi.company || {};
   const asn = ipapi.asn || {};
   const location = ipapi.location || {};
-  const countryCode = clean(location.country_code || ipwho.country_code);
+  const risk = riskLevel(fraudScore, flags);
+  const scoreText = Number.isFinite(fraudScore) ? String(fraudScore) : "未返回";
+  const country = clean(location.country_code || ipwho.country_code);
   const region = clean(location.state || ipwho.region);
   const city = clean(location.city || ipwho.city);
-  const scoreText = Number.isFinite(fraudScore) ? String(fraudScore) : "未返回";
-  const risk = riskLevel(fraudScore, flags);
+  const asnText = clean(asn.asn || (ipwho.connection && ipwho.connection.asn));
+  const org = clean(company.name || asn.org || (ipwho.connection && ipwho.connection.org));
+  const networkType = clean(company.type || ipapi.type);
 
-  const lines = [
-    `出口 IP：${ip}`,
-    `风险结论：${risk}`,
-    `IPPure 评分：${scoreText}`,
-    `国家/地区：${countryCode} ${region} ${city}`,
-    `ASN：${clean(asn.asn || (ipwho.connection && ipwho.connection.asn))}`,
-    `运营组织：${clean(company.name || asn.org || (ipwho.connection && ipwho.connection.org))}`,
-    `网络类型：${clean(company.type || ipapi.type)}`,
-    `代理：${boolFlag(flags.proxy)}  VPN：${boolFlag(flags.vpn)}`,
-    `Tor：${boolFlag(flags.tor)}  数据中心：${boolFlag(flags.datacenter)}`,
-  ];
+  const subtitle = `${risk} · IPPure ${scoreText}`;
+  const body = [
+    `IP  ${ip}`,
+    `地区  ${country} · ${region} · ${city}`,
+    `ASN  ${asnText}`,
+    `组织  ${org}`,
+    `类型  ${networkType}`,
+    `代理 ${yesNo(flags.proxy)} ｜ VPN ${yesNo(flags.vpn)}`,
+    `Tor ${yesNo(flags.tor)} ｜ 机房 ${yesNo(flags.datacenter)}`,
+  ].join("\n");
 
-  notify("节点 IP 质量检测", `${risk} · ${ip}`, lines.join("\n"));
-  $done();
+  notify("节点 IP 质量检测", subtitle, body);
 }
 
-main().catch((error) => {
-  notify("节点 IP 质量检测失败", "请确认网络已连接", String(error && error.message ? error.message : error));
-  $done();
-});
+main()
+  .catch((error) => {
+    notify("节点 IP 质量检测失败", "请检查网络或稍后重试", String(error && error.message ? error.message : error));
+  })
+  .finally(() => $done());
