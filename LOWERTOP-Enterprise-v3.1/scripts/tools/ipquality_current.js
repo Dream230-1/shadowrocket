@@ -1,6 +1,6 @@
 // ==Shadowrocket==
 // Name: Current Egress IP Quality
-// Description: Inspect the currently active Shadowrocket egress. Detect on network change and scheduled polling.
+// Description: Inspect the active Shadowrocket egress on network change or low-frequency polling.
 // Source inspiration: MaYIHEI/paperclip ipquality
 // ==/Shadowrocket==
 
@@ -93,13 +93,20 @@ async function main() {
 
   const subtitle = `${risk} · IPPure ${scoreText}`;
   const body = [
-    `IP  ${ip}`,
-    `地区  ${country} · ${region} · ${city}`,
-    `ASN  ${asnText}`,
-    `组织  ${org}`,
-    `类型  ${networkType}`,
-    `代理 ${yesNo(flags.proxy)} ｜ VPN ${yesNo(flags.vpn)}`,
-    `Tor ${yesNo(flags.tor)} ｜ 机房 ${yesNo(flags.datacenter)}`,
+    "【出口信息】",
+    `IP：${ip}`,
+    `地区：${country} / ${region} / ${city}`,
+    "",
+    "【网络归属】",
+    `ASN：${asnText}`,
+    `组织：${org}`,
+    `类型：${networkType}`,
+    "",
+    "【风险标记】",
+    `代理：${yesNo(flags.proxy)}`,
+    `VPN：${yesNo(flags.vpn)}`,
+    `Tor：${yesNo(flags.tor)}`,
+    `数据中心：${yesNo(flags.datacenter)}`,
   ].join("\n");
 
   notify("节点 IP 质量检测", subtitle, body);
