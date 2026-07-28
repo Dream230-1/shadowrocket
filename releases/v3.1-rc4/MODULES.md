@@ -1,6 +1,6 @@
 # RC4 独立模块安装与验证
 
-RC4 当前包含两类能力：内置的 iCloud 分层分流，以及需单独安装的 Apple 天气 QWeather 可选模块。iCloud 规则随 Direct 配置生效，不需要另装模块；Apple 天气仍需在 Shadowrocket 中单独安装、启用和回滚。
+RC4 当前包含三类能力：内置的 iCloud 分层分流、用于兼容外部 `direct_list` 的 iCloud 专用代理优先模块，以及需单独安装的 Apple 天气 QWeather 可选模块。未启用外部 `direct_list` 时，主配置自身已能正确分流 iCloud；Apple 天气与 iCloud 专用代理优先模块均可单独安装、启用和回滚。
 
 哔哩哔哩与百度网盘旧模块已从 RC4 移除。后续分别在 `bilibili-next` 与 `baidunetdisk-next` 实验分支中基于最新客户端抓包结果重新开发，不继续修补或安装 RC4 旧模块。
 
@@ -11,6 +11,22 @@ RC4 当前包含两类能力：内置的 iCloud 分层分流，以及需单独�
 - Apple Push、App Store、系统更新与中国区 Apple Core 保持 `DIRECT`。
 - 不需要开启 HTTPS 解密，iCloud 与 Apple Account 域名不得加入 MITM。
 - 正式发布前按 `validation/modules/TEMPLATE-ICLOUD-AI.yaml` 完成 Wi-Fi、蜂窝、网络切换与负向对照。
+
+## iCloud 专用代理优先 RC4
+
+仅当外部 `direct_list` 含有 `DOMAIN-SUFFIX,icloud.com,DIRECT` 等泛 iCloud 直连规则时安装：
+
+```text
+https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/modules/optional/iCloud.PrivateRelay.Priority.RC4.sgmodule
+```
+
+模块顺序必须为：
+
+1. `iCloud 专用代理优先 RC4`
+2. `direct_list`
+3. Apple 天气及其他模块
+
+该模块只包含三个精确 `DOMAIN` 规则，不含脚本或 MITM。其作用是让 `mask.icloud.com`、`mask-h2.icloud.com`、`mask-api.icloud.com` 在 `direct_list` 的泛域名规则之前命中 `AI`；普通 iCloud 同步仍由 `direct_list` 或主配置保持 `DIRECT`。
 
 ## 安装前准备
 

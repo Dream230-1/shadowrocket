@@ -1,0 +1,11 @@
+#!name=iCloud 专用代理优先 RC4
+#!desc=将 Apple 专用代理的三个精确 mask 端点优先交给 AI；必须放在 direct_list 等泛 iCloud 直连模块上方。普通 iCloud 同步仍保持 DIRECT。
+#!author=Dream230-1 / LOWERTOP
+#!homepage=https://github.com/Dream230-1/shadowrocket
+#!category=LOWERTOP RC4
+#!version=3.1.0-rc4
+
+[Rule]
+DOMAIN,mask.icloud.com,AI
+DOMAIN,mask-h2.icloud.com,AI
+DOMAIN,mask-api.icloud.com,AI

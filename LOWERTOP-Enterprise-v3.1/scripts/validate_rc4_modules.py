@@ -30,7 +30,11 @@ def require(text: str, values: tuple[str, ...], label: str) -> None:
 def main() -> None:
     project = Path(__file__).resolve().parents[1]
     weather_path = project / "modules" / "optional" / "AppleWeather.QWeather.RC4.sgmodule"
+    private_relay_path = (
+        project / "modules" / "optional" / "iCloud.PrivateRelay.Priority.RC4.sgmodule"
+    )
     weather = read(weather_path)
+    private_relay = read(private_relay_path)
 
     require(
         weather,
@@ -52,7 +56,36 @@ def main() -> None:
     if 'API.QWeather.Token:""' not in weather:
         fail("Apple Weather module: QWeather token default must remain empty")
 
-    print("RC4 module audit OK: Apple Weather module, local-only QWeather token")
+    require(
+        private_relay,
+        (
+            "#!name=iCloud 专用代理优先 RC4",
+            "DOMAIN,mask.icloud.com,AI",
+            "DOMAIN,mask-h2.icloud.com,AI",
+            "DOMAIN,mask-api.icloud.com,AI",
+        ),
+        "iCloud Private Relay priority module",
+    )
+
+    relay_rules = [
+        line.strip()
+        for line in private_relay.splitlines()
+        if line.strip().startswith(("DOMAIN,", "DOMAIN-SUFFIX,", "RULE-SET,"))
+    ]
+    expected_relay_rules = [
+        "DOMAIN,mask.icloud.com,AI",
+        "DOMAIN,mask-h2.icloud.com,AI",
+        "DOMAIN,mask-api.icloud.com,AI",
+    ]
+    if relay_rules != expected_relay_rules:
+        fail("iCloud Private Relay priority module: rules must remain exact and ordered")
+    if "[Script]" in private_relay or "[MITM]" in private_relay:
+        fail("iCloud Private Relay priority module: script and MITM sections are forbidden")
+
+    print(
+        "RC4 module audit OK: Apple Weather local-only token; "
+        "iCloud Private Relay exact priority rules"
+    )
 
 
 if __name__ == "__main__":
