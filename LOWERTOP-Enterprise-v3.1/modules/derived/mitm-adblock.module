@@ -1,5 +1,5 @@
 #!name=LOWERTOP MITM 去广告
-#!desc=Bilibili + 闲鱼 + 百度网盘 MITM 去广告模块（需开启 HTTPS 解密）
+#!desc=百度网盘 MITM 去广告模块（需开启 HTTPS 解密并信任 CA 证书）
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!author=LOWERTOP
 #!date=2026-07-28
@@ -8,11 +8,7 @@
 # 百度网盘去广告
 http-response ^https?:\/\/pan\.baidu\.com\/(api\/getconfig|api\/getsyscfg|api\/taskscore\/tasklist|act\/api\/activityentry|rest\/\d\.\d\/pcs\/adv|api\/plugin\/get) requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_netdisk.js, tag=百度网盘去广告
 
-# 百度网盘推荐列表过滤
-http-response ^https?:\/\/pan\.baidu\.com\/recommend\/query\/list requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_netdisk.js, tag=百度网盘推荐过滤
-
-# 百度网盘首页去广告
-http-response ^https?:\/\/pan\.baidu\.com\/feed\/kingkongdistrict requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_netdisk.js, tag=百度网盘首页过滤
+http-response ^https?:\/\/pan\.baidu\.com\/(recommend\/query\/list|feed\/kingkongdistrict) requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_netdisk.js, tag=百度网盘过滤
 
 [MitM]
-hostname = pan.baidu.com, pos.baidu.com, cpro.baidu.com, nsclick.baidu.com
+hostname = pan.baidu.com
