@@ -74,6 +74,11 @@ cases:
   expected_policy: AI
   expected_source_contains: Apple-iCloud
   requires_remote: false
+- name: Apple iCloud China content CDN
+  host: edge-064.xacan2.icloud-content.com.cn
+  expected_policy: AI
+  expected_source_contains: Apple-iCloud
+  requires_remote: false
 - name: Apple iCloud Live Photos
   host: sync.apple-livephotoskit.com
   expected_policy: AI
