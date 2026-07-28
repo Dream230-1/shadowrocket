@@ -8,12 +8,12 @@
 - 最小回归测试
 - 独立 GitHub Actions 工作流与审计产物
 
-## v0.2
+## v0.2 进行中
 
-- JSON 响应差异分析器
-- 模块与主配置冲突检查
-- URL Rewrite、Map Local 与 Script 覆盖范围报告
-- 请求样本匿名化工具
+- [x] 模块与主配置冲突检查
+- [x] URL Rewrite、Map Local、Script 与 MITM 覆盖范围报告
+- [ ] JSON 响应差异分析器
+- [ ] 请求样本匿名化工具
 
 ## v0.3
 

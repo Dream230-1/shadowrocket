@@ -101,15 +101,12 @@ def main() -> None:
         "cellular_record": evidence_gate("cellular"),
         "switching_record": evidence_gate("switching"),
         "adblock_observation": evidence_gate("adblock-72h"),
-        "bilibili_module": evidence_gate("module:bilibili-adblock"),
-        "baidu_netdisk_module": evidence_gate("module:baidu-netdisk-adblock"),
         "apple_weather_module": evidence_gate("module:apple-weather-qweather"),
-        "ip_quality_module": evidence_gate("module:ip-quality-current-egress"),
     }
 
     mandatory_static = ["behavior_lock", "dns_audit", "offline_regression", "rule_conflicts", "modular_equivalence"]
     automation_ok = all(gates[key] is True for key in mandatory_static)
-    module_gate_names = ["bilibili_module", "baidu_netdisk_module", "apple_weather_module", "ip_quality_module"]
+    module_gate_names = ["apple_weather_module"]
     module_values = [gates[key] for key in module_gate_names]
     modules_ready = False if any(value is False for value in module_values) else (True if all(value is True for value in module_values) else None)
 
@@ -144,7 +141,7 @@ def main() -> None:
         "device_records": [str(p.relative_to(root)) for p in real_device],
         "adblock_records": [str(p.relative_to(root)) for p in real_ad],
         "module_records": [str(p.relative_to(root)) for p in real_modules],
-        "note": f"{release_label} remains pending until current-version network, 72-hour advertising and all four module validation records are complete.",
+        "note": f"{release_label} remains pending until current-version network, 72-hour advertising and Apple Weather validation records are complete.",
     }
     json_out = root / args.json_out
     json_out.parent.mkdir(parents=True, exist_ok=True)
@@ -160,7 +157,7 @@ def main() -> None:
 ## 结论
 
 - 自动化基线：**{mark(automation_ok)}**
-- 四个 {release_label} 模块实机验证：**{mark(modules_ready)}**
+- Apple Weather 模块实机验证：**{mark(modules_ready)}**
 - {release_label} 可发布：**{mark(release_ready)}**
 - Source commit：`{payload['source_commit']}`
 - Source branch：`{payload['source_branch']}`
@@ -183,16 +180,13 @@ def main() -> None:
 
 1. 使用 {release_label} 主配置完成 Wi-Fi、蜂窝及双向网络切换记录。
 2. 使用 {release_label} 配置完成连续至少 72 小时广告误杀观察。
-3. 分别验证哔哩哔哩、百度网盘、Apple 天气和 IP 质量检测模块，并提交对应记录。
-4. 哔哩哔哩需覆盖播放、相关推荐、评论、搜索、动态、直播和登录。
-5. 百度网盘需覆盖登录、上传下载、转存、分享和在线播放。
-6. Apple 天气需覆盖当前、小时、每日、降水、空气质量、定位与小组件。
+3. 验证 Apple 天气模块并提交对应记录，覆盖当前、小时、每日、降水、空气质量、定位与小组件。
 
 ## 边界
 
 - Performance 的 DNS、QUIC、IPv6、UDP 与核心路由继承既有基线，RC4 对最终规范化配置建立独立行为锁。
-- 三个增强模块不会自动注入 Direct 主配置，可单独禁用和回滚。
-- 百度网盘模块在完成实测前保持 Experimental。
+- Apple Weather 不会自动注入 Direct 主配置，可单独禁用和回滚。
+- Bilibili Next 与 BaiduNetdisk Next 保持独立实验分支，不计入 RC4 发布闸门。
 - DoQ/DoH3/DoH/DoT 自动回退、动态 DNS 选优及 IPv6/ECH 不进入 RC4 默认配置。
 """
     (root / args.markdown_out).write_text(markdown, encoding="utf-8")

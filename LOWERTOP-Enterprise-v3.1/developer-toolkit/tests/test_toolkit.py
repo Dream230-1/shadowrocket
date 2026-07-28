@@ -61,6 +61,87 @@ class ToolkitTests(unittest.TestCase):
             self.assertEqual(payload["summary"]["policies"]["REJECT"], 1)
             self.assertEqual(payload["summary"]["rejected_hosts"]["ads.example.com"], 1)
 
+    def test_coverage_audit_accepts_isolated_module(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp) / "base.conf"
+            module = Path(tmp) / "safe.sgmodule"
+            report = Path(tmp) / "coverage.json"
+            base.write_text(
+                "[Script]\n"
+                "http-request ^https://base\\.example\\.com/v1/ script-path=https://example.com/base.js, tag=Base\n"
+                "[MITM]\n"
+                "hostname = base.example.com\n",
+                encoding="utf-8",
+            )
+            module.write_text(
+                "#!name=safe\n#!desc=test\n"
+                "[Script]\n"
+                "Safe = type=http-response,pattern=^https://api\\.example\\.com/v1/item,"
+                "script-path=https://example.com/safe.js\n"
+                "[MITM]\n"
+                "hostname = %APPEND% api.example.com\n",
+                encoding="utf-8",
+            )
+            result = self.run_tool(
+                "audit_coverage.py",
+                "--base-config",
+                str(base),
+                str(module),
+                "--json-out",
+                str(report),
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            payload = json.loads(report.read_text(encoding="utf-8"))
+            self.assertTrue(payload["passed"])
+            self.assertEqual(payload["summary"]["errors"], 0)
+            self.assertEqual(payload["summary"]["scripts"], 2)
+            self.assertEqual(payload["summary"]["coverage_patterns"], 2)
+
+    def test_coverage_audit_rejects_duplicate_script_name(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp) / "base.conf"
+            module = Path(tmp) / "duplicate.sgmodule"
+            base.write_text(
+                "[Script]\n"
+                "Base = type=http-request,pattern=^https://base\\.example\\.com/v1/,"
+                "script-path=https://example.com/base.js\n",
+                encoding="utf-8",
+            )
+            module.write_text(
+                "#!name=duplicate\n#!desc=test\n"
+                "[Script]\n"
+                "Base = type=http-response,pattern=^https://api\\.example\\.com/v1/,"
+                "script-path=https://example.com/module.js\n",
+                encoding="utf-8",
+            )
+            result = self.run_tool(
+                "audit_coverage.py", "--base-config", str(base), str(module)
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("duplicate-script-name", result.stdout)
+
+    def test_coverage_audit_rejects_cross_mechanism_pattern(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp) / "base.conf"
+            module = Path(tmp) / "conflict.sgmodule"
+            pattern = r"^https://api\.example\.com/v1/item"
+            base.write_text(
+                f"[URL Rewrite]\n{pattern} - reject\n",
+                encoding="utf-8",
+            )
+            module.write_text(
+                "#!name=conflict\n#!desc=test\n"
+                "[Script]\n"
+                f"Conflict = type=http-response,pattern={pattern},"
+                "script-path=https://example.com/module.js\n",
+                encoding="utf-8",
+            )
+            result = self.run_tool(
+                "audit_coverage.py", "--base-config", str(base), str(module)
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("cross-mechanism-pattern", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -11,8 +11,6 @@ import yaml
 
 
 REQUIRED_MODULES = {
-    "bilibili-adblock",
-    "baidu-netdisk-adblock",
     "apple-weather-qweather",
 }
 

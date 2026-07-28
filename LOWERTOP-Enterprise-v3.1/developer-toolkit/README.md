@@ -26,14 +26,22 @@
    - 自动编译脚本、运行回归测试、校验模块并生成 MITM 审计报告。
    - 报告以 GitHub Actions Artifact 形式保存。
 
+5. `audit_coverage.py`
+   - 对照 RC 主配置审计可选模块的 Script、URL Rewrite、Map Local 与 MITM 覆盖范围。
+   - 阻断重复脚本名、跨机制相同匹配表达式和主配置与模块间重复 MITM Hostname。
+   - 输出包含来源文件、行号和覆盖机制的 JSON 报告。
+
 ## 使用示例
 
 在 `LOWERTOP-Enterprise-v3.1` 目录执行：
 
 ```bash
-python3 developer-toolkit/validate_module.py modules/optional/Bilibili.ADBlock.RC4.sgmodule
-python3 developer-toolkit/validate_module.py modules/optional modules/experimental --json-out reports/modules.json
-python3 developer-toolkit/extract_mitm.py modules/optional modules/experimental --unique
+python3 developer-toolkit/validate_module.py modules/optional/AppleWeather.QWeather.RC4.sgmodule
+python3 developer-toolkit/validate_module.py modules/optional --json-out reports/modules.json
+python3 developer-toolkit/extract_mitm.py modules/optional --unique
+python3 developer-toolkit/audit_coverage.py \
+  --base-config ../releases/v3.1-rc4/LOWERTOP-Enterprise-v3.1-RC4-Performance-Direct.conf \
+  modules/optional --json-out reports/developer-toolkit-coverage.json
 python3 developer-toolkit/analyze_log.py shadowrocket.log --keyword bilibili --keyword fav \
   --json-out reports/bilibili-log.json --markdown-out reports/bilibili-log.md
 ```
@@ -56,9 +64,14 @@ python3 developer-toolkit/analyze_log.py shadowrocket.log --keyword bilibili --k
 - 每个模块必须保留明确的回滚入口和实机验证记录。
 - 自动化静态通过不能替代真实设备验证。
 
-## 下一阶段
+## v0.2 当前阶段
+
+- 模块与主配置冲突检查
+- URL Rewrite、Map Local、Script 与 MITM 覆盖范围报告
+
+## 后续阶段
 
 - JSON 响应差异分析器
 - protobuf/gRPC 请求识别与样本登记
-- 模块与主配置冲突检查
+- 请求样本匿名化工具
 - Bilibili Next 与 BaiduNetdisk Next 独立实验目录

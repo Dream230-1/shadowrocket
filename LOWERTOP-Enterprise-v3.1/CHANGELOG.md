@@ -6,6 +6,7 @@
 
 - Apple 天气 QWeather 参数化模块，基于 NSRingo WeatherKit v3.1.0。
 - Developer Toolkit v0.1：模块静态校验、MITM Hostname 提取、日志分析和最小回归测试。
+- Developer Toolkit v0.2 alpha：模块与主配置覆盖冲突审计及 JSON 报告。
 - RC4 模块安全审计与公开仓库凭证扫描。
 - 生成配置 `[Rule]`、`[Script]`、`[MITM]` 分段规范化与校验。
 
@@ -14,6 +15,8 @@
 - Apple 天气由主配置自动注入改为独立模块，默认不启用。
 - 自维护脚本 URL 切换至 `release/v3.1-rc4`。
 - RC4 模块审计收缩为仅校验仍属主线的 Apple 天气模块。
+- RC4 实机证据与发布报告收缩为仅要求 Apple 天气模块，不再引用已冻结或移除的模块。
+- GitHub Actions 切换至 Node 24 运行时的 Checkout、Setup Python、Cache 与 Artifact 主版本。
 
 ### Removed
 
