@@ -1,21 +1,20 @@
 #!name=LOWERTOP MITM 去广告
-#!desc=百度网盘 + Bilibili 完整去广告（含信息流/直播/开屏）+ 闲鱼（即将加入）
+#!desc=百度网盘 + Bilibili 完整去广告 + 闲鱼
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!author=LOWERTOP
 #!date=2026-07-28
 
 [Script]
-# === 百度网盘 ===
-http-request ^https:\/\/pan\.baidu\.com\/api\/(getconfig|getsyscfg|taskscore\/tasklist|plugin\/get) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
-http-request ^https:\/\/pan\.baidu\.com\/(act\/api\/activityentry|rest\/\d\.\d\/pcs\/adv|recommend\/query\/list|feed\/kingkongdistrict) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘去广告
+# === 百度网盘（http-request 拦截） ===
+http-request ^https:\/\/pan\.baidu\.com\/(api\/(getconfig|getsyscfg|taskscore\/tasklist|plugin\/get)|act\/api\/activityentry|rest\/\d\.\d\/pcs\/adv|recommend\/query\/list|feed\/kingkongdistrict) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘
 
-# === Bilibili 完整去广告 ===
-http-request ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=Bili开屏拦截
-http-request ^https:\/\/app\.bilibili\.com\/(xlive\/e-commerce-interface|xresource\/show\/tab|xresource\/top|xresource\/patch|x\/v2\/search\/square) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=Bili广告拦截
-http-request ^https:\/\/app\.bilibili\.com\/pgc\/(activity\/deliver|page\/channel) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=BiliPGC拦截
+# === Bilibili（统一 http-request + http-response） ===
+http-request ^https:\/\/app\.bilibili\.com\/(x\/v2\/splash\/list|xlive\/(e-commerce-interface|app-(room|interface))|x\/resource\/(show\/tab|top\/activity|patch\/tab)|x\/v2\/search\/(square|search)|vip\/ads\/materials|pgc\/(activity\/deliver|page\/channel)) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=Bili拦截
 
-http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/(splash\/(show|event)|feed\/index) requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=Bili信息流去广告
-http-response ^https:\/\/app\.bilibili\.com\/(xlive\/app-(room|interface)|x\/resource\/show\/skin|pgc\/page\/channel) requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=Bili其他去广告
+http-response ^https:\/\/app\.bilibili\.com\/(x\/v2\/(splash\/(show|event)|feed\/index|search\/(square|search)|account\/myinfo)|xlive\/(app-(room|interface)|e-commerce-interface)|x\/resource\/(show\/(tab|skin)|top\/activity|patch\/tab)|pgc\/(view\/v2\/app\/season|activity\/deliver|page\/channel)|vip\/ads\/materials) requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=Bili响应
+
+# === 闲鱼（统一拦截 market 域名的 JSON 响应） ===
+http-response ^https:\/\/market\.wapa\.taobao\.com\/ requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/xianyu.js, tag=闲鱼去广告
 
 [MitM]
-hostname = pan.baidu.com, app.bilibili.com, api.bilibili.com, api.live.bilibili.com
+hostname = pan.baidu.com, app.bilibili.com, api.bilibili.com, api.live.bilibili.com, api.biliapi.com, api.biliapi.net, market.wapa.taobao.com

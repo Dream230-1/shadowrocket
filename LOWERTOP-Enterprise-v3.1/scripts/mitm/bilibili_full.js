@@ -96,4 +96,32 @@ if (url.indexOf('/pgc/page/channel') >= 0) {
   return;
 }
 
+// === 视频播放页广告 ===
+// 播放页信息 - 过滤广告
+if (url.indexOf('/pgc/view/v2/app/season') >= 0) {
+  modifyBody(function(obj) { if (obj && obj.data) delete obj.data.payment; });
+  return;
+}
+// 视频相关推荐 - 由 playerunite gRPC 处理（见下方）
+// 搜索页广告 - 拦截竖版广告和直播广告
+if (url.indexOf('/x/v2/search/square') >= 0 || url.indexOf('/x/v2/search/search') >= 0) {
+  emptyJson(); return;
+}
+
+// === VIP/会员广告 ===
+if (url.indexOf('/x/v2/account/myinfo') >= 0) {
+  modifyBody(function(obj) {
+    if (obj && obj.data && obj.data.vip && obj.data.vip.status === 0) {
+      obj.data.vip = { status: 1, type: 2, due_date: 9005270400000, role: 15 };
+    }
+  });
+  return;
+}
+
+// 广告物料接口
+if (url.indexOf('/vip/ads/materials') >= 0) { emptyJson(); return; }
+
+// 游戏大卡广告
+if (url.indexOf('/game/live/large_card_material') >= 0) { emptyJson(); return; }
+
 $done();
