@@ -3,33 +3,56 @@
 // Author: LOWERTOP
 // ==/Shadowrocket==
 
-const url = $request.url;
+var url = $request.url;
 
-// 广告配置接口 → 返回空 JSON
-if (/(api\/getconfig|api\/getsyscfg|api\/taskscore\/tasklist|act\/api\/activityentry|pcs\/adv|api\/plugin\/get)/.test(url)) {
-  $done({body: '{}'});
-  return;
-}
-
-// 推荐列表 → 过滤广告类型
-if (/recommend\/query\/list/.test(url)) {
-  try {
-    var obj = JSON.parse($response.body);
-    if (obj && obj.data && obj.data.data) {
-      var filtered = [];
-      for (var i = 0; i < obj.data.data.length; i++) {
-        var item = obj.data.data[i];
-        if (item.type !== 'novel' && item.type !== 'shortplay' && item.type !== 'print' && item.type !== 'job_hunt') {
-          filtered.push(item);
+try {
+  var body = $response.body;
+  if (!body || body.length < 10) { $done(); return; }
+  
+  // 只处理 JSON 响应
+  if (body.charAt(0) === '{' || body.charAt(0) === '[') {
+    var obj = JSON.parse(body);
+    var modified = false;
+    
+    // 已知广告路径
+    var adPaths = [
+      '/api/getconfig', '/api/getsyscfg', '/api/taskscore/tasklist',
+      '/act/api/activityentry', '/pcs/adv', '/api/plugin/get',
+      '/api/getsplash', '/api/splash', '/api/ad'
+    ];
+    for (var i = 0; i < adPaths.length; i++) {
+      if (url.indexOf(adPaths[i]) >= 0) {
+        $done({body: '{}'});
+        return;
+      }
+    }
+    
+    // 通用广告字段清理（任何 JSON 响应都检查）
+    if (obj && typeof obj === 'object') {
+      var adKeys = ['ad', 'ads', 'ad_info', 'ad_data', 'splash', 'banner'];
+      for (var k = 0; k < adKeys.length; k++) {
+        if (obj[adKeys[k]] !== undefined) {
+          delete obj[adKeys[k]];
+          modified = true;
         }
       }
-      obj.data.data = filtered;
+      if (obj.data && typeof obj.data === 'object') {
+        for (var k = 0; k < adKeys.length; k++) {
+          if (obj.data[adKeys[k]] !== undefined) {
+            delete obj.data[adKeys[k]];
+            modified = true;
+          }
+        }
+      }
     }
-    $done({body: JSON.stringify(obj)});
-  } catch(e) {
-    $done();
+    
+    if (modified) {
+      $done({body: JSON.stringify(obj)});
+      return;
+    }
   }
-  return;
+} catch(e) {
+  // 静默失败
 }
 
 $done();
