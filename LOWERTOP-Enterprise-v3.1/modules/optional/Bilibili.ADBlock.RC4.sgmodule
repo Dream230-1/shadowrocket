@@ -1,41 +1,25 @@
-#!name=哔哩哔哩去广告 RC4.1
-#!desc=按 JSON/gRPC 结构过滤开屏、信息流、视频推荐广告、会员购/直播推广及评论区广告；保留正常热搜、动态话题、视频、评论与账号功能。
+#!name=哔哩哔哩去广告 RC4.2 保守版
+#!desc=仅处理已验证的开屏广告、视频页商业推荐和评论区推广；暂停信息流请求改写及动态、搜索、直播、播放 URL 等非必要处理，优先保护收藏、账号和播放功能。
 #!author=Dream230-1 / LOWERTOP; upstream BiliUniverse contributors
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!category=LOWERTOP RC4
-#!version=3.1.0-rc4.1
-#!arguments=Splash:true,Feed.AD:true,Feed.Activity:false,Feed.Vertical:false,Feed.BlockUpLiveList:"",Feed.Story:true,Search.AD:true,Search.HotSearch:false,PGC.AD:true,Xlive.AD:true,Dynamic.HotTopics:false,Dynamic.MostVisited:false,Dynamic.MostVisitedLiveOnly:false,Dynamic.AdCard:true,View.AD:true,DM.Command:false,DM.Colorful:false,Reply.AD:true,LogLevel:"WARN"
-#!arguments-desc=默认只过滤广告及商业推广。保留正常视频、相关推荐、热搜、动态话题、评论、弹幕、直播和账号功能，不伪造会员状态。
+#!version=3.1.0-rc4.2
+#!arguments=Splash:true,View.AD:true,Reply.AD:true,LogLevel:"WARN"
+#!arguments-desc=保守模式。只过滤开屏、视频页商业推荐和评论区推广，不修改会员状态，不处理收藏、账号、动态、搜索、直播、弹幕或播放 URL。
 
-# Upstream template snapshot: BiliUniverse/ADBlock@43b07841fa55ba77e29d478cab0be44c8b49a3c2
-# License: Apache-2.0. Runtime bundles use the official latest release during RC validation;
-# before stable release, replace latest with a verified immutable version tag.
-
-[URL Rewrite]
-# 去除搜索框默认商业关键词，不影响用户主动搜索及正常热搜。
-^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$ - reject
-
-[Map Local]
-# 搜索推荐词接口可能混入推广词，返回空对象不影响主动搜索。
-^https?:\/\/api\.vc\.bilibili\.com\/search_svr\/v\d\/Search\/recommend_words data-type=text data="{}" header="application/json"
-# 漫画与直播购物推广。
-^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/(Flash|ListFlash) data-type=text data="{}" header="application/json"
-^https?:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v1\/ecommerce-user\/get_shopping_info\? data-type=text data="{}" header="application/json"
+# Upstream: BiliUniverse/ADBlock
+# License: Apache-2.0
 
 [Script]
-📺 BiliBili.feed.request = type=http-request,pattern=^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/feed\/index\?,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/request.bundle.js,argument=Splash="{{{Splash}}}"&Feed.AD="{{{Feed.AD}}}"&Feed.Activity="{{{Feed.Activity}}}"&Feed.Vertical="{{{Feed.Vertical}}}"&Feed.BlockUpLiveList="{{{Feed.BlockUpLiveList}}}"&Feed.Story="{{{Feed.Story}}}"&Search.AD="{{{Search.AD}}}"&Search.HotSearch="{{{Search.HotSearch}}}"&PGC.AD="{{{PGC.AD}}}"&Xlive.AD="{{{Xlive.AD}}}"&Dynamic.HotTopics="{{{Dynamic.HotTopics}}}"&Dynamic.MostVisited="{{{Dynamic.MostVisited}}}"&Dynamic.MostVisitedLiveOnly="{{{Dynamic.MostVisitedLiveOnly}}}"&Dynamic.AdCard="{{{Dynamic.AdCard}}}"&View.AD="{{{View.AD}}}"&DM.Command="{{{DM.Command}}}"&DM.Colorful="{{{DM.Colorful}}}"&Reply.AD="{{{Reply.AD}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.response.json = type=http-response,pattern=^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/(splash\/(brand\/list|event\/list2|list|show)|feed\/index(\/story)?|search\/square),requires-body=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=Splash="{{{Splash}}}"&Feed.AD="{{{Feed.AD}}}"&Feed.Activity="{{{Feed.Activity}}}"&Feed.Vertical="{{{Feed.Vertical}}}"&Feed.Story="{{{Feed.Story}}}"&Search.AD="{{{Search.AD}}}"&Search.HotSearch="{{{Search.HotSearch}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.web.feed.response = type=http-response,pattern=^https?:\/\/api\.bilibili\.com\/x\/web-interface\/wbi\/index\/top\/feed\/rcmd\?,requires-body=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=Feed.AD="{{{Feed.AD}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.pgc.page.response = type=http-response,pattern=^https?:\/\/api\.bili(bili\.com|api\.net)\/pgc\/page\/(bangumi|cinema\/tab\?),requires-body=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=PGC.AD="{{{PGC.AD}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.live.room.response = type=http-response,pattern=^https?:\/\/api\.live\.bilibili\.com\/xlive\/app-room\/v1\/index\/getInfoByRoom,requires-body=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=Xlive.AD="{{{Xlive.AD}}}"&LogLevel="{{{LogLevel}}}"
+# 开屏广告。仅处理明确的 splash JSON 接口。
+📺 BiliBili.splash.response = type=http-response,pattern=^https?:\/\/app\.bili(bili\.com|api\.net)\/x\/v2\/splash\/(brand\/list|event\/list2|list|show),requires-body=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=Splash="{{{Splash}}}"&LogLevel="{{{LogLevel}}}"
+
+# 视频详情及相关推荐商业卡片。包含 grpc.bilibili.com 与 grpc.biliapi.net。
 📺 BiliBili.view.grpc = type=http-response,pattern=^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.(view|viewunite)\.v1\.View\/(View|TFInfo|RelatesFeed)$,requires-body=1,binary-body-mode=1,max-size=262144,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=View.AD="{{{View.AD}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.dynamic.grpc = type=http-response,pattern=^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.dynamic\.v2\.Dynamic\/Dyn(All|Video)$,requires-body=1,binary-body-mode=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=Dynamic.HotTopics="{{{Dynamic.HotTopics}}}"&Dynamic.MostVisited="{{{Dynamic.MostVisited}}}"&Dynamic.MostVisitedLiveOnly="{{{Dynamic.MostVisitedLiveOnly}}}"&Dynamic.AdCard="{{{Dynamic.AdCard}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.playurl.grpc = type=http-response,pattern=^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.playurl\.v1\.PlayURL\/PlayView$,requires-body=1,binary-body-mode=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=View.AD="{{{View.AD}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.search.grpc = type=http-response,pattern=^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.polymer\.app\.search\.v1\.Search\/SearchAll$,requires-body=1,binary-body-mode=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=Search.AD="{{{Search.AD}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.dm.grpc = type=http-response,pattern=^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.community\.service\.dm\.v1\.DM\/(DmView|DmSegMobile),requires-body=1,binary-body-mode=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=DM.Command="{{{DM.Command}}}"&DM.Colorful="{{{DM.Colorful}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.reply.grpc = type=http-response,pattern=^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.main\.community\.reply\.v1\.Reply\/MainList,requires-body=1,binary-body-mode=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=Reply.AD="{{{Reply.AD}}}"&LogLevel="{{{LogLevel}}}"
-📺 BiliBili.pgc.grpc = type=http-response,pattern=^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.pgc\.gateway\.player\.v2\.PlayURL\/PlayView$,requires-body=1,binary-body-mode=1,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=PGC.AD="{{{PGC.AD}}}"&LogLevel="{{{LogLevel}}}"
+
+# 评论区广告及商业推荐链接。
+📺 BiliBili.reply.grpc = type=http-response,pattern=^https:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.main\.community\.reply\.v1\.Reply\/MainList$,requires-body=1,binary-body-mode=1,max-size=262144,script-path=https://github.com/BiliUniverse/ADBlock/releases/latest/download/response.bundle.js,argument=Reply.AD="{{{Reply.AD}}}"&LogLevel="{{{LogLevel}}}"
 
 [MITM]
-hostname = %APPEND% manga.bilibili.com,api.live.bilibili.com,api.vc.bilibili.com,app.bilibili.com,app.biliapi.net,api.bilibili.com,api.biliapi.net,grpc.biliapi.net
+hostname = %APPEND% app.bilibili.com,app.biliapi.net,grpc.bilibili.com,grpc.biliapi.net
 h2 = true
