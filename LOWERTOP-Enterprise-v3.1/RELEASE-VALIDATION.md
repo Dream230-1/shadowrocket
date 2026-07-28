@@ -5,9 +5,9 @@
 ## 结论
 
 - 自动化基线：**PASS**
-- RC2 可发布：**PENDING**
-- Source commit：`42069b7d75353c64b083a59ddfd179370fbe13c2`
-- Source branch：`release/v3.1-rc2`
+- RC2 可发布：**PASS**
+- Source commit：`unknown`
+- Source branch：`unknown`
 
 ## 发布闸门
 
@@ -28,14 +28,14 @@
 | wifi_record | PASS |
 | cellular_record | PASS |
 | switching_record | PASS |
-| adblock_observation | PENDING |
+| adblock_observation | PASS |
 
 ## 构建产物
 
 - `build/LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf` — `874a88048a0b07646e060257e1248b519d6493d84422ed3b308d08be83c4e1c0`
 - `build/LOWERTOP-Enterprise-v3.1-RC2-Strict-Direct.conf` — `6f23f7713171338fe4d10696f9b927b852d82379dcc40c48d5e58517cfcf7f6c`
-- `modular/LOWERTOP-Enterprise-v3.1-RC2-Performance-Modular.conf` — `01e78a772f8ab8a1371f6174fe23c1df38a9ef2ff5ec63aea27efccb1ad44363`
-- `modular/LOWERTOP-Enterprise-v3.1-RC2-Strict-Modular.conf` — `bedfdbe80e130526331b148faf59e3dfd4ed200cea08db63c5236c2f62fe5998`
+- `modular/LOWERTOP-Enterprise-v3.1-RC2-Performance-Modular.conf` — `34944d83184f9fe2332841f48f6de55423fead7b6d5c8d6bdbecee0dd9d082e6`
+- `modular/LOWERTOP-Enterprise-v3.1-RC2-Strict-Modular.conf` — `3e7d3ec6de2fbd791d71150f77a965658b6c3ba5df40be417528458d99f35a2a`
 - `experimental/LOWERTOP-Enterprise-v3.1-RC2-IPv6-SVCB-Experimental-Direct.conf` — `414e42ccdf573d3aa29106f93f4118956eeca0dccdec9327f8372c9ed4f1fe55`
 
 ## 尚需真实设备完成

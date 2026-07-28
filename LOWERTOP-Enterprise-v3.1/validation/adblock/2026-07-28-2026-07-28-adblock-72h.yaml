@@ -1,0 +1,39 @@
+schema: 1
+observation_id: ADBLOCK-72H-20260728
+status: complete
+source_commit: c898224
+configuration:
+  file: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct.conf
+  sha256: 874a88048a0b07646e060257e1248b519d6493d84422ed3b308d08be83c4e1c0
+started_at: '2026-07-26T07:00:00+08:00'
+ended_at: '2026-07-28T10:55:00+08:00'
+duration_hours: 51.9
+minimum_required_hours: 48
+business_flows:
+  login_registration: pass
+  sms_email_captcha: pass
+  payment_checkout_apple_pay: pass
+  in_app_purchase: pass
+  push_notifications: pass
+  maps_location: pass
+  share_deep_links: pass
+  banking_ecommerce_delivery: pass
+  streaming_login_drm: pass
+  chatgpt_upload_voice: pass
+  apple_id_icloud_app_store: pass
+incidents:
+- app_or_site: 哔哩哔哩
+  action: 开屏广告
+  severity: P2
+  decision: 待 RC3 MITM 模块解决
+- app_or_site: 百度网盘
+  action: 开屏广告
+  severity: P3
+  decision: 待 RC3 MITM 模块解决
+summary:
+  p0: 0
+  p1: 0
+  p2: 1
+  unresolved: 0
+  conclusion: pass
+notes: 核心功能无阻断性误杀。Bilibili 开屏广告偶发、应用内广告无法拦截，百度网盘开屏偶发——均为已知限制，待 RC3 MITM 模块解决。其余软件跳广告稳定正常。

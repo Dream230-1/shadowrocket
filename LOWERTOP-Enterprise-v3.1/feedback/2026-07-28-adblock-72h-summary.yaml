@@ -1,0 +1,28 @@
+schema: 1
+feedback_id: ADBLOCK-72H-SUMMARY-20260728
+date: 2026-07-28
+source: user_report
+category: adblock_observation_complete
+configuration: LOWERTOP-Enterprise-v3.1-RC2-Performance-Direct
+duration_hours: 72+
+overall_assessment: stable
+apps_tested:
+  - name: 闲鱼
+    splash_ad: stable
+    notes: 开屏广告拦截稳定
+  - name: 哔哩哔哩
+    splash_ad: occasional_fail
+    in_app_ad: not_blocked
+    notes: 开屏广告仍偶发拦截失败；应用内广告（MITM 方案待 RC3 实现）
+  - name: 百度网盘
+    splash_ad: occasional_fail
+    notes: 偶尔触发开屏广告
+  - name: 其他软件
+    splash_ad: stable
+    notes: 跳广告整体稳定
+conclusion: pass_with_observations
+remaining_issues:
+  - 哔哩哔哩开屏广告偶发拦截失败 → RC3 MITM 模块解决
+  - 百度网盘开屏广告偶发 → RC3 MITM 模块解决
+  - 哔哩哔哩应用内广告 → DNS 规则级无法处理，RC3 MITM 模块解决
+recorded_at: 2026-07-28 10:56 CST
