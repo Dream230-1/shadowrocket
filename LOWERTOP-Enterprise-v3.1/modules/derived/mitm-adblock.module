@@ -1,17 +1,20 @@
 #!name=LOWERTOP MITM 去广告
-#!desc=百度网盘 + Bilibili 完整去广告 + 闲鱼 + gRPC 拦截
+#!desc=百度网盘 + Bilibili（完整+ gRPC）+ 闲鱼
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!author=LOWERTOP
 #!date=2026-07-28
 
 [Script]
 # === 百度网盘 ===
-http-request ^https:\/\/pan\.baidu\.com\/(api\/(getconfig|getsyscfg|taskscore\/tasklist|plugin\/get)|act\/api\/activityentry|rest\/\d\.\d\/pcs\/adv|recommend\/query\/list|feed\/kingkongdistrict) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘
+http-request ^https:\/\/pan\.baidu\.com\/(api|act\/api|rest\/|recommend|feed\/) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_reject.js, tag=百度网盘
 
-# === Bilibili 统一入口 ===
-http-request ^https:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/(x\/v2\/splash\/list|xlive|playerunite|PlayViewUnite|PlayURL|playurl|View\/View|ViewUnite|RelatesFeed|SearchAll|Reply\/MainList|x\/resource|x\/v2\/search|vip\/ads|pgc|game) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=Bili拦截
+# === Bilibili JSON API ===
+http-request ^https:\/\/app\.bilibili\.com\/(x\/v2\/splash\/list|xlive|x\/resource|x\/v2\/search|vip\/ads|pgc) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=Bili拦截
 
 http-response ^https:\/\/app\.bilibili\.com\/(x\/v2|xlive|x\/resource|pgc|vip) requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=Bili响应
+
+# === Bilibili gRPC 视频广告（修复 URL 匹配） ===
+http-request ^https:\/\/grpc\.biliapi\.net\/.*(?:playerunite|PlayViewUnite|PlayURL|playurl|RelatesFeed|SearchAll|Reply\/MainList) script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/bilibili_full.js, tag=BiligRPC
 
 # === 闲鱼 ===
 http-response ^https:\/\/market\.wapa\.taobao\.com\/ requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/xianyu.js, tag=闲鱼
@@ -27,5 +30,4 @@ DOMAIN-SUFFIX,nsclick.baidu.com,REJECT
 DOMAIN-SUFFIX,wangmeng.baidu.com,REJECT
 DOMAIN-SUFFIX,e.baidu.com,REJECT
 DOMAIN-SUFFIX,cb.baidu.com,REJECT
-DOMAIN-SUFFIX,union.baidu.com,REJECT
 DOMAIN-KEYWORD,baidustatic,REJECT
