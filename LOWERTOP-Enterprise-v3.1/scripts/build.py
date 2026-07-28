@@ -131,6 +131,10 @@ def main():
             yaml.safe_dump(merged, allow_unicode=True, sort_keys=False, width=200), encoding="utf-8"
         )
         shutil.copytree(project / "rules", workspace / "rules", dirs_exist_ok=True)
+        scripts_conf = project / "config" / "scripts.yaml"
+        if scripts_conf.exists():
+            (workspace / "config").mkdir(parents=True, exist_ok=True)
+            shutil.copy2(scripts_conf, workspace / "config" / "scripts.yaml")
 
         py = sys.executable
         run([py, "scripts/generate.py", "--profile", "all-release", "--mode", "inline"], workspace)

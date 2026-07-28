@@ -172,6 +172,27 @@ def render_config(root: Path, manifest: dict, profile_name: str, mode: str, base
             lines.append(f'RULE-SET,{upstream_url(manifest, item["path"])},{item["policy"]}')
 
     lines.append(manifest["final_rule"])
+
+    # 注入 MITM 去广告脚本（从 config/scripts.yaml 读取）
+    scripts_config = root / "config" / "scripts.yaml"
+    if scripts_config.exists():
+        try:
+            import yaml as _y
+            sc = _y.safe_load(scripts_config.read_text(encoding="utf-8")) or {}
+            if sc.get("script_rules"):
+                lines.append("")
+                lines.append("[Script]")
+                lines.append("# MITM 去广告脚本（由 scripts.yaml 注入）")
+                for rule in sc["script_rules"]:
+                    lines.append(rule)
+            if sc.get("extra_rules"):
+                lines.append("")
+                lines.append("# 额外广告域名拦截（由 scripts.yaml 注入）")
+                for r in sc["extra_rules"]:
+                    lines.append(r)
+        except Exception:
+            pass
+
     lines.extend(['', '[Host]', 'localhost = 127.0.0.1', ''])
     return "\n".join(lines)
 
