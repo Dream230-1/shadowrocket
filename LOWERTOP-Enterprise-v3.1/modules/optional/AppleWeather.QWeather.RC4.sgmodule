@@ -1,0 +1,23 @@
+#!name=Apple 天气增强 QWeather RC4
+#!desc=基于 NSRingo WeatherKit v3.1.0，将中国区当前天气、小时/每日预报、未来一小时降水和空气质量接入和风天气。API Key 仅保存在 Shadowrocket 本地模块参数中。
+#!author=Dream230-1 / LOWERTOP; upstream NSRingo contributors
+#!homepage=https://github.com/Dream230-1/shadowrocket
+#!category=LOWERTOP RC4
+#!version=3.1.0-rc4
+#!arguments=Weather.Replace:"CN",Weather.Provider:"QWeather",NextHour.Provider:"QWeather",AirQuality.Current.Pollutants.Provider:"QWeather",AirQuality.Current.Index.Provider:"QWeather",AirQuality.Comparison.Yesterday.PollutantsProvider:"QWeather",AirQuality.Comparison.Yesterday.IndexProvider:"QWeather",API.QWeather.Host:"devapi.qweather.com",API.QWeather.Token:"",Storage:"Argument",LogLevel:"WARN"
+#!arguments-desc=安装后进入模块编辑参数：填写新的 API.QWeather.Token；API.QWeather.Host 可填写账户控制台提供的专属 API Host。禁止把真实 Token 提交到 GitHub。普通免费凭证可能不支持昨日空气质量接口，遇到错误时将昨日两项改回默认或关闭。
+
+# Upstream: NSRingo/WeatherKit@348dc2a30dc2407d2bbd88d00cfd93a9f911a3c6
+# Runtime bundle pinned to v3.1.0; upstream license and attribution retained.
+
+[Rule]
+DOMAIN,weather-analytics-events.apple.com,REJECT-DROP
+DOMAIN-SUFFIX,tthr.apple.com,REJECT-DROP,extended-matching
+DOMAIN,tether.edge.apple,REJECT-DROP,extended-matching
+
+[Script]
+🌤 WeatherKit.availability.response = type=http-response,pattern=^https?:\/\/weatherkit\.apple\.com\/api\/v1\/availability\/,requires-body=1,engine=webview,max-size=-1,timeout=60,script-path=https://github.com/NSRingo/WeatherKit/releases/download/v3.1.0/response.bundle.js,argument=Weather.Replace="{{{Weather.Replace}}}"&Weather.Provider="{{{Weather.Provider}}}"&NextHour.Provider="{{{NextHour.Provider}}}"&AirQuality.Current.Pollutants.Provider="{{{AirQuality.Current.Pollutants.Provider}}}"&AirQuality.Current.Index.Provider="{{{AirQuality.Current.Index.Provider}}}"&AirQuality.Comparison.Yesterday.PollutantsProvider="{{{AirQuality.Comparison.Yesterday.PollutantsProvider}}}"&AirQuality.Comparison.Yesterday.IndexProvider="{{{AirQuality.Comparison.Yesterday.IndexProvider}}}"&API.QWeather.Host="{{{API.QWeather.Host}}}"&API.QWeather.Token="{{{API.QWeather.Token}}}"&Storage="{{{Storage}}}"&LogLevel="{{{LogLevel}}}"
+🌤 WeatherKit.weather.response = type=http-response,pattern=^https?:\/\/weatherkit\.apple\.com\/api\/v2\/weather\/,requires-body=1,binary-body-mode=1,engine=webview,max-size=-1,timeout=60,script-path=https://github.com/NSRingo/WeatherKit/releases/download/v3.1.0/response.bundle.js,argument=Weather.Replace="{{{Weather.Replace}}}"&Weather.Provider="{{{Weather.Provider}}}"&NextHour.Provider="{{{NextHour.Provider}}}"&AirQuality.Current.Pollutants.Provider="{{{AirQuality.Current.Pollutants.Provider}}}"&AirQuality.Current.Index.Provider="{{{AirQuality.Current.Index.Provider}}}"&AirQuality.Comparison.Yesterday.PollutantsProvider="{{{AirQuality.Comparison.Yesterday.PollutantsProvider}}}"&AirQuality.Comparison.Yesterday.IndexProvider="{{{AirQuality.Comparison.Yesterday.IndexProvider}}}"&API.QWeather.Host="{{{API.QWeather.Host}}}"&API.QWeather.Token="{{{API.QWeather.Token}}}"&Storage="{{{Storage}}}"&LogLevel="{{{LogLevel}}}"
+
+[MITM]
+hostname = %APPEND% weatherkit.apple.com
