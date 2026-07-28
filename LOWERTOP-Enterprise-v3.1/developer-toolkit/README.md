@@ -7,25 +7,45 @@
 1. `validate_module.py`
    - 校验模块元数据、区块名称和脚本类型。
    - 检查 `%APPEND%`、MITM Hostname 和远程脚本 URL。
-   - 标记高风险用法，例如整接口返回空对象、未知脚本类型和过宽 Hostname。
+   - 明确拒绝 Shadowrocket 不支持的 `type=generic`。
+   - 将整接口空对象、浮动 `releases/latest` 等高风险写法标记为警告。
 
 2. `extract_mitm.py`
-   - 从 `.sgmodule`、`.srmodule`、`.conf` 中提取 MITM Hostname。
-   - 输出去重后的 Hostname 清单。
-   - 可用于核对需要手动加入 HTTPS 解密的域名。
+   - 从 `.sgmodule`、`.srmodule`、`.module`、`.conf` 中提取 MITM Hostname。
+   - 输出去重后的 Hostname、来源文件、行号与 `%APPEND%` 状态。
+   - 检查通配符、URL 误填和无效格式。
 
 3. `analyze_log.py`
-   - 分析从 Shadowrocket 导出的文本日志。
-   - 汇总 DIRECT、PROXY、REJECT、MITM、SCRIPT 等命中情况。
-   - 支持按关键字筛选，例如 `bilibili`、`fav`、`baidu`。
+   - 分析 Shadowrocket 导出的文本日志或整理后的请求记录。
+   - 汇总 DIRECT、PROXY、REJECT、MITM、SCRIPT、HTTP 状态码和命中规则。
+   - 支持按多个关键字筛选，例如 `bilibili`、`fav`、`baidu`。
+   - 可在发现 REJECT 时返回失败退出码，便于自动化回归。
+
+4. Toolkit CI
+   - 工作流：`.github/workflows/developer-toolkit.yml`。
+   - 自动编译脚本、运行回归测试、校验模块并生成 MITM 审计报告。
+   - 报告以 GitHub Actions Artifact 形式保存。
 
 ## 使用示例
 
+在 `LOWERTOP-Enterprise-v3.1` 目录执行：
+
 ```bash
 python3 developer-toolkit/validate_module.py modules/optional/Bilibili.ADBlock.RC4.sgmodule
-python3 developer-toolkit/extract_mitm.py modules/optional/Bilibili.ADBlock.RC4.sgmodule
-python3 developer-toolkit/analyze_log.py shadowrocket.log --keyword bilibili
+python3 developer-toolkit/validate_module.py modules/optional modules/experimental --json-out reports/modules.json
+python3 developer-toolkit/extract_mitm.py modules/optional modules/experimental --unique
+python3 developer-toolkit/analyze_log.py shadowrocket.log --keyword bilibili --keyword fav \
+  --json-out reports/bilibili-log.json --markdown-out reports/bilibili-log.md
 ```
+
+## Shadowrocket 实机证据流程
+
+1. 关闭与测试目标无关的模块和 HTTPS 解密域名。
+2. 清空 Shadowrocket 请求日志。
+3. 执行单一测试动作，例如打开“我的收藏”或冷启动百度网盘。
+4. 导出文本日志，或按时间顺序整理为一行一条请求记录。
+5. 使用 `analyze_log.py` 分析域名、策略、规则和异常状态码。
+6. 只有在核心功能回归通过后，才扩大广告接口覆盖范围。
 
 ## 开发原则
 
@@ -34,10 +54,11 @@ python3 developer-toolkit/analyze_log.py shadowrocket.log --keyword bilibili
 - 不允许在未做实机回归前把实验模块并入主配置。
 - JSON 和 protobuf 响应应做字段级修改，避免整接口清空。
 - 每个模块必须保留明确的回滚入口和实机验证记录。
+- 自动化静态通过不能替代真实设备验证。
 
 ## 下一阶段
 
-- JSON 差异分析器
-- protobuf/gRPC 请求识别
+- JSON 响应差异分析器
+- protobuf/gRPC 请求识别与样本登记
 - 模块与主配置冲突检查
-- CI 自动生成模块审计报告
+- Bilibili Next 与 BaiduNetdisk Next 独立实验目录
