@@ -1,9 +1,9 @@
 meta:
-  version: 3.1.0-rc2
-  generated_date: '2026-07-26'
-  project_path: Shadowrocket/LOWERTOP-Enterprise-v3.1
+  version: 3.1.0-rc3
+  generated_date: '2026-07-28'
+  project_path: LOWERTOP-Enterprise-v3.1
   design:
-    - RC3 验证内核兼容层
+    - RC2 验证内核兼容层
     - RC1 Performance 行为契约冻结
     - AI / Apple / 通信 / 媒体 / 游戏 / 广告 / 基础路由模块化
     - Apple Global 与 Apple Core 负向回归
@@ -13,3 +13,9 @@ meta:
     - Wi-Fi / 蜂窝 / 网络切换设备验证模板
     - AdvertisingLite 72 小时误杀观察
     - Direct / Modular 可复现发布
+    - MITM 去广告模块（Bilibili / 闲鱼 / 百度网盘）
+    - iCloud 专用代理分流
+    - DNS 泄漏防护
+    - Apple 天气增强（QWeather API）
+    - IP 节点质量检测
+    - 规则精简去重
