@@ -1,0 +1,22 @@
+#!name=百度网盘去广告 RC4 Experimental
+#!desc=仅拦截已识别的活动入口、福利推广、游戏中心和广告配置接口；不修改会员状态，不影响登录、下载、分享及在线播放主链路。
+#!author=Dream230-1 / LOWERTOP
+#!homepage=https://github.com/Dream230-1/shadowrocket
+#!category=LOWERTOP RC4 Experimental
+#!version=3.1.0-rc4
+
+# 参考接口快照：axtyet/Luminous@3eb24e5f60c8b72c46358be12902534400b0d1e9
+# 本模块默认不并入主配置。启用前请开启 Shadowrocket HTTPS 解密并保留回滚入口。
+
+[Map Local]
+# 弹窗配置与首页活动入口
+^https:\/\/pan\.baidu\.com\/act\/api\/activityentry(?:\?|$) data-type=text data="{}" header="application/json"
+# “我的”页面福利推广
+^https:\/\/pan\.baidu\.com\/act\/v2\/welfare\/list(?:\?|$) data-type=text data="{}" header="application/json"
+# 广告配置接口
+^https:\/\/pan\.baidu\.com\/rest\/\d\.\d\/pcs\/adv(?:\?|$) data-type=text data="{}" header="application/json"
+# 游戏中心入口，仅限制 method=gamecenter
+^https:\/\/pan\.baidu\.com\/rest\/2\.0\/membership\/user\?(?=[^#]*\bmethod=gamecenter\b) data-type=text data="{}" header="application/json"
+
+[MITM]
+hostname = %APPEND% pan.baidu.com
