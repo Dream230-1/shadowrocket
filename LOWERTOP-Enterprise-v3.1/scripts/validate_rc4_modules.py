@@ -47,9 +47,9 @@ def main() -> None:
         bilibili,
         (
             "BiliUniverse/ADBlock/releases/",
-            "View/(View|TFInfo|RelatesFeed)",
-            "Reply/MainList",
-            "Dynamic/Dyn(All|Video)",
+            "RelatesFeed",
+            "Reply\\/MainList",
+            "Dyn(All|Video)",
             "binary-body-mode=1",
             "hostname = %APPEND%",
         ),
