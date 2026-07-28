@@ -1,9 +1,9 @@
 #!name=节点 IP 质量检测（出口变化自动触发）
-#!desc=Wi-Fi/蜂窝变化时立即检测；每分钟轮询当前出口，仅在出口 IP 变化时通知，适用于同一网络内切换代理节点。
+#!desc=Wi-Fi/蜂窝变化时立即检测；每 5 分钟检查一次当前出口，仅在出口 IP 变化时通知，兼顾同一网络内切换代理节点与耗电控制。
 #!author=Dream230-1 / LOWERTOP
 #!homepage=https://github.com/Dream230-1/shadowrocket
 #!category=工具
 
 [Script]
 节点 IP 质量检测·网络变化 = type=event, event-name=network-changed, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/scripts/tools/ipquality_current.js, timeout=30, argument=force=1, enable=true
-节点 IP 质量检测·出口轮询 = type=cron, cronexp="*/1 * * * *", script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/scripts/tools/ipquality_current.js, timeout=30, argument=force=0, enable=true
+节点 IP 质量检测·出口轮询 = type=cron, cronexp="*/5 * * * *", script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc4/LOWERTOP-Enterprise-v3.1/scripts/tools/ipquality_current.js, timeout=30, argument=force=0, enable=true
