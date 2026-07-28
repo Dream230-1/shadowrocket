@@ -15,4 +15,4 @@ http-response ^https?:\/\/pan\.baidu\.com\/recommend\/query\/list requires-body=
 http-response ^https?:\/\/pan\.baidu\.com\/feed\/kingkongdistrict requires-body=true, script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1-rc3/LOWERTOP-Enterprise-v3.1/scripts/mitm/baidu_netdisk.js, tag=百度网盘首页过滤
 
 [MitM]
-hostname = pan.baidu.com
+hostname = pan.baidu.com, pos.baidu.com, cpro.baidu.com, nsclick.baidu.com
