@@ -1,0 +1,68 @@
+name: Shadowrocket Developer Toolkit
+
+on:
+  push:
+    branches:
+      - release/v3.1-rc4
+    paths:
+      - "LOWERTOP-Enterprise-v3.1/developer-toolkit/**"
+      - "LOWERTOP-Enterprise-v3.1/modules/**"
+      - ".github/workflows/developer-toolkit.yml"
+  pull_request:
+    paths:
+      - "LOWERTOP-Enterprise-v3.1/developer-toolkit/**"
+      - "LOWERTOP-Enterprise-v3.1/modules/**"
+      - ".github/workflows/developer-toolkit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  toolkit-audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: LOWERTOP-Enterprise-v3.1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Compile toolkit
+        run: |
+          python -m py_compile developer-toolkit/*.py developer-toolkit/tests/*.py
+
+      - name: Run toolkit regression tests
+        run: |
+          python -m unittest discover -s developer-toolkit/tests -p "test_*.py" -v
+
+      - name: Validate Shadowrocket modules
+        run: |
+          mkdir -p reports
+          python developer-toolkit/validate_module.py \
+            modules/optional \
+            modules/experimental \
+            --json-out reports/developer-toolkit-modules.json
+
+      - name: Extract MITM hostnames
+        run: |
+          python developer-toolkit/extract_mitm.py \
+            modules/optional \
+            modules/experimental \
+            --json-out reports/developer-toolkit-mitm.json
+
+      - name: Upload toolkit reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: shadowrocket-developer-toolkit-reports
+          path: |
+            LOWERTOP-Enterprise-v3.1/reports/developer-toolkit-modules.json
+            LOWERTOP-Enterprise-v3.1/reports/developer-toolkit-mitm.json
+          if-no-files-found: warn
