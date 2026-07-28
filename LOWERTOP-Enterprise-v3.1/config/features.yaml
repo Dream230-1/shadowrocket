@@ -11,6 +11,12 @@ features:
   conditional_remote_cache: true
   service_health_report: true
   network_benchmark_report: true
+  scripts_config_validation: true
+  secret_scanning: true
+  ip_quality_current_egress: true
+  bilibili_adblock_rc4: false
+  baidu_netdisk_adblock_experimental: false
+  apple_weather_qweather: false
   ipv6_svcb_experimental: true
   force_ech: false
   unverified_dns_protocol_fallback: false
