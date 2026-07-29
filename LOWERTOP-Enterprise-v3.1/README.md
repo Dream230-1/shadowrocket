@@ -10,18 +10,23 @@ v3.1 以 RC4 实机验证结果为发布基线，保留稳定的路由、DNS、�
 4. **Developer Toolkit v0.1**：提供模块静态校验、MITM Hostname 提取与风险检查、Shadowrocket 文本日志分析和最小回归测试。
 5. **iCloud 分层分流**：普通 iCloud 同步及 Apple Account 保持 `DIRECT`；仅专用代理 `mask*` 精确端点优先走 `AI` fallback，且不启用 HTTPS 解密。
 6. **最小 MITM**：默认主配置移除闲鱼 MITM 去广告脚本；只有启用 Apple 天气等响应改写模块时才需要 HTTPS 解密。
+7. **第三方模块冻结审计**：微信公众号、微博、Netflix 评分和 YouTube 信息流模块使用固定上游提交；微博模块删除非会员皮肤改写并收缩 MITM 主机。
 
 ## 模块目录
 
 ```text
 modules/optional/
 ├── AppleWeather.QWeather.v3.1.sgmodule
-└── iCloud.PrivateRelay.Priority.v3.1.sgmodule
+├── iCloud.PrivateRelay.Priority.v3.1.sgmodule
+├── Netflix.Ratings.v3.1.sgmodule
+├── WeChat.OfficialAccounts.NoAds.v3.1.sgmodule
+├── Weibo.NoAds.v3.1.sgmodule
+└── YouTube.NoAds.v3.1.sgmodule
 ```
 
 模块安装、顺序、HTTPS 解密边界和回滚方法见 `releases/v3.1/MODULES.md`。
 
-哔哩哔哩与百度网盘旧模块不进入 v3.1 正式版。后续分别在 `bilibili-next` 与 `baidunetdisk-next` 实验分支中基于最新客户端抓包结果重新开发。
+完整审计矩阵见 `releases/v3.1/MODULE-AUDIT.md`。哔哩哔哩与百度网盘旧模块不进入 v3.1 正式版。后续分别在 `bilibili-next` 与 `baidunetdisk-next` 实验分支中基于最新客户端抓包结果重新开发。
 
 ## 保持不变
 

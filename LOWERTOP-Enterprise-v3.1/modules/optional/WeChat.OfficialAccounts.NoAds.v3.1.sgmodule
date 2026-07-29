@@ -1,0 +1,15 @@
+#!name=微信公众号去广告 审计版 v3.1
+#!desc=仅移除公众号文章底部广告。脚本固定到 NobyDa/Script 的已审计提交，仅解密 mp.weixin.qq.com。
+#!author=Dream230-1 / LOWERTOP; upstream NobyDa
+#!homepage=https://github.com/Dream230-1/shadowrocket
+#!category=LOWERTOP v3.1 Audited
+#!version=3.1.0
+
+# Upstream module: deezertidal/shadowrocket-rules@7fad8dc2c42b168dc1cbebf18b1591fc39579b9d
+# Runtime script: NobyDa/Script@7f8b309f8d943806b90c6ff25d8b8aa0c59b0c03
+
+[Script]
+微信公众号底部广告 = type=http-response,pattern=^https?:\/\/mp\.weixin\.qq\.com\/mp\/getappmsgad,requires-body=1,script-path=https://raw.githubusercontent.com/NobyDa/Script/7f8b309f8d943806b90c6ff25d8b8aa0c59b0c03/QuantumultX/File/Wechat.js
+
+[MITM]
+hostname = %APPEND% mp.weixin.qq.com

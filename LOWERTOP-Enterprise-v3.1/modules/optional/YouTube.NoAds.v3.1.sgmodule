@@ -1,0 +1,14 @@
+#!name=YouTube 信息流去广告 审计版 v3.1
+#!desc=仅过滤首页瀑布流和播放页推荐列表广告，不处理视频贴片广告。按 v3.1 推荐组合保持关闭。
+#!author=Dream230-1 / LOWERTOP; upstream app2smile
+#!homepage=https://github.com/Dream230-1/shadowrocket
+#!category=LOWERTOP v3.1 Audited
+#!version=3.1.0
+
+# Runtime module and script: app2smile/rules@df6366a7024e0b3f0aa3510c5b791eea6f3cba89
+
+[Script]
+YouTube 信息流广告 = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next),requires-body=1,binary-body-mode=1,max-size=2097152,script-path=https://raw.githubusercontent.com/app2smile/rules/df6366a7024e0b3f0aa3510c5b791eea6f3cba89/js/youtube.js
+
+[MITM]
+hostname = %APPEND% youtubei.googleapis.com

@@ -2,6 +2,14 @@
 
 ## 3.1.0
 
+### Audited module refresh
+
+- 新增微信公众号、微博、Netflix 评分和 YouTube 信息流四个审计版可选模块。
+- 所有新增运行脚本固定到不可变上游提交，不跟随 `main`、`master` 或 `latest`。
+- 微博模块删除非会员皮肤改写，将 `*.uve.weibo.com` 收缩为两个精确开屏广告主机。
+- 新增第三方模块审计矩阵和后续升级路线。
+- 正式主配置、路由、DNS、策略组、AdvertisingLite 和 `FINAL,PROXY` 行为未改变。
+
 ### Released
 
 - 冻结 RC4 已验证的 DNS、策略组、路由顺序、iCloud 分层分流和 `FINAL,PROXY` 行为。
