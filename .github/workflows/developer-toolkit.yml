@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release/v3.1
+      - release/v3.1.1
     paths:
       - "LOWERTOP-Enterprise-v3.1/developer-toolkit/**"
       - "LOWERTOP-Enterprise-v3.1/modules/**"
@@ -60,7 +61,7 @@ jobs:
       - name: Audit module coverage conflicts
         run: |
           python developer-toolkit/audit_coverage.py \
-            --base-config ../releases/v3.1/LOWERTOP-Enterprise-v3.1-Performance-Direct.conf \
+            --base-config ../releases/v3.1.1/LOWERTOP-Enterprise-v3.1.1-Performance-Direct.conf \
             modules/optional \
             --json-out reports/developer-toolkit-coverage.json
 

@@ -1,17 +1,21 @@
-#!name=Netflix 评分增强 审计版 v3.1
-#!desc=在 Netflix 中显示 IMDb、豆瓣和季度评分。不会解锁会员或影视内容，会把片名发送给 OMDb，并把 IMDb ID 发送给豆瓣搜索。
-#!author=Dream230-1 / LOWERTOP; upstream yichahucha
+#!name=Netflix 双字幕与评分 审计版 v3.1.1
+#!desc=为 Netflix 提供双语字幕以及 IMDb、豆瓣和季度评分；不解锁会员或影视内容。
+#!author=Dream230-1 / LOWERTOP; upstream DualSubs and yichahucha
 #!homepage=https://github.com/Dream230-1/shadowrocket
-#!category=LOWERTOP v3.1 Audited
-#!version=3.1.0
+#!category=LOWERTOP v3.1.1 Audited
+#!version=3.1.1
+#!arguments=Switch:true,Languages[0]:AUTO,Languages[1]:ZH,ShowOnly:false
+#!arguments-desc=Switch:字幕功能开关\nLanguages[0]:主字幕语言\nLanguages[1]:副字幕语言\nShowOnly:仅显示翻译字幕
 
-# Upstream module: deezertidal/shadowrocket-rules@7fad8dc2c42b168dc1cbebf18b1591fc39579b9d
-# Runtime scripts: yichahucha/surge@06d6e36771880959c008d3c59c192068f00ddd51
+# Ratings module basis: deezertidal/shadowrocket-rules@7fad8dc2c42b168dc1cbebf18b1591fc39579b9d
+# Rating runtime: yichahucha/surge@06d6e36771880959c008d3c59c192068f00ddd51
+# Subtitle runtime: DualSubs/Universal@14fdcecdaaaf8e2b80c74a6bfc2bb0890da0775e
 
 [Script]
-Netflix 评分请求 = type=http-request,pattern=^https?://ios\.prod\.ftl\.netflix\.com/iosui/user/.+path=%5B%22videos%22%2C%22\d+%22%2C%22summary%22%5D,script-path=https://raw.githubusercontent.com/yichahucha/surge/06d6e36771880959c008d3c59c192068f00ddd51/nf_rating.js,timeout=10
-Netflix 评分响应 = type=http-response,pattern=^https?://ios\.prod\.ftl\.netflix\.com/iosui/user/.+path=%5B%22videos%22%2C%22\d+%22%2C%22summary%22%5D,requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/06d6e36771880959c008d3c59c192068f00ddd51/nf_rating.js,timeout=10
-Netflix 季度评分 = type=http-response,pattern=^https?://ios\.prod\.ftl\.netflix\.com/iosui/warmer/.+type=show-ath,requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/06d6e36771880959c008d3c59c192068f00ddd51/nf_rating_season.js,timeout=10
+Netflix 评分请求 = type=http-request,pattern=^https?://ios\\.prod\\.ftl\\.netflix\\.com/iosui/user/.+path=%5B%22videos%22%2C%22\\d+%22%2C%22summary%22%5D,script-path=https://raw.githubusercontent.com/yichahucha/surge/06d6e36771880959c008d3c59c192068f00ddd51/nf_rating.js,timeout=10
+Netflix 评分响应 = type=http-response,pattern=^https?://ios\\.prod\\.ftl\\.netflix\\.com/iosui/user/.+path=%5B%22videos%22%2C%22\\d+%22%2C%22summary%22%5D,requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/06d6e36771880959c008d3c59c192068f00ddd51/nf_rating.js,timeout=10
+Netflix 季度评分 = type=http-response,pattern=^https?://ios\\.prod\\.ftl\\.netflix\\.com/iosui/warmer/.+type=show-ath,requires-body=1,script-path=https://raw.githubusercontent.com/yichahucha/surge/06d6e36771880959c008d3c59c192068f00ddd51/nf_rating_season.js,timeout=10
+Netflix 双语字幕 = type=http-response,pattern=^https?:\\/\\/[^/]+\\.oca\\.nflxvideo\\.net\\/\\?o=\\d+&v=\\d+&e=\\d+&t=.+,requires-body=1,max-size=-1,timeout=60,script-path=https://raw.githubusercontent.com/DualSubs/Universal/14fdcecdaaaf8e2b80c74a6bfc2bb0890da0775e/js/Translate.response.js,argument=Switch={{{Switch}}}&Languages[0]={{{Languages[0]}}}&Languages[1]={{{Languages[1]}}}&ShowOnly={{{ShowOnly}}}
 
 [MITM]
-hostname = %APPEND% ios.prod.ftl.netflix.com
+hostname = %APPEND% ios.prod.ftl.netflix.com,*.oca.nflxvideo.net

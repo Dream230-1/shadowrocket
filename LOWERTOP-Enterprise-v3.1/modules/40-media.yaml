@@ -1,11 +1,11 @@
 module:
   id: media
   enabled: true
-  description: 流媒体服务模块，保留 RC1 的策略组与 stage。
+  description: 流媒体服务模块；YouTube 统一指向 AI，其余服务保留独立策略。
   rulesets:
     - kind: remote
       name: YouTube
-      policy: YouTube
+      policy: AI
       stage: 60
     - kind: remote
       name: Netflix

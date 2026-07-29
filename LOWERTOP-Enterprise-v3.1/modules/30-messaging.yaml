@@ -1,9 +1,9 @@
 module:
   id: messaging
   enabled: true
-  description: Telegram 独立通信模块。
+  description: Telegram 规则保留，但策略统一指向 AI。
   rulesets:
     - kind: remote
       name: Telegram
-      policy: Telegram
+      policy: AI
       stage: 50

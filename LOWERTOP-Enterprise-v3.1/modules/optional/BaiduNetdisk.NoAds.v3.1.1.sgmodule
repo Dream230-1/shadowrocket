@@ -1,0 +1,16 @@
+#!name=百度网盘仅去广告 审计版 v3.1.1
+#!desc=仅处理广告专用接口中的显式广告字段；不匹配登录、账号、会员、分享、文件列表、播放或下载接口。
+#!author=Dream230-1 / LOWERTOP
+#!homepage=https://github.com/Dream230-1/shadowrocket
+#!category=LOWERTOP v3.1.1 Candidate
+#!version=3.1.1
+
+# Endpoint basis: LOWERTOP legacy audit e28ff3d7ce0d628820df2322e4f4ac7c64bacc1e
+# Runtime: Dream230-1/shadowrocket@0c2941d8a438d7e78ba71a1a5ed58366926c5369
+# Capture status: current-device packet capture validation pending.
+
+[Script]
+百度网盘广告接口 = type=http-response,pattern=^https:\\/\\/pan\\.baidu\\.com\\/(rest\\/2\\.0\\/pcs\\/adv|api\\/(getsplash|splash|ad))([\\/?]|$),requires-body=1,max-size=1048576,script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/0c2941d8a438d7e78ba71a1a5ed58366926c5369/LOWERTOP-Enterprise-v3.1/scripts/runtime/baidu_netdisk_ads_only.js
+
+[MITM]
+hostname = %APPEND% pan.baidu.com

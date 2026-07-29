@@ -8,22 +8,38 @@ on:
 permissions:
   contents: write
 
+env:
+  TARGET_BRANCH: release/v3.1.1
+  UPSTREAM_REPOSITORY: GMOogway/shadowrocket-rules
+
 jobs:
   derive:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+          fetch-depth: 0
       - name: Fetch and transform GMOogway proxy_list module
         run: |
+          set -euo pipefail
           OUTDIR="LOWERTOP-Enterprise-v3.1/modules/derived"
           mkdir -p "$OUTDIR"
           OUTFILE="$OUTDIR/gmoogway-proxy-list-ai.module"
-          URL="https://raw.githubusercontent.com/GMOogway/shadowrocket-rules/master/sr_proxy_list.module"
-          TODAY=$(date '+%m-%d')
-          curl -fsSL "$URL" | sed 's/,PROXY$/,AI/' | sed "s/Created:[0-9: -]*/Created:${TODAY} 07:35 /" > "$OUTFILE"
-          COUNT=$(grep -c ',AI$' "$OUTFILE" || true)
-          echo "Derived module written: ${COUNT} AI rules"
+          SOURCE_SHA="$(git ls-remote "https://github.com/${UPSTREAM_REPOSITORY}.git" refs/heads/master | awk '{print $1}')"
+          test "${#SOURCE_SHA}" -eq 40
+          SOURCE_FILE="$(mktemp)"
+          curl -fsSL "https://raw.githubusercontent.com/${UPSTREAM_REPOSITORY}/${SOURCE_SHA}/sr_proxy_list.module" -o "$SOURCE_FILE"
+          python LOWERTOP-Enterprise-v3.1/scripts/derive_proxy_module.py \
+            --input "$SOURCE_FILE" \
+            --output "$OUTFILE" \
+            --source-commit "$SOURCE_SHA"
+          grep -q "Upstream:${SOURCE_SHA}" "$OUTFILE"
+          if grep -Eq ',PROXY(,|$)' "$OUTFILE"; then
+            echo "Unconverted PROXY policy detected" >&2
+            exit 1
+          fi
       - name: Commit and push if changed
         run: |
           git config user.name "Dream230-1"
@@ -33,5 +49,5 @@ jobs:
             echo "No changes — upstream module unchanged."
           else
             git commit -m "Auto-derive GMOogway proxy-list → AI ($(date -u '+%Y-%m-%d %H:%M UTC'))"
-            git push
+            git push origin "HEAD:${TARGET_BRANCH}"
           fi

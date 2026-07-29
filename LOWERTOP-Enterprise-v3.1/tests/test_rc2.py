@@ -27,6 +27,7 @@ behavior_lock = load("behavior_lock")
 module_config = load("module_config")
 rule_conflicts = load("rule_conflicts")
 build = load("build")
+derive_proxy_module = load("derive_proxy_module")
 
 
 class BehaviorLockTests(unittest.TestCase):
@@ -43,6 +44,21 @@ class BehaviorLockTests(unittest.TestCase):
 
 
 class ModuleTests(unittest.TestCase):
+    def test_proxy_derivation_preserves_every_rule_and_targets_ai(self):
+        source = "\n".join((
+            "#!name=proxy_list",
+            "#!desc=Rules:3",
+            "[Rule]",
+            "DOMAIN-SUFFIX,example.com,PROXY",
+            "URL-REGEX,\"^https://example.org/a,b$\",PROXY",
+            "IP-CIDR,203.0.113.0/24,PROXY,no-resolve",
+        ))
+        rendered, count = derive_proxy_module.transform(source, "a" * 40)
+        self.assertEqual(count, 3)
+        self.assertEqual(rendered.count(",AI"), 3)
+        self.assertNotIn(",PROXY", rendered)
+        self.assertIn("Upstream:" + "a" * 40, rendered)
+
     def test_module_assembly_preserves_source_items(self):
         manifest = {
             "local_rulesets": [{"name": "A", "policy": "DIRECT", "stage": 10}],
@@ -67,25 +83,48 @@ class ModuleTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 module_config.apply_modules(manifest, Path(temp))
 
-    def test_routing_overrides_keep_icloud_direct_and_remove_legacy_group(self):
+    def test_routing_overrides_unify_telegram_and_youtube_on_ai(self):
         manifest = {
             "proxy_groups": [
                 {"name": "AI", "type": "fallback"},
                 {"name": "iCloud", "type": "select"},
+                {"name": "Telegram", "type": "select"},
+                {"name": "YouTube", "type": "select"},
             ],
             "local_rulesets": [
                 {"name": "Apple-iCloud", "policy": "iCloud", "stage": 35},
             ],
+            "remote_rulesets": [
+                {"name": "Telegram", "policy": "Telegram", "stage": 50},
+                {"name": "YouTube", "policy": "YouTube", "stage": 60},
+            ],
+            "health_checks": [
+                {"service": "Telegram Web", "policy": "Telegram"},
+                {"service": "YouTube", "policy": "YouTube"},
+            ],
+            "benchmark": {
+                "endpoints": [
+                    {"id": "telegram", "policy": "Telegram"},
+                    {"id": "youtube", "policy": "YouTube"},
+                ]
+            },
         }
         config = {
             "routing_overrides": {
-                "remove_proxy_groups": ["iCloud"],
+                "remove_proxy_groups": ["iCloud", "Telegram", "YouTube"],
+                "policy_aliases": {"Telegram": "AI", "YouTube": "AI"},
                 "local_ruleset_policies": {"Apple-iCloud": "DIRECT"},
             }
         }
         result = build.apply_routing_overrides(manifest, config)
         self.assertEqual([group["name"] for group in result["proxy_groups"]], ["AI"])
         self.assertEqual(result["local_rulesets"][0]["policy"], "DIRECT")
+        self.assertEqual([item["policy"] for item in result["remote_rulesets"]], ["AI", "AI"])
+        self.assertEqual([item["policy"] for item in result["health_checks"]], ["AI", "AI"])
+        self.assertEqual(
+            [item["policy"] for item in result["benchmark"]["endpoints"]],
+            ["AI", "AI"],
+        )
 
     def test_routing_overrides_reject_unknown_targets(self):
         manifest = {"proxy_groups": [], "local_rulesets": []}

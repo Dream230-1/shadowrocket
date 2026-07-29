@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 3.1.1
+
+### Routing
+
+- 完整 `proxy_list` 每日从 GMOogway 上游固定提交转码为 `AI`，不裁剪任何规则。
+- 删除 Telegram 与 YouTube 独立策略组；对应远程规则直接指向 `AI`。
+- 移除内置 AdvertisingLite；通用域名广告拦截交给外部 `reject_list`。
+
+### Modules
+
+- 新增哔哩哔哩纯去广告模块，禁止改写 VIP、收藏、账号、评论和播放接口。
+- 新增百度网盘纯去广告模块，禁止匹配登录、分享、下载、文件列表和传输接口。
+- 修复 Netflix 双字幕与评分模块，所有脚本固定到 40 位上游提交。
+- Apple Weather 运行脚本固定到仓库内不可变提交。
+
+### Security and CI
+
+- 新增模块审计清单，记录来源提交、MITM 主机、通配符例外和冲突模块。
+- CI 拒绝 `main`、`master`、GitHub `blob`、`latest` 与非 40 位提交脚本链接。
+- CI 拒绝未登记 MITM 通配符、会员解锁模块、支付/登录主机和跨模块 MITM 冲突。
+- 哔哩哔哩与百度网盘当前客户端抓包验证仍为发布后候选验证项，不把静态端点审计表述为实机通过。
+
 ## 3.1.0
 
 ### Audited module refresh

@@ -40,7 +40,7 @@ def main() -> None:
     require(
         weather,
         (
-            "NSRingo/WeatherKit/releases/download/v3.1.0/response.bundle.js",
+            "Dream230-1/shadowrocket/0c2941d8a438d7e78ba71a1a5ed58366926c5369/",
             'API.QWeather.Token:""',
             'API.QWeather.Token="{{{API.QWeather.Token}}}"',
             'Weather.Provider="{{{Weather.Provider}}}"',
@@ -107,11 +107,14 @@ def main() -> None:
         "Netflix.Ratings.v3.1.sgmodule": {
             "markers": (
                 "yichahucha/surge/06d6e36771880959c008d3c59c192068f00ddd51/",
+                "DualSubs/Universal/14fdcecdaaaf8e2b80c74a6bfc2bb0890da0775e/",
                 "Netflix 评分请求 = type=http-request",
                 "Netflix 评分响应 = type=http-response",
                 "Netflix 季度评分 = type=http-response",
+                "Netflix 双语字幕 = type=http-response",
             ),
-            "hosts": ("ios.prod.ftl.netflix.com",),
+            "hosts": ("ios.prod.ftl.netflix.com", "*.oca.nflxvideo.net"),
+            "allowed_wildcards": ("*.oca.nflxvideo.net",),
         },
         "YouTube.NoAds.v3.1.sgmodule": {
             "markers": (
@@ -147,11 +150,13 @@ def main() -> None:
         )
         if hosts != spec["hosts"]:
             fail(f"{filename}: MITM hostnames must remain exact and ordered")
-        if any("*" in host for host in hosts):
-            fail(f"{filename}: wildcard MITM hostnames are forbidden")
+        allowed_wildcards = set(spec.get("allowed_wildcards", ()))
+        unexpected_wildcards = [host for host in hosts if "*" in host and host not in allowed_wildcards]
+        if unexpected_wildcards:
+            fail(f"{filename}: unapproved wildcard MITM hostnames: {unexpected_wildcards}")
 
     print(
-        "v3.1 module audit OK: Apple Weather local-only token; "
+        "v3.1.1 module audit OK: Apple Weather local-only token; "
         "iCloud Private Relay exact priority rules; audited optional runtimes pinned"
     )
 

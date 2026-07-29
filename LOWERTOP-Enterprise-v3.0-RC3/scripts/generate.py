@@ -20,8 +20,10 @@ def artifact_label(meta):
     match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:-(.+))?", version)
     if not match:
         return "v3.0"
-    major, minor, _patch, suffix = match.groups()
+    major, minor, patch, suffix = match.groups()
     label = f"v{major}.{minor}"
+    if patch != "0":
+        label += f".{patch}"
     if suffix:
         label += "-" + suffix.upper()
     return label
@@ -111,7 +113,7 @@ def render_config(root: Path, manifest: dict, profile_name: str, mode: str, base
     profile = manifest["profiles"][profile_name]
     meta = manifest["meta"]
     lines = [
-        f'# Shadowrocket Enterprise v3.0 - {profile["title"]}',
+        f'# Shadowrocket Enterprise {artifact_label(meta)} - {profile["title"]}',
         f'# Version: {meta["version"]}',
         f'# Generated: {meta["generated_date"]}',
         '# Source of truth: manifest.yaml',

@@ -134,8 +134,10 @@ def artifact_label(meta: dict) -> str:
     match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:-(.+))?", version)
     if not match:
         return "v3.0"
-    major, minor, _patch, suffix = match.groups()
+    major, minor, patch, suffix = match.groups()
     label = f"v{major}.{minor}"
+    if patch != "0":
+        label += f".{patch}"
     if suffix:
         label += "-" + suffix.upper()
     return label

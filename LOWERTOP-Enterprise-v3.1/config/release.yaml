@@ -1,5 +1,5 @@
 meta:
-  version: 3.1.0
+  version: 3.1.1
   generated_date: '2026-07-29'
   project_path: LOWERTOP-Enterprise-v3.1
   design:
@@ -11,9 +11,9 @@ meta:
     - 全局规则冲突审计
     - ETag / Last-Modified 条件缓存
     - Wi-Fi / 蜂窝 / 网络切换设备验证模板
-    - AdvertisingLite 72 小时误杀观察
+    - 外部 reject_list 与 Ultra+ 分层去广告
     - Direct / Modular 可复现发布
-    - 规则型去广告默认启用，MITM 去广告不进入核心配置
+    - 核心配置不内置通用去广告规则或 MITM
     - iCloud 专用代理分流
     - DNS 泄漏防护
     - Apple 天气增强（QWeather，本地密钥）
@@ -23,9 +23,15 @@ meta:
     - 规则精简去重
 
 routing_overrides:
-  # v3.1 删除旧 iCloud select，普通 iCloud 同步固定 DIRECT。
+  # v3.1.1 删除旧 iCloud、Telegram 与 YouTube select。
   # 专用代理 mask 端点由更靠前的 Apple-Global-AI 精确规则交给 AI。
+  # Telegram 与 YouTube 规则统一交给已实机验证稳定的 AI fallback。
   remove_proxy_groups:
     - iCloud
+    - Telegram
+    - YouTube
+  policy_aliases:
+    Telegram: AI
+    YouTube: AI
   local_ruleset_policies:
     Apple-iCloud: DIRECT

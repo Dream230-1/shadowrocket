@@ -1,0 +1,103 @@
+schema: 1
+audited_at: '2026-07-29'
+modules:
+  AppleWeather.QWeather.v3.1.sgmodule:
+    source: NSRingo/WeatherKit
+    source_commits:
+      - 348dc2a30dc2407d2bbd88d00cfd93a9f911a3c6
+      - 0c2941d8a438d7e78ba71a1a5ed58366926c5369
+    mitm_hosts:
+      - weatherkit.apple.com
+    conflicts:
+      - other Apple Weather response-rewrite modules
+  iCloud.PrivateRelay.Priority.v3.1.sgmodule:
+    source: Dream230-1/shadowrocket
+    source_commits:
+      - 1aa01d21eee532f9f7391d4d684dee90f663c482
+    mitm_hosts: []
+    conflicts:
+      - direct_list must remain below this module
+  WeChat.OfficialAccounts.NoAds.v3.1.sgmodule:
+    source: NobyDa/Script
+    source_commits:
+      - 7f8b309f8d943806b90c6ff25d8b8aa0c59b0c03
+    mitm_hosts:
+      - mp.weixin.qq.com
+    conflicts:
+      - Ultra+ WeChat rewrites
+  Weibo.NoAds.v3.1.sgmodule:
+    source: zmqcherish/proxy-script
+    source_commits:
+      - 1d9f51bc9a0077d81998bb503ee6158ca83faa73
+    mitm_hosts:
+      - api.weibo.cn
+      - mapi.weibo.com
+      - sdkapp.uve.weibo.com
+      - wbapp.uve.weibo.com
+    conflicts:
+      - Ultra+ Weibo rewrites
+  YouTube.NoAds.v3.1.sgmodule:
+    source: app2smile/rules
+    source_commits:
+      - df6366a7024e0b3f0aa3510c5b791eea6f3cba89
+    mitm_hosts:
+      - youtubei.googleapis.com
+    conflicts:
+      - Ultra+ YouTube rewrites
+  Netflix.Ratings.v3.1.sgmodule:
+    source: DualSubs/Universal and yichahucha/surge
+    source_commits:
+      - 14fdcecdaaaf8e2b80c74a6bfc2bb0890da0775e
+      - 06d6e36771880959c008d3c59c192068f00ddd51
+    mitm_hosts:
+      - ios.prod.ftl.netflix.com
+      - '*.oca.nflxvideo.net'
+    allowed_wildcards:
+      - '*.oca.nflxvideo.net'
+    conflicts:
+      - other Netflix subtitle or rating response rewrites
+  Bilibili.NoAds.v3.1.1.sgmodule:
+    source: LOWERTOP ads-only implementation; endpoint basis app2smile/rules
+    source_commits:
+      - df6366a7024e0b3f0aa3510c5b791eea6f3cba89
+      - 0c2941d8a438d7e78ba71a1a5ed58366926c5369
+    mitm_hosts:
+      - app.bilibili.com
+    conflicts:
+      - Ultra+ Bilibili rewrites
+      - legacy Bilibili full rewrite modules
+    capture_validation: pending-current-device
+    forbidden_pattern_tokens:
+      - account
+      - favorite
+      - fav
+      - vip
+      - purchase
+      - pay
+      - reply
+      - comment
+      - playurl
+      - playerunite
+      - resource/show/tab
+  BaiduNetdisk.NoAds.v3.1.1.sgmodule:
+    source: LOWERTOP ads-only implementation; legacy endpoint audit
+    source_commits:
+      - e28ff3d7ce0d628820df2322e4f4ac7c64bacc1e
+      - 0c2941d8a438d7e78ba71a1a5ed58366926c5369
+    mitm_hosts:
+      - pan.baidu.com
+    conflicts:
+      - Ultra+ Baidu Netdisk rewrites
+      - legacy Baidu membership unlock modules
+    capture_validation: pending-current-device
+    forbidden_pattern_tokens:
+      - login
+      - passport
+      - account
+      - membership
+      - vip
+      - share
+      - download
+      - filelist
+      - transfer
+      - play

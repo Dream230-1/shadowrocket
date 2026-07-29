@@ -1,8 +1,8 @@
 features:
   default_profile: performance
   dns_leak_guard: true
-  advertising_lite: true
-  adblock_collision_audit: true
+  advertising_lite: false
+  adblock_collision_audit: false
   ruleset_drift_audit: true
   route_regression: true
   rule_conflict_audit: true
@@ -12,6 +12,7 @@ features:
   service_health_report: true
   network_benchmark_report: true
   scripts_config_validation: true
+  optional_module_security_audit: true
   secret_scanning: true
 
   # v3.1 仅将 Apple 天气作为独立可选模块，不会自动注入主配置。

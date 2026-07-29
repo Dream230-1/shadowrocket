@@ -106,17 +106,17 @@ cases:
   requires_remote: false
 - name: Telegram API
   host: api.telegram.org
-  expected_policy: Telegram
+  expected_policy: AI
   expected_source_contains: Telegram
   requires_remote: true
 - name: Telegram CDN
   host: cdn-telegram.org
-  expected_policy: Telegram
+  expected_policy: AI
   expected_source_contains: Telegram
   requires_remote: true
 - name: YouTube
   host: www.youtube.com
-  expected_policy: YouTube
+  expected_policy: AI
   expected_source_contains: YouTube
   requires_remote: true
 - name: Netflix
@@ -143,11 +143,6 @@ cases:
   host: open.spotify.com
   expected_policy: Spotify
   expected_source_contains: Spotify
-  requires_remote: true
-- name: AdvertisingLite keyword fixture
-  host: ads.112wan.example
-  expected_policy: REJECT
-  expected_source_contains: AdvertisingLite
   requires_remote: true
 - name: ChinaMax Baidu
   host: www.baidu.com

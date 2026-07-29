@@ -35,11 +35,18 @@ def main() -> None:
     current = json.loads(current_path.read_text(encoding='utf-8'))
     baseline_rules = baseline.get('rulesets', {})
     current_rules = {item['name']: item for item in current.get('results', [])}
+    active_rules = {
+        str(item.get('name', ''))
+        for item in manifest.get('remote_rulesets', [])
+        if item.get('name')
+    }
 
     count_limit = float(settings.get('max_rule_count_change_percent', 15))
     byte_limit = float(settings.get('max_byte_change_percent', 20))
     results, failures, warnings = [], [], []
     for name, old in baseline_rules.items():
+        if name not in active_rules:
+            continue
         now = current_rules.get(name)
         if not now:
             item = {'name': name, 'ok': False, 'error': '当前审计缺少该规则集'}

@@ -1,4 +1,23 @@
-# LOWERTOP Enterprise v3.1
+# LOWERTOP Enterprise v3.1.1
+
+v3.1.1 将完整 GMOogway `proxy_list` 转换为 `AI` 并保持每日更新；模块规则优先于主配置中的服务分流。Telegram 与 YouTube 不再保留独立策略组，两者统一进入稳定的 `AI` 策略。
+
+内置 AdvertisingLite 已移除。域名广告拦截由外部 `reject_list` 负责，响应改写由独立模块负责。核心配置仍无 `[Script]`、无 `[MITM]`。
+
+正式版安装、模块顺序与 HTTPS 解密边界见 `releases/v3.1.1/MODULES.md`；逐模块来源、固定提交、MITM 主机和冲突关系见 `releases/v3.1.1/MODULE-AUDIT.md`。
+
+## v3.1.1 重点
+
+1. `proxy_list` 不裁剪，全部规则转换为 `AI`，每天从上游固定提交重新生成。
+2. 删除 Telegram、YouTube 策略组；原规则直接指向 `AI`。
+3. 删除内置 AdvertisingLite，避免与外部 `reject_list` 重复。
+4. 所有仓库内可选模块脚本 URL 固定到 40 位提交 SHA；CI 禁止 `main`、`master`、GitHub `blob` 与 `latest`。
+5. 哔哩哔哩模块只处理开屏和推荐广告端点，不改 VIP、收藏、账号、评论或播放。
+6. 百度网盘模块只处理明确广告端点，不匹配登录、账号、分享、下载、文件列表或传输。
+7. Netflix 双字幕与评分模块已修复并锁定；动态字幕 CDN 仅保留一项经审计的 `*.oca.nflxvideo.net` MITM 通配符例外。
+8. CI 检查 MITM 通配符、会员解锁、支付/登录主机、模块冲突和可变脚本链接。
+
+## v3.1.0 历史说明
 
 v3.1 以 RC4 实机验证结果为发布基线，保留稳定的路由、DNS、策略组和 `FINAL,PROXY` 行为。规则型 AdvertisingLite 默认启用；需要响应体改写或 HTTPS 解密的增强继续作为可选模块。
 

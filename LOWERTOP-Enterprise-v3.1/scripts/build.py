@@ -29,7 +29,10 @@ def apply_routing_overrides(manifest: dict, config: dict) -> dict:
     """Apply RC-specific named routing changes without mutating the RC3 kernel."""
     overrides = config.get("routing_overrides", {}) or {}
     remove_groups = set(overrides.get("remove_proxy_groups", []) or [])
+    policy_aliases = overrides.get("policy_aliases", {}) or {}
     policy_overrides = overrides.get("local_ruleset_policies", {}) or {}
+    if not isinstance(policy_aliases, dict):
+        raise ValueError("routing_overrides.policy_aliases must be a mapping")
     if not isinstance(policy_overrides, dict):
         raise ValueError("routing_overrides.local_ruleset_policies must be a mapping")
 
@@ -41,6 +44,24 @@ def apply_routing_overrides(manifest: dict, config: dict) -> dict:
     manifest["proxy_groups"] = [
         group for group in groups if str(group.get("name", "")) not in remove_groups
     ]
+
+    aliases = {str(name): str(policy).strip() for name, policy in policy_aliases.items()}
+    if any(not policy for policy in aliases.values()):
+        raise ValueError("routing_overrides.policy_aliases cannot contain an empty policy")
+    for item in manifest.get("remote_rulesets", []) or []:
+        if item.get("policy") in aliases:
+            item["policy"] = aliases[item["policy"]]
+    for item in manifest.get("health_checks", []) or []:
+        if item.get("policy") in aliases:
+            item["policy"] = aliases[item["policy"]]
+    for item in (manifest.get("benchmark", {}) or {}).get("endpoints", []) or []:
+        if item.get("policy") in aliases:
+            item["policy"] = aliases[item["policy"]]
+    adblock = manifest.get("adblock_audit", {}) or {}
+    if isinstance(adblock.get("blocking_policies"), list):
+        adblock["blocking_policies"] = list(dict.fromkeys(
+            aliases.get(policy, policy) for policy in adblock["blocking_policies"]
+        ))
 
     rulesets = manifest.get("local_rulesets", []) or []
     by_name = {str(item.get("name", "")): item for item in rulesets}
@@ -108,14 +129,12 @@ def validate_generated(path: Path):
     fallback = next((line for line in text.splitlines() if line.startswith("fallback-dns-server = ")), "")
     if "#proxy" not in fallback:
         errors.append("fallback-dns-server missing #proxy")
-    openai, apple_global, apple_core, advertising = (
+    openai, apple_global, apple_core = (
         text.find("DOMAIN-SUFFIX,openai.com,AI"), text.find("# Local ruleset: Apple-Global-AI"),
-        text.find("# Local ruleset: Apple-Core-Direct"), text.find("AdvertisingLite"),
+        text.find("# Local ruleset: Apple-Core-Direct"),
     )
-    if min(openai, apple_global, apple_core, advertising) < 0:
-        errors.append("required AI/Apple/Advertising module missing")
-    if openai >= 0 and advertising >= 0 and openai > advertising:
-        errors.append("OpenAI rule must precede AdvertisingLite")
+    if min(openai, apple_global, apple_core) < 0:
+        errors.append("required AI/Apple module missing")
     if apple_global >= 0 and apple_core >= 0 and apple_global > apple_core:
         errors.append("Apple Global must precede Apple Core")
     return errors
@@ -149,8 +168,8 @@ def main():
 
     features = yaml.safe_load((project / "config" / "features.yaml").read_text(encoding="utf-8")) or {}
     flags = features.get("features", {})
-    if not flags.get("advertising_lite", False):
-        raise SystemExit("AdvertisingLite must remain enabled in v3.1")
+    if flags.get("advertising_lite", False):
+        raise SystemExit("AdvertisingLite must remain disabled in v3.1.1")
     if flags.get("unverified_dns_protocol_fallback", False):
         raise SystemExit("Unverified DNS protocol fallback cannot enter the v3.1 release profile")
     if flags.get("force_ech", False):
@@ -187,8 +206,10 @@ def main():
             v = str(meta.get("version", "3.0.0"))
             m = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:-(.+))?", v)
             if not m: return "v3.0"
-            ma, mi, _p, sx = m.groups()
+            ma, mi, patch, sx = m.groups()
             label = f"v{ma}.{mi}"
+            if patch != "0":
+                label += f".{patch}"
             if sx: label += "-" + sx.upper()
             return label
 
@@ -205,7 +226,7 @@ def main():
         copy_tree_files(workspace / "experimental", experimental, "*.conf")
 
         # The final behavior lock records the approved v3.1 contract after normalization.
-        run([py, "scripts/behavior_lock.py", "--config", str(performance), "--baseline", str(project / "baselines/v31-performance.lock.yaml"), "--json-out", str(reports / "behavior-lock.json")], project)
+        run([py, "scripts/behavior_lock.py", "--config", str(performance), "--baseline", str(project / "baselines/v311-performance.lock.yaml"), "--json-out", str(reports / "behavior-lock.json")], project)
         run([py, "scripts/regression_v31.py", "--kernel-root", str(workspace), "--config", str(performance),
              "--cases", "regression/base_cases.yaml", "--cases", "regression/apple_negative_cases.yaml",
              "--json-out", "reports/regression-offline.json"], project)
@@ -227,7 +248,8 @@ def main():
             run([py, "scripts/regression_v31.py", "--kernel-root", str(workspace), "--config", str(performance),
                  "--cases", "regression/base_cases.yaml", "--cases", "regression/apple_negative_cases.yaml", "--online",
                  "--cache-dir", str(persistent_cache), "--json-out", "reports/regression-online.json"], project)
-            run([py, "scripts/adblock_collision.py", "--root", str(workspace), "--cache-dir", str(persistent_cache), "--json-out", str(reports / "adblock-collisions.json")], workspace)
+            if flags.get("adblock_collision_audit", False):
+                run([py, "scripts/adblock_collision.py", "--root", str(workspace), "--cache-dir", str(persistent_cache), "--json-out", str(reports / "adblock-collisions.json")], workspace)
             if flags.get("rule_conflict_audit", True):
                 run([py, "scripts/rule_conflicts.py", "--root", str(project), "--config", str(performance),
                      "--cache-dir", str(persistent_cache), "--online-ready", "--json-out", "reports/rule-conflicts-online.json"], project)
@@ -243,7 +265,7 @@ def main():
         "modular": sorted(file.name for file in modular.glob("*.conf")),
         "experimental": sorted(file.name for file in experimental.glob("*.conf")),
         "reports": sorted(file.name for file in reports.glob("*.json")),
-        "dns_guard": "passed", "advertising_lite": "preserved", "performance_behavior": "v3.1 final contract locked",
+        "dns_guard": "passed", "advertising_lite": "removed", "performance_behavior": "v3.1.1 routing contract locked",
     }
     (output / "v31-build-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))

@@ -1,7 +1,7 @@
 module:
   id: advertising
-  enabled: true
-  description: AdvertisingLite 广告拦截模块，关键业务规则必须先于此模块。
+  enabled: false
+  description: v3.1.1 移除内置 AdvertisingLite；由外部 reject_list 与独立响应改写模块负责。
   rulesets:
     - kind: remote
       name: AdvertisingLite

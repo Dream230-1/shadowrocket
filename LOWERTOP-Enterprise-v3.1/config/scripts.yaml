@@ -8,11 +8,6 @@ script_rules: []
 
 mitm_hostname: []
 
-# 保留 RC3 的明确广告主机，移除 baidustatic 关键词级拦截。
-extra_rules:
-  - DOMAIN-SUFFIX,pos.baidu.com,REJECT
-  - DOMAIN-SUFFIX,cpro.baidu.com,REJECT
-  - DOMAIN-SUFFIX,nsclick.baidu.com,REJECT
-  - DOMAIN-SUFFIX,wangmeng.baidu.com,REJECT
-  - DOMAIN-SUFFIX,e.baidu.com,REJECT
-  - DOMAIN-SUFFIX,cb.baidu.com,REJECT
+# v3.1.1 不在核心配置中重复通用广告规则。
+# 域名级拦截由外部 reject_list 负责，响应改写由独立模块负责。
+extra_rules: []
