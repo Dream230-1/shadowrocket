@@ -5,7 +5,7 @@ modules:
     source: NSRingo/WeatherKit
     source_commits:
       - 348dc2a30dc2407d2bbd88d00cfd93a9f911a3c6
-      - 0c2941d8a438d7e78ba71a1a5ed58366926c5369
+      - ae08eee2d4190ccb61f33ff0d3a9e4fa26ba2b88
     mitm_hosts:
       - weatherkit.apple.com
     conflicts:
@@ -60,7 +60,7 @@ modules:
     source: LOWERTOP ads-only implementation; endpoint basis app2smile/rules
     source_commits:
       - df6366a7024e0b3f0aa3510c5b791eea6f3cba89
-      - 0c2941d8a438d7e78ba71a1a5ed58366926c5369
+      - ae08eee2d4190ccb61f33ff0d3a9e4fa26ba2b88
     mitm_hosts:
       - app.bilibili.com
     conflicts:
@@ -83,7 +83,7 @@ modules:
     source: LOWERTOP ads-only implementation; legacy endpoint audit
     source_commits:
       - e28ff3d7ce0d628820df2322e4f4ac7c64bacc1e
-      - 0c2941d8a438d7e78ba71a1a5ed58366926c5369
+      - ae08eee2d4190ccb61f33ff0d3a9e4fa26ba2b88
     mitm_hosts:
       - pan.baidu.com
     conflicts:

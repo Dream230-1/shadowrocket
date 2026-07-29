@@ -40,7 +40,7 @@ def main() -> None:
     require(
         weather,
         (
-            "Dream230-1/shadowrocket/0c2941d8a438d7e78ba71a1a5ed58366926c5369/",
+            "Dream230-1/shadowrocket/ae08eee2d4190ccb61f33ff0d3a9e4fa26ba2b88/",
             'API.QWeather.Token:""',
             'API.QWeather.Token="{{{API.QWeather.Token}}}"',
             'Weather.Provider="{{{Weather.Provider}}}"',

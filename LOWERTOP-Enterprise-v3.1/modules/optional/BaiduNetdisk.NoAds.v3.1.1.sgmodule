@@ -6,11 +6,11 @@
 #!version=3.1.1
 
 # Endpoint basis: LOWERTOP legacy audit e28ff3d7ce0d628820df2322e4f4ac7c64bacc1e
-# Runtime: Dream230-1/shadowrocket@0c2941d8a438d7e78ba71a1a5ed58366926c5369
+# Runtime: Dream230-1/shadowrocket@ae08eee2d4190ccb61f33ff0d3a9e4fa26ba2b88
 # Capture status: current-device packet capture validation pending.
 
 [Script]
-百度网盘广告接口 = type=http-response,pattern=^https:\\/\\/pan\\.baidu\\.com\\/(rest\\/2\\.0\\/pcs\\/adv|api\\/(getsplash|splash|ad))([\\/?]|$),requires-body=1,max-size=1048576,script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/0c2941d8a438d7e78ba71a1a5ed58366926c5369/LOWERTOP-Enterprise-v3.1/scripts/runtime/baidu_netdisk_ads_only.js
+百度网盘广告接口 = type=http-response,pattern=^https:\\/\\/pan\\.baidu\\.com\\/(rest\\/2\\.0\\/pcs\\/adv|api\\/(getsplash|splash|ad))([\\/?]|$),requires-body=1,max-size=1048576,script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/ae08eee2d4190ccb61f33ff0d3a9e4fa26ba2b88/LOWERTOP-Enterprise-v3.1/scripts/runtime/baidu_netdisk_ads_only.js
 
 [MITM]
 hostname = %APPEND% pan.baidu.com

@@ -6,11 +6,11 @@
 #!version=3.1.1
 
 # Endpoint basis: app2smile/rules@df6366a7024e0b3f0aa3510c5b791eea6f3cba89
-# Runtime: Dream230-1/shadowrocket@0c2941d8a438d7e78ba71a1a5ed58366926c5369
+# Runtime: Dream230-1/shadowrocket@ae08eee2d4190ccb61f33ff0d3a9e4fa26ba2b88
 # Capture status: current-device packet capture validation pending.
 
 [Script]
-哔哩哔哩开屏与推荐流广告 = type=http-response,pattern=^https:\\/\\/app\\.bilibili\\.com\\/x\\/v2\\/(splash\\/(list|show)|feed\\/index)(\\?|$),requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/0c2941d8a438d7e78ba71a1a5ed58366926c5369/LOWERTOP-Enterprise-v3.1/scripts/runtime/bilibili_ads_only.js
+哔哩哔哩开屏与推荐流广告 = type=http-response,pattern=^https:\\/\\/app\\.bilibili\\.com\\/x\\/v2\\/(splash\\/(list|show)|feed\\/index)(\\?|$),requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/Dream230-1/shadowrocket/ae08eee2d4190ccb61f33ff0d3a9e4fa26ba2b88/LOWERTOP-Enterprise-v3.1/scripts/runtime/bilibili_ads_only.js
 
 [MITM]
 hostname = %APPEND% app.bilibili.com
