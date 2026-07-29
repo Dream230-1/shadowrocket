@@ -3,17 +3,17 @@ name: Shadowrocket Developer Toolkit
 on:
   push:
     branches:
-      - release/v3.1-rc4
+      - release/v3.1
     paths:
       - "LOWERTOP-Enterprise-v3.1/developer-toolkit/**"
       - "LOWERTOP-Enterprise-v3.1/modules/**"
-      - "releases/v3.1-rc4/**"
+      - "releases/v3.1/**"
       - ".github/workflows/developer-toolkit.yml"
   pull_request:
     paths:
       - "LOWERTOP-Enterprise-v3.1/developer-toolkit/**"
       - "LOWERTOP-Enterprise-v3.1/modules/**"
-      - "releases/v3.1-rc4/**"
+      - "releases/v3.1/**"
       - ".github/workflows/developer-toolkit.yml"
   workflow_dispatch:
 
@@ -60,7 +60,7 @@ jobs:
       - name: Audit module coverage conflicts
         run: |
           python developer-toolkit/audit_coverage.py \
-            --base-config ../releases/v3.1-rc4/LOWERTOP-Enterprise-v3.1-RC4-Performance-Direct.conf \
+            --base-config ../releases/v3.1/LOWERTOP-Enterprise-v3.1-Performance-Direct.conf \
             modules/optional \
             --json-out reports/developer-toolkit-coverage.json
 

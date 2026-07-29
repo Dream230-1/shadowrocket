@@ -1,6 +1,6 @@
 meta:
-  version: 3.1.0-rc4
-  generated_date: '2026-07-28'
+  version: 3.1.0
+  generated_date: '2026-07-29'
   project_path: LOWERTOP-Enterprise-v3.1
   design:
     - RC2 验证内核兼容层
@@ -13,7 +13,7 @@ meta:
     - Wi-Fi / 蜂窝 / 网络切换设备验证模板
     - AdvertisingLite 72 小时误杀观察
     - Direct / Modular 可复现发布
-    - 闲鱼 MITM 去广告
+    - 规则型去广告默认启用，MITM 去广告不进入核心配置
     - iCloud 专用代理分流
     - DNS 泄漏防护
     - Apple 天气增强（QWeather，本地密钥）
@@ -23,7 +23,7 @@ meta:
     - 规则精简去重
 
 routing_overrides:
-  # RC4 删除旧 iCloud select，普通 iCloud 同步固定 DIRECT。
+  # v3.1 删除旧 iCloud select，普通 iCloud 同步固定 DIRECT。
   # 专用代理 mask 端点由更靠前的 Apple-Global-AI 精确规则交给 AI。
   remove_proxy_groups:
     - iCloud

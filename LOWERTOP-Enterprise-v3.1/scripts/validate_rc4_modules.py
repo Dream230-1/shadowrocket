@@ -17,7 +17,7 @@ def fail(message: str) -> None:
 
 def read(path: Path) -> str:
     if not path.is_file():
-        fail(f"missing RC4 module: {path}")
+        fail(f"missing v3.1 module: {path}")
     return path.read_text(encoding="utf-8")
 
 
@@ -29,9 +29,9 @@ def require(text: str, values: tuple[str, ...], label: str) -> None:
 
 def main() -> None:
     project = Path(__file__).resolve().parents[1]
-    weather_path = project / "modules" / "optional" / "AppleWeather.QWeather.RC4.sgmodule"
+    weather_path = project / "modules" / "optional" / "AppleWeather.QWeather.v3.1.sgmodule"
     private_relay_path = (
-        project / "modules" / "optional" / "iCloud.PrivateRelay.Priority.RC4.sgmodule"
+        project / "modules" / "optional" / "iCloud.PrivateRelay.Priority.v3.1.sgmodule"
     )
     weather = read(weather_path)
     private_relay = read(private_relay_path)
@@ -51,7 +51,7 @@ def main() -> None:
     for pattern in SECRET_PATTERNS:
         match = pattern.search(weather)
         if match:
-            fail(f"RC4 modules: possible credential detected: {match.group(0)[:24]}...")
+            fail(f"v3.1 modules: possible credential detected: {match.group(0)[:24]}...")
 
     if 'API.QWeather.Token:""' not in weather:
         fail("Apple Weather module: QWeather token default must remain empty")
@@ -59,7 +59,7 @@ def main() -> None:
     require(
         private_relay,
         (
-            "#!name=iCloud 专用代理优先 RC4",
+            "#!name=iCloud 专用代理优先 v3.1",
             "DOMAIN,mask.icloud.com,AI",
             "DOMAIN,mask-h2.icloud.com,AI",
             "DOMAIN,mask-api.icloud.com,AI",
@@ -83,7 +83,7 @@ def main() -> None:
         fail("iCloud Private Relay priority module: script and MITM sections are forbidden")
 
     print(
-        "RC4 module audit OK: Apple Weather local-only token; "
+        "v3.1 module audit OK: Apple Weather local-only token; "
         "iCloud Private Relay exact priority rules"
     )
 

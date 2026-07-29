@@ -1,9 +1,9 @@
-#!name=Apple 天气增强 QWeather RC4
+#!name=Apple 天气增强 QWeather v3.1
 #!desc=基于 NSRingo WeatherKit v3.1.0，将中国区当前天气、小时/每日预报、未来一小时降水和空气质量接入和风天气。API Key 仅保存在 Shadowrocket 本地模块参数中。
 #!author=Dream230-1 / LOWERTOP; upstream NSRingo contributors
 #!homepage=https://github.com/Dream230-1/shadowrocket
-#!category=LOWERTOP RC4
-#!version=3.1.0-rc4
+#!category=LOWERTOP v3.1
+#!version=3.1.0
 #!arguments=Weather.Replace:"CN",Weather.Provider:"QWeather",NextHour.Provider:"QWeather",AirQuality.Current.Pollutants.Provider:"QWeather",AirQuality.Current.Index.Provider:"QWeather",AirQuality.Comparison.Yesterday.PollutantsProvider:"QWeather",AirQuality.Comparison.Yesterday.IndexProvider:"QWeather",API.QWeather.Host:"devapi.qweather.com",API.QWeather.Token:"",Storage:"Argument",LogLevel:"WARN"
 #!arguments-desc=安装后进入模块编辑参数：填写新的 API.QWeather.Token；API.QWeather.Host 可填写账户控制台提供的专属 API Host。禁止把真实 Token 提交到 GitHub。普通免费凭证可能不支持昨日空气质量接口，遇到错误时将昨日两项改回默认或关闭。
 

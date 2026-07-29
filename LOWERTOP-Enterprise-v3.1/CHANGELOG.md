@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## 3.1.0
+
+### Released
+
+- 冻结 RC4 已验证的 DNS、策略组、路由顺序、iCloud 分层分流和 `FINAL,PROXY` 行为。
+- AdvertisingLite 与明确广告域名继续作为默认规则型拦截。
+- Apple 天气 QWeather 与 iCloud 专用代理优先模块更新为 v3.1 正式版。
+- 新增外部 `direct_list`、`reject_list`、`proxy_list`、ADBlock、启动页去广告与 YouTube 去广告的启用边界和顺序说明。
+
+### Security
+
+- 从默认主配置移除闲鱼 MITM 去广告脚本及 `market.wapa.taobao.com` 解密主机。
+- 核心配置不再要求 HTTPS 解密；Apple 天气仅解密 `weatherkit.apple.com`。
+- iCloud、Apple Account、支付及登录域名不得加入 MITM。
+
+### Compatibility
+
+- `direct_list` 可继续用于优先直连，但 `iCloud 专用代理优先 v3.1` 必须位于其上方。
+- 通用 `proxy_list` 不作为默认模块，避免抢先覆盖 YouTube 等专用策略组。
+- 重复启用 AdvertisingLite、`reject_list` 和 ADBlock 会扩大误杀面，正式版建议只选择一层通用广告规则。
+
 ## 3.1.0-rc4
 
 ### Added

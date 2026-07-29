@@ -1,9 +1,9 @@
 schema: 1
-source_commit: 9a2fd78a5600218bc38b1563e128f97ecde1a509
-artifact: LOWERTOP-Enterprise-v3.1-RC4-Performance-Direct.conf
-raw_sha256: 91bd23fd50346647b3c3e032fc2b6df663e38fef8d5ec03caf8f386df40b524f
-semantic_sha256: 75e99e20478c096e729867b7a53e1dd24a8d6066288124178b22b461fc49d7b0
-semantic_line_count: 125
+source_commit: 1aa01d21eee532f9f7391d4d684dee90f663c482
+artifact: LOWERTOP-Enterprise-v3.1-Performance-Direct.conf
+raw_sha256: f2f77cc601b074d7d0dd83bc7db135ab86b08dac574fdb5ca20b70ccd16019fd
+semantic_sha256: b4096d803d40580deae3f49fe51009108172767a90010a7d7a4e8ca03e86d9b0
+semantic_line_count: 121
 contract:
   general:
     skip-proxy: 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local

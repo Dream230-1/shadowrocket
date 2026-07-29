@@ -14,7 +14,7 @@ features:
   scripts_config_validation: true
   secret_scanning: true
 
-  # RC4 仅保留 Apple 天气独立模块，不会自动注入主配置。
+  # v3.1 仅将 Apple 天气作为独立可选模块，不会自动注入主配置。
   apple_weather_qweather_module_available: true
   apple_weather_qweather: false
 

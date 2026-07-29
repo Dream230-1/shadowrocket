@@ -150,17 +150,17 @@ def main():
     features = yaml.safe_load((project / "config" / "features.yaml").read_text(encoding="utf-8")) or {}
     flags = features.get("features", {})
     if not flags.get("advertising_lite", False):
-        raise SystemExit("AdvertisingLite must remain enabled in v3.1 RC4")
+        raise SystemExit("AdvertisingLite must remain enabled in v3.1")
     if flags.get("unverified_dns_protocol_fallback", False):
-        raise SystemExit("Unverified DNS protocol fallback cannot enter an RC4 release profile")
+        raise SystemExit("Unverified DNS protocol fallback cannot enter the v3.1 release profile")
     if flags.get("force_ech", False):
-        raise SystemExit("Forced ECH cannot enter an RC4 release profile")
+        raise SystemExit("Forced ECH cannot enter the v3.1 release profile")
 
     output, modular, experimental, reports = (project / name for name in ("build", "modular", "experimental", "reports"))
     for directory in (output, modular, experimental, reports):
         reset_directory(directory)
 
-    with tempfile.TemporaryDirectory(prefix="lowertop-v31-rc4-") as temp:
+    with tempfile.TemporaryDirectory(prefix="lowertop-v31-final-") as temp:
         workspace = Path(temp) / "project"
         shutil.copytree(rc3, workspace)
         (workspace / "manifest.yaml").write_text(
@@ -177,7 +177,7 @@ def main():
         run([py, "scripts/generate.py", "--profile", "all-release", "--mode", "remote", "--base-url", modular_base_url, "--out-dir", "modular"], workspace)
         run([py, "scripts/generate.py", "--profile", "ipv6_svcb_experimental", "--mode", "inline", "--out-dir", "experimental"], workspace)
 
-        # RC4 must audit the final importable bytes, not the kernel's intermediate layout.
+        # Audit the final importable bytes, not the kernel's intermediate layout.
         run(
             [py, str(project / "scripts" / "normalize_generated_sections.py"), "--project", str(workspace)],
             project,
@@ -204,8 +204,8 @@ def main():
         copy_tree_files(workspace / "modular", modular)
         copy_tree_files(workspace / "experimental", experimental, "*.conf")
 
-        # RC4 behavior lock records the intentional safety delta after final section normalization.
-        run([py, "scripts/behavior_lock.py", "--config", str(performance), "--baseline", str(project / "baselines/rc4-performance.lock.yaml"), "--json-out", str(reports / "behavior-lock.json")], project)
+        # The final behavior lock records the approved v3.1 contract after normalization.
+        run([py, "scripts/behavior_lock.py", "--config", str(performance), "--baseline", str(project / "baselines/v31-performance.lock.yaml"), "--json-out", str(reports / "behavior-lock.json")], project)
         run([py, "scripts/regression_v31.py", "--kernel-root", str(workspace), "--config", str(performance),
              "--cases", "regression/base_cases.yaml", "--cases", "regression/apple_negative_cases.yaml",
              "--json-out", "reports/regression-offline.json"], project)
@@ -243,7 +243,7 @@ def main():
         "modular": sorted(file.name for file in modular.glob("*.conf")),
         "experimental": sorted(file.name for file in experimental.glob("*.conf")),
         "reports": sorted(file.name for file in reports.glob("*.json")),
-        "dns_guard": "passed", "advertising_lite": "preserved", "performance_behavior": "RC4 safety delta locked",
+        "dns_guard": "passed", "advertising_lite": "preserved", "performance_behavior": "v3.1 final contract locked",
     }
     (output / "v31-build-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))

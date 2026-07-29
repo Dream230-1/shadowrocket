@@ -158,7 +158,7 @@ def main() -> None:
 ## 结论
 
 - 自动化基线：**{mark(automation_ok)}**
-- RC4 模块实机验证：**{mark(modules_ready)}**
+- v3.1 模块实机验证：**{mark(modules_ready)}**
 - {release_label} 可发布：**{mark(release_ready)}**
 - Source commit：`{payload['source_commit']}`
 - Source branch：`{payload['source_branch']}`
@@ -186,11 +186,11 @@ def main() -> None:
 
 ## 边界
 
-- Performance 的 DNS、QUIC、IPv6、UDP 与核心路由继承既有基线，RC4 对最终规范化配置建立独立行为锁。
+- Performance 的 DNS、QUIC、IPv6、UDP 与核心路由继承既有基线，v3.1 对最终规范化配置建立独立行为锁。
 - Apple Weather 不会自动注入 Direct 主配置，可单独禁用和回滚。
 - iCloud 分层路由会进入 Direct 主配置但不加入 MITM；发布前必须完成同步直连与专用代理 AI 的独立实机记录。
-- Bilibili Next 与 BaiduNetdisk Next 保持独立实验分支，不计入 RC4 发布闸门。
-- DoQ/DoH3/DoH/DoT 自动回退、动态 DNS 选优及 IPv6/ECH 不进入 RC4 默认配置。
+- Bilibili Next 与 BaiduNetdisk Next 保持独立实验分支，不计入 v3.1 发布闸门。
+- DoQ/DoH3/DoH/DoT 自动回退、动态 DNS 选优及 IPv6/ECH 不进入 v3.1 默认配置。
 """
     (root / args.markdown_out).write_text(markdown, encoding="utf-8")
     print(json.dumps({
