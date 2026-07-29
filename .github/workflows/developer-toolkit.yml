@@ -50,6 +50,7 @@ jobs:
           mkdir -p reports
           python developer-toolkit/validate_module.py \
             modules/optional \
+            --allow-wildcard-host '*.oca.nflxvideo.net' \
             --json-out reports/developer-toolkit-modules.json
 
       - name: Extract MITM hostnames

@@ -32,6 +32,35 @@ class ToolkitTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("unsupported-script-type", result.stdout)
 
+    def test_validator_rejects_wildcard_mitm_by_default(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            module = Path(tmp) / "wildcard.sgmodule"
+            module.write_text(
+                "#!name=wildcard\n#!desc=test\n[MITM]\n"
+                "hostname = %APPEND% *.oca.nflxvideo.net\n",
+                encoding="utf-8",
+            )
+            result = self.run_tool("validate_module.py", str(module))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("wildcard-mitm", result.stdout)
+
+    def test_validator_allows_explicit_audited_wildcard(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            module = Path(tmp) / "wildcard.sgmodule"
+            module.write_text(
+                "#!name=wildcard\n#!desc=test\n[MITM]\n"
+                "hostname = %APPEND% *.oca.nflxvideo.net\n",
+                encoding="utf-8",
+            )
+            result = self.run_tool(
+                "validate_module.py",
+                str(module),
+                "--allow-wildcard-host",
+                "*.oca.nflxvideo.net",
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn("wildcard-mitm", result.stdout)
+
     def test_mitm_extractor_outputs_unique_hosts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             module = Path(tmp) / "mitm.sgmodule"

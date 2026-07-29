@@ -45,7 +45,8 @@ def parse_hostnames(value: str) -> list[str]:
     return [part.strip() for part in value.replace("%APPEND%", "").split(",") if part.strip()]
 
 
-def validate(path: Path) -> dict:
+def validate(path: Path, allowed_wildcards: set[str] | None = None) -> dict:
+    allowed_wildcards = allowed_wildcards or set()
     text = path.read_text(encoding="utf-8-sig")
     lines = text.splitlines()
     is_module = path.suffix.lower() in {".sgmodule", ".srmodule", ".module"}
@@ -118,7 +119,8 @@ def validate(path: Path) -> dict:
 
     for hostname in sorted(set(hostnames)):
         if hostname == "*" or hostname.startswith("*."):
-            findings.append(issue("error", "wildcard-mitm", f"禁止使用过宽 MITM Hostname：{hostname}"))
+            if hostname not in allowed_wildcards:
+                findings.append(issue("error", "wildcard-mitm", f"禁止使用过宽 MITM Hostname：{hostname}"))
         elif "/" in hostname or "://" in hostname:
             findings.append(issue("error", "invalid-mitm-hostname", f"MITM Hostname 只能填写主机名：{hostname}"))
 
@@ -140,6 +142,12 @@ def main() -> int:
     parser.add_argument("inputs", nargs="+", help="模块文件或目录")
     parser.add_argument("--json-out", help="将完整报告写入 JSON")
     parser.add_argument("--strict", action="store_true", help="将警告也视为失败")
+    parser.add_argument(
+        "--allow-wildcard-host",
+        action="append",
+        default=[],
+        help="显式允许一个经审计的 MITM 通配符主机；可重复传入",
+    )
     args = parser.parse_args()
 
     try:
@@ -147,10 +155,12 @@ def main() -> int:
     except FileNotFoundError as exc:
         parser.error(f"路径不存在：{exc}")
 
-    reports = [validate(path) for path in files]
+    allowed_wildcards = set(args.allow_wildcard_host)
+    reports = [validate(path, allowed_wildcards) for path in files]
     payload = {
         "ok": all(r["ok"] and (not args.strict or not r["summary"]["warnings"]) for r in reports),
         "strict": args.strict,
+        "allowed_wildcards": sorted(allowed_wildcards),
         "files": len(reports),
         "reports": reports,
     }
