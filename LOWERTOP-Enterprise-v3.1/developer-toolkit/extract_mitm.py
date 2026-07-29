@@ -48,9 +48,10 @@ def extract(path: Path) -> dict:
     return {"file": str(path), "entries": entries}
 
 
-def classify(hostname: str) -> list[str]:
+def classify(hostname: str, allowed_wildcards: set[str] | None = None) -> list[str]:
+    allowed_wildcards = allowed_wildcards or set()
     flags: list[str] = []
-    if hostname == "*" or hostname.startswith("*."):
+    if (hostname == "*" or hostname.startswith("*.")) and hostname not in allowed_wildcards:
         flags.append("wildcard")
     if "://" in hostname or "/" in hostname:
         flags.append("invalid-format")
@@ -65,6 +66,12 @@ def main() -> int:
     parser.add_argument("--json", action="store_true", help="输出 JSON")
     parser.add_argument("--json-out", help="写入 JSON 文件")
     parser.add_argument("--unique", action="store_true", help="仅输出去重 Hostname")
+    parser.add_argument(
+        "--allow-wildcard-host",
+        action="append",
+        default=[],
+        help="显式允许一个经审计的 MITM 通配符主机；可重复传入",
+    )
     args = parser.parse_args()
 
     try:
@@ -80,12 +87,18 @@ def main() -> int:
                 "file": source["file"], "line": entry["line"], "append": entry["append"]
             })
 
+    allowed_wildcards = set(args.allow_wildcard_host)
     hostnames = [
-        {"hostname": hostname, "flags": classify(hostname), "sources": entries}
+        {
+            "hostname": hostname,
+            "flags": classify(hostname, allowed_wildcards),
+            "sources": entries,
+        }
         for hostname, entries in sorted(index.items())
     ]
     payload = {
         "ok": not any(item["flags"] for item in hostnames),
+        "allowed_wildcards": sorted(allowed_wildcards),
         "files": len(files),
         "hostname_count": len(hostnames),
         "hostnames": hostnames,

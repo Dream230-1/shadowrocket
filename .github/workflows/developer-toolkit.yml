@@ -57,6 +57,7 @@ jobs:
         run: |
           python developer-toolkit/extract_mitm.py \
             modules/optional \
+            --allow-wildcard-host '*.oca.nflxvideo.net' \
             --json-out reports/developer-toolkit-mitm.json
 
       - name: Audit module coverage conflicts

@@ -73,6 +73,27 @@ class ToolkitTests(unittest.TestCase):
             payload = json.loads(result.stdout)
             self.assertEqual(payload["hostname_count"], 2)
 
+    def test_mitm_extractor_allows_explicit_audited_wildcard(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            module = Path(tmp) / "mitm.sgmodule"
+            module.write_text(
+                "#!name=mitm\n#!desc=test\n[MITM]\n"
+                "hostname = %APPEND% *.oca.nflxvideo.net\n",
+                encoding="utf-8",
+            )
+            result = self.run_tool(
+                "extract_mitm.py",
+                str(module),
+                "--json",
+                "--allow-wildcard-host",
+                "*.oca.nflxvideo.net",
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            payload = json.loads(result.stdout)
+            self.assertTrue(payload["ok"])
+            self.assertEqual(payload["allowed_wildcards"], ["*.oca.nflxvideo.net"])
+            self.assertEqual(payload["hostnames"][0]["flags"], [])
+
     def test_log_analyzer_finds_reject(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             log = Path(tmp) / "shadowrocket.log"
