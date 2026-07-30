@@ -23,6 +23,7 @@ POLICIES = {
     "REJECT-TINYGIF",
     "REJECT-NO-DROP",
 }
+URL_SCHEME_PREFIXES = (r"^https?:\/\/", r"^https?://")
 
 
 def unique(items: Iterable[str]) -> list[str]:
@@ -30,6 +31,12 @@ def unique(items: Iterable[str]) -> list[str]:
 
 
 def parse_rule(line: str) -> tuple[str, str, list[str]] | None:
+    """Return rule type, complete payload and modifiers after the policy field.
+
+    URL regular expressions can contain commas in quantifiers such as ``{0,5}``.
+    The policy is therefore located first, then every field before it is joined
+    back into the payload instead of treating the second CSV field as complete.
+    """
     try:
         fields = next(csv.reader([line], skipinitialspace=True))
     except csv.Error:
@@ -39,18 +46,49 @@ def parse_rule(line: str) -> tuple[str, str, list[str]] | None:
     if len(fields) < 3:
         return None
 
-    rule_type = fields[0].upper()
-    value = fields[1]
-    extras = fields[2:]
     policy_index = next(
-        (index for index, field in enumerate(extras) if field.upper() in POLICIES),
+        (index for index in range(2, len(fields)) if fields[index].upper() in POLICIES),
         None,
     )
     if policy_index is None:
         return None
 
-    extras = extras[:policy_index] + extras[policy_index + 1 :]
-    return rule_type, value, extras
+    rule_type = fields[0].upper()
+    value = ",".join(fields[1:policy_index]).strip()
+    modifiers = fields[policy_index + 1 :]
+    if not value:
+        return None
+    return rule_type, value, modifiers
+
+
+def url_regex_to_domain_regex(value: str) -> str | None:
+    """Convert host-only URL regex rules to Stash DOMAIN-REGEX rules.
+
+    The upstream rules match only the URL scheme and hostname. Converting them
+    avoids Stash classical-provider parsing failures while preserving the actual
+    hostname match. Path-specific URL expressions are deliberately left alone.
+    """
+    host_pattern: str | None = None
+    for prefix in URL_SCHEME_PREFIXES:
+        if value.startswith(prefix):
+            host_pattern = value[len(prefix) :]
+            break
+
+    if host_pattern is None or not host_pattern:
+        return None
+    if "/" in host_pattern or r"\/" in host_pattern:
+        return None
+
+    if host_pattern.endswith(".*$"):
+        host_pattern = host_pattern[:-3]
+    if not host_pattern:
+        return None
+
+    if not host_pattern.startswith("^"):
+        host_pattern = "^" + host_pattern
+    if not host_pattern.endswith("$"):
+        host_pattern += "$"
+    return host_pattern
 
 
 def convert(input_path: Path) -> dict[str, list[str]]:
@@ -67,15 +105,21 @@ def convert(input_path: Path) -> dict[str, list[str]]:
         if parsed is None:
             continue
 
-        rule_type, value, extras = parsed
-        if rule_type == "DOMAIN":
+        rule_type, value, modifiers = parsed
+        if rule_type == "DOMAIN" and not modifiers:
             domain.append(value)
-        elif rule_type == "DOMAIN-SUFFIX":
+        elif rule_type == "DOMAIN-SUFFIX" and not modifiers:
             domain.append(f"+.{value.lstrip('.')}")
-        elif rule_type in IP_TYPES:
+        elif rule_type in IP_TYPES and all(item.lower() == "no-resolve" for item in modifiers):
             ipcidr.append(value)
+        elif rule_type == "URL-REGEX" and not modifiers:
+            domain_regex = url_regex_to_domain_regex(value)
+            if domain_regex is not None:
+                classical.append(f"DOMAIN-REGEX,{domain_regex}")
+            else:
+                classical.append(f"URL-REGEX,{value}")
         else:
-            classical.append(",".join([rule_type, value, *extras]))
+            classical.append(",".join([rule_type, value, *modifiers]))
 
     return {
         "domain": unique(domain),
