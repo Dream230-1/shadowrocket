@@ -5,34 +5,34 @@ rule-providers:
   gmoogway-reject-domain:
     behavior: domain
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-reject-domain.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-reject-domain.yaml?rev=20260730-1155
     interval: 86400
 
   gmoogway-direct-domain:
     behavior: domain
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-domain.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-domain.yaml?rev=20260730-1155
     interval: 86400
   gmoogway-direct-classical:
     behavior: classical
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-classical.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-classical.yaml?rev=20260730-1155
     interval: 86400
 
   gmoogway-proxy-domain:
     behavior: domain
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-domain.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-domain.yaml?rev=20260730-1155
     interval: 86400
   gmoogway-proxy-ipcidr:
     behavior: ipcidr
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-ipcidr.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-ipcidr.yaml?rev=20260730-1155
     interval: 86400
   gmoogway-proxy-classical:
     behavior: classical
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-classical.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-classical.yaml?rev=20260730-1155
     interval: 86400
 
 rules:
