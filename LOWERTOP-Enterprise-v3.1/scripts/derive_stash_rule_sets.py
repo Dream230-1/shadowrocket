@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Iterable
 
 IP_TYPES = {"IP-CIDR", "IP-CIDR6"}
+Network = ipaddress.IPv4Network | ipaddress.IPv6Network
 POLICIES = {
     "DIRECT",
     "PROXY",
@@ -40,6 +41,15 @@ def suffix_chain(domain: str) -> Iterable[str]:
     parts = domain.split(".")
     for index in range(len(parts)):
         yield ".".join(parts[index:])
+
+
+def collapse_networks(networks: Iterable[Network]) -> list[Network]:
+    """Collapse IPv4 and IPv6 independently because ipaddress rejects mixed versions."""
+    items = list(networks)
+    output: list[Network] = []
+    for version in (4, 6):
+        output.extend(ipaddress.collapse_addresses(item for item in items if item.version == version))
+    return output
 
 
 @dataclass
@@ -185,9 +195,9 @@ def convert(input_path: Path) -> dict[str, list[str]]:
     }
 
 
-def load_base_rules(paths: list[Path]) -> tuple[DomainCoverage, list[ipaddress._BaseNetwork]]:
+def load_base_rules(paths: list[Path]) -> tuple[DomainCoverage, list[Network]]:
     coverage = DomainCoverage()
-    networks: list[ipaddress._BaseNetwork] = []
+    networks: list[Network] = []
 
     for path in paths:
         for raw_line in path.read_text(encoding="utf-8-sig").splitlines():
@@ -216,7 +226,7 @@ def load_base_rules(paths: list[Path]) -> tuple[DomainCoverage, list[ipaddress._
                 except ValueError:
                     continue
 
-    return coverage, list(ipaddress.collapse_addresses(networks))
+    return coverage, collapse_networks(networks)
 
 
 def compact_domain_items(items: list[str], external: DomainCoverage) -> list[str]:
@@ -248,10 +258,8 @@ def coverage_from_items(items: list[str]) -> DomainCoverage:
     return coverage
 
 
-def compact_ipcidr(
-    items: list[str], base_networks: list[ipaddress._BaseNetwork]
-) -> list[str]:
-    parsed: list[ipaddress._BaseNetwork] = []
+def compact_ipcidr(items: list[str], base_networks: list[Network]) -> list[str]:
+    parsed: list[Network] = []
     for item in items:
         try:
             network = ipaddress.ip_network(item, strict=False)
@@ -260,7 +268,7 @@ def compact_ipcidr(
         if any(network.version == base.version and network.subnet_of(base) for base in base_networks):
             continue
         parsed.append(network)
-    return [str(network) for network in ipaddress.collapse_addresses(parsed)]
+    return [str(network) for network in collapse_networks(parsed)]
 
 
 def write_yaml(
