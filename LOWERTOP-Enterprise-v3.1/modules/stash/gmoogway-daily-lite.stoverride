@@ -1,36 +1,38 @@
-name: GMOogway Daily Lite Rules for Stash
+name: GMOogway Daily Delta Rules for Stash
 
-desc: 精简低内存版。GMOogway reject、direct、proxy 每日规则仅加载 domain/ipcidr provider；优先使用当前配置已有的 AI 规则集与 AI 策略组，其余通用代理流量交给 Global 策略组。要求主配置已定义 rule-provider AI、策略组 AI 与 Global。
+desc: 真正精简的每日增量版。先沿用主配置已有的 Direct、Reject、AI 规则，再加载 GMOogway 尚未被现有 22 个分类规则覆盖的增量 domain/ipcidr；通用代理交给 Global。要求主配置已定义 rule-provider Direct、Reject、AI，以及策略组 AI、Global。
 
 rule-providers:
-  gmoogway-reject-domain:
+  gmoogway-lite-reject-domain:
     behavior: domain
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-reject-domain.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-lite-reject-domain.yaml
     interval: 86400
 
-  gmoogway-direct-domain:
+  gmoogway-lite-direct-domain:
     behavior: domain
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-domain.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-lite-direct-domain.yaml
     interval: 86400
 
-  gmoogway-proxy-domain:
+  gmoogway-lite-proxy-domain:
     behavior: domain
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-domain.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-lite-proxy-domain.yaml
     interval: 86400
 
-  gmoogway-proxy-ipcidr:
+  gmoogway-lite-proxy-ipcidr:
     behavior: ipcidr
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-ipcidr.yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-lite-proxy-ipcidr.yaml
     interval: 86400
 
 rules:
-  # 固定优先级：GMOogway REJECT > GMOogway DIRECT > 主配置 AI.list > GMOogway 通用代理。
-  - RULE-SET,gmoogway-reject-domain,REJECT
-  - RULE-SET,gmoogway-direct-domain,DIRECT
+  # 保持主配置分类权威；GMOogway 仅补充未覆盖规则。
+  - RULE-SET,Direct,DIRECT
+  - RULE-SET,Reject,REJECT
+  - RULE-SET,gmoogway-lite-reject-domain,REJECT
+  - RULE-SET,gmoogway-lite-direct-domain,DIRECT
   - RULE-SET,AI,AI
-  - RULE-SET,gmoogway-proxy-domain,Global
-  - RULE-SET,gmoogway-proxy-ipcidr,Global,no-resolve
+  - RULE-SET,gmoogway-lite-proxy-domain,Global
+  - RULE-SET,gmoogway-lite-proxy-ipcidr,Global,no-resolve
