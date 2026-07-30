@@ -22,18 +22,20 @@ permissions:
 env:
   TARGET_BRANCH: release/v3.1.1
   UPSTREAM_REPOSITORY: GMOogway/shadowrocket-rules
+  BASE_REPOSITORY: Repcz/Tool
+  BASE_BRANCH: X
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.TARGET_BRANCH }}
           fetch-depth: 0
 
-      - name: Fetch, validate and transform GMOogway modules
+      - name: Fetch, delta-optimize and validate rules
         run: |
           set -euo pipefail
           MODULE_OUTDIR="LOWERTOP-Enterprise-v3.1/modules/derived"
@@ -42,10 +44,13 @@ jobs:
           mkdir -p "$MODULE_OUTDIR" "$STASH_OUTDIR"
 
           SOURCE_SHA="$(git ls-remote "https://github.com/${UPSTREAM_REPOSITORY}.git" refs/heads/master | awk '{print $1}')"
+          BASE_SHA="$(git ls-remote "https://github.com/${BASE_REPOSITORY}.git" "refs/heads/${BASE_BRANCH}" | awk '{print $1}')"
           test "${#SOURCE_SHA}" -eq 40
+          test "${#BASE_SHA}" -eq 40
 
           TMPDIR="$(mktemp -d)"
           trap 'rm -rf "$TMPDIR"' EXIT
+
           for list in reject direct proxy; do
             curl --retry 3 --retry-all-errors -fsSL \
               "https://raw.githubusercontent.com/${UPSTREAM_REPOSITORY}/${SOURCE_SHA}/sr_${list}_list.module" \
@@ -53,6 +58,21 @@ jobs:
             test -s "$TMPDIR/${list}.module"
             grep -q "^#!name=${list}_list$" "$TMPDIR/${list}.module"
             grep -q '^\[Rule\]$' "$TMPDIR/${list}.module"
+          done
+
+          BASE_NAMES=(
+            Direct Lan Reject AppleServers Microsoft Github Google Telegram Twitter Facebook
+            Steam Epic AI Emby Spotify Bahamut Netflix Disney PrimeVideo HBO TikTok Proxy
+          )
+          test "${#BASE_NAMES[@]}" -eq 22
+          BASE_ARGS=()
+          for name in "${BASE_NAMES[@]}"; do
+            file="$TMPDIR/base-${name}.list"
+            curl --retry 3 --retry-all-errors -fsSL \
+              "https://raw.githubusercontent.com/${BASE_REPOSITORY}/${BASE_SHA}/Stash/Rules/${name}.list" \
+              -o "$file"
+            test -s "$file"
+            BASE_ARGS+=(--base-rule "$file")
           done
 
           REJECT_RULES="$(grep -Ec '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|IP-CIDR|IP-CIDR6|GEOIP|USER-AGENT|URL-REGEX),' "$TMPDIR/reject.module")"
@@ -71,6 +91,8 @@ jobs:
 
           python LOWERTOP-Enterprise-v3.1/scripts/derive_stash_rule_sets.py \
             --source-commit "$SOURCE_SHA" \
+            --base-commit "$BASE_SHA" \
+            "${BASE_ARGS[@]}" \
             --output-dir "$STASH_OUTDIR" \
             "$TMPDIR/reject.module" \
             "$TMPDIR/direct.module" \
@@ -81,8 +103,6 @@ jobs:
             echo "Unconverted PROXY policy detected" >&2
             exit 1
           fi
-          grep -Eq ',REJECT(,|$)' "$MODULE_OUTDIR/gmoogway-reject-list-daily.module"
-          grep -Eq ',DIRECT(,|$)' "$MODULE_OUTDIR/gmoogway-direct-list-daily.module"
 
           for list in reject direct proxy; do
             for behavior in domain ipcidr classical; do
@@ -96,12 +116,23 @@ jobs:
             exit 1
           fi
 
-          # Lite override audit: four low-memory providers only, no iCloud cache path,
-          # no classical provider, stable URLs, and deterministic policy order.
+          for file in \
+            gmoogway-lite-reject-domain.yaml \
+            gmoogway-lite-direct-domain.yaml \
+            gmoogway-lite-proxy-domain.yaml \
+            gmoogway-lite-proxy-ipcidr.yaml; do
+            test -s "$STASH_OUTDIR/$file"
+            grep -q '^payload:' "$STASH_OUTDIR/$file"
+            grep -q "# Excludes: Repcz/Tool@${BASE_SHA}" "$STASH_OUTDIR/$file"
+          done
+          test -s "$STASH_OUTDIR/gmoogway-lite-report.txt"
+          grep -q "base_files=22" "$STASH_OUTDIR/gmoogway-lite-report.txt"
+
+          # Override audit: only four generated delta providers, stable URLs, no classical/path.
           test -s "$LITE_OVERRIDE"
-          test "$(grep -Ec '^  gmoogway-(reject-domain|direct-domain|proxy-domain|proxy-ipcidr):$' "$LITE_OVERRIDE")" -eq 4
+          test "$(grep -Ec '^  gmoogway-lite-(reject-domain|direct-domain|proxy-domain|proxy-ipcidr):$' "$LITE_OVERRIDE")" -eq 4
           if grep -Eq 'behavior: classical|^[[:space:]]+path:|\?rev=' "$LITE_OVERRIDE"; then
-            echo "Lite override contains a forbidden classical/path/cache-busting field" >&2
+            echo "Delta override contains a forbidden classical/path/cache-busting field" >&2
             exit 1
           fi
 
@@ -109,37 +140,45 @@ jobs:
           from pathlib import Path
           import sys
 
-          path = Path(sys.argv[1])
           rules = [
               line.strip()[2:]
-              for line in path.read_text(encoding="utf-8").splitlines()
+              for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines()
               if line.strip().startswith("- ")
           ]
           expected = [
-              "RULE-SET,gmoogway-reject-domain,REJECT",
-              "RULE-SET,gmoogway-direct-domain,DIRECT",
+              "RULE-SET,Direct,DIRECT",
+              "RULE-SET,Reject,REJECT",
+              "RULE-SET,gmoogway-lite-reject-domain,REJECT",
+              "RULE-SET,gmoogway-lite-direct-domain,DIRECT",
               "RULE-SET,AI,AI",
-              "RULE-SET,gmoogway-proxy-domain,Global",
-              "RULE-SET,gmoogway-proxy-ipcidr,Global,no-resolve",
+              "RULE-SET,gmoogway-lite-proxy-domain,Global",
+              "RULE-SET,gmoogway-lite-proxy-ipcidr,Global,no-resolve",
           ]
           if rules != expected:
-              raise SystemExit(f"Unexpected lite override rule order: {rules!r}")
+              raise SystemExit(f"Unexpected delta override rule order: {rules!r}")
           PY
 
-          LITE_RULES="$((
+          FULL_RULES="$((
             $(sed -n 's/^# Rules: //p' "$STASH_OUTDIR/gmoogway-reject-domain.yaml") +
             $(sed -n 's/^# Rules: //p' "$STASH_OUTDIR/gmoogway-direct-domain.yaml") +
             $(sed -n 's/^# Rules: //p' "$STASH_OUTDIR/gmoogway-proxy-domain.yaml") +
             $(sed -n 's/^# Rules: //p' "$STASH_OUTDIR/gmoogway-proxy-ipcidr.yaml")
           ))"
-          test "$LITE_RULES" -gt 200000
-          if [ "$LITE_RULES" -ge 350000 ]; then
-            echo "Lite Stash rule budget exceeded: ${LITE_RULES} >= 350000" >&2
+          LITE_RULES="$((
+            $(sed -n 's/^# Rules: //p' "$STASH_OUTDIR/gmoogway-lite-reject-domain.yaml") +
+            $(sed -n 's/^# Rules: //p' "$STASH_OUTDIR/gmoogway-lite-direct-domain.yaml") +
+            $(sed -n 's/^# Rules: //p' "$STASH_OUTDIR/gmoogway-lite-proxy-domain.yaml") +
+            $(sed -n 's/^# Rules: //p' "$STASH_OUTDIR/gmoogway-lite-proxy-ipcidr.yaml")
+          ))"
+          test "$LITE_RULES" -gt 0
+          test "$LITE_RULES" -lt "$FULL_RULES"
+          if [ "$LITE_RULES" -ge 300000 ]; then
+            echo "Delta Stash rule budget exceeded: ${LITE_RULES} >= 300000" >&2
             exit 1
           fi
 
-          printf 'Upstream %s: reject=%s direct=%s proxy=%s lite=%s\n' \
-            "$SOURCE_SHA" "$REJECT_RULES" "$DIRECT_RULES" "$PROXY_RULES" "$LITE_RULES"
+          printf 'GMOogway=%s Repcz=%s full=%s delta=%s removed=%s\n' \
+            "$SOURCE_SHA" "$BASE_SHA" "$FULL_RULES" "$LITE_RULES" "$((FULL_RULES-LITE_RULES))"
 
       - name: Commit and push if changed
         run: |
@@ -153,6 +192,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes — all Shadowrocket and Stash outputs are unchanged."
           else
-            git commit -m "Auto-sync GMOogway rules for Shadowrocket and Stash ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+            git commit -m "Auto-sync GMOogway delta rules for Stash ($(date -u '+%Y-%m-%d %H:%M UTC'))"
             git push origin "HEAD:${TARGET_BRANCH}"
           fi
