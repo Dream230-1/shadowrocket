@@ -1,0 +1,124 @@
+name: LOWERTOP Stash AdBlock Rewrite Lite
+
+desc: 轻量应用级去广告。处理 10 个常见应用的开屏广告和番茄小说广告资源；仅净化广告，不修改会员、订阅、收据或账号数据。需要在 Stash 中安装并信任用户自行生成的 CA 证书。
+
+http:
+  url-rewrite:
+    # 番茄小说广告 SDK 静态响应
+    - '^https://api-access\.pangolin-sdk-toutiao\d?\.com/api/ad/ - reject-dict'
+    - '^https://sf3-fe-tos\.pglstatp-toutiao\.com/obj/ad-pattern/renderer/package\.json - reject-dict'
+
+  script:
+    # 爱奇艺开屏
+    - match: ^https?:\/\/(t7z|kjp)\.cupid\.iqiyi\.com\/mixer\?
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # 嘀嗒出行开屏
+    - match: ^https?:\/\/capis(-?\w*)?\.didapinche\.com\/ad\/cx\/startup\?
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # Fa米家开屏
+    - match: ^https?:\/\/fmapp\.chinafamilymart\.com\.cn\/api\/app\/market\/start\/ad
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # 哔哩哔哩开屏
+    - match: ^https?:\/\/app\.bilibili\.com\/x\/v2\/splash\/(show|list)
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # 美团外卖开屏
+    - match: ^https?:\/\/wmapi\.meituan\.com\/api\/v\d+\/loadInfo\?
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # 小爱音箱开屏
+    - match: ^https?:\/\/hd\.mina\.mi\.com\/splashscreen\/alert
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # 京东开屏
+    - match: ^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=start
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # 联享家开屏
+    - match: ^https?:\/\/mi\.gdt\.qq\.com\/gdt_mview\.fcg
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # 多点开屏
+    - match: ^https?:\/\/cmsapi\.dmall\.com\/app\/home\/homepageStartUpPic
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # 轻牛健康开屏
+    - match: ^https?:\/\/gw\.yolanda\.hk\/api\/servlets\?endpoint=banners\/show_launch_banner
+      name: lowertop-startup-ad-lite
+      type: response
+      require-body: true
+      max-size: 1048576
+      timeout: 10
+
+    # 番茄小说可交互广告资源
+    - match: ^https:\/\/lf-cdn-tos\.bytescm\.com\/obj\/static\/ad\/play-comp\/playable-component-sdk\/package\.ugen\.json
+      name: lowertop-fanqie-ad-lite
+      type: response
+      require-body: true
+      max-size: 2097152
+      timeout: 10
+
+  mitm:
+    - capis.didapinche.com
+    - capis*.didapinche.com
+    - fmapp.chinafamilymart.com.cn
+    - app.bilibili.com
+    - wmapi.meituan.com
+    - hd.mina.mi.com
+    - api.m.jd.com
+    - mi.gdt.qq.com
+    - cmsapi.dmall.com
+    - gw.yolanda.hk
+    - t7z.cupid.iqiyi.com
+    - kjp.cupid.iqiyi.com
+    - api-access.pangolin-sdk-toutiao*.com
+    - sf3-fe-tos.pglstatp-toutiao.com
+    - lf-cdn-tos.bytescm.com
+
+script-providers:
+  lowertop-startup-ad-lite:
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/scripts/stash/adblock/startup-ad-lite.js
+    interval: 86400
+
+  lowertop-fanqie-ad-lite:
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/scripts/stash/adblock/fanqie-ad-lite.js
+    interval: 86400
