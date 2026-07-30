@@ -1,44 +1,64 @@
 name: GMOogway Daily Rules for Stash
-desc: 将 reject、direct、proxy 拆分为低内存规则集；不指定 iCloud 缓存 path，避免多个 provider 并发创建目录导致 resource deadlock；proxy 指向 AI 策略组。
+
+desc: reject、direct、proxy 使用低内存 domain/ipcidr 远程规则集；停用 Stash 无法稳定解析的 DOMAIN-REGEX classical provider；关键 AI、TikTok、OneDrive 规则直接保留；proxy 指向 AI 策略组。
 
 rule-providers:
   gmoogway-reject-domain:
     behavior: domain
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-reject-domain.yaml?rev=20260730-1155
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-reject-domain.yaml
     interval: 86400
 
   gmoogway-direct-domain:
     behavior: domain
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-domain.yaml?rev=20260730-1155
-    interval: 86400
-  gmoogway-direct-classical:
-    behavior: classical
-    format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-classical.yaml?rev=20260730-1155
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-domain.yaml
     interval: 86400
 
   gmoogway-proxy-domain:
     behavior: domain
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-domain.yaml?rev=20260730-1155
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-domain.yaml
     interval: 86400
+
   gmoogway-proxy-ipcidr:
     behavior: ipcidr
     format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-ipcidr.yaml?rev=20260730-1155
-    interval: 86400
-  gmoogway-proxy-classical:
-    behavior: classical
-    format: yaml
-    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-classical.yaml?rev=20260730-1155
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-ipcidr.yaml
     interval: 86400
 
 rules:
+  # 优先级：REJECT > DIRECT > AI/PROXY
   - RULE-SET,gmoogway-reject-domain,REJECT
   - RULE-SET,gmoogway-direct-domain,DIRECT
-  - RULE-SET,gmoogway-direct-classical,DIRECT
+
+  # 原 direct classical 中 8 条主机正则的兼容通配符写法
+  - DOMAIN-WILDCARD,*.awsdns-cn-??.cn,DIRECT
+  - DOMAIN-WILDCARD,epicgames-download*-*.file.myqcloud.com,DIRECT
+  - DOMAIN-WILDCARD,*.zh.okaapps.com,DIRECT
+  - DOMAIN-WILDCARD,cdn*-epicgames-*.file.myqcloud.com,DIRECT
+  - DOMAIN-WILDCARD,r*sn-*.xn--ngstr-lra8j.com,DIRECT
+  - DOMAIN-WILDCARD,r*sn-*.googlevideo.com,DIRECT
+  - DOMAIN-WILDCARD,*-mihayo.akamaized.net,DIRECT
+  - DOMAIN-WILDCARD,*.awsdns-cn-??.biz,DIRECT
+  - DOMAIN-WILDCARD,*.awsdns-cn-??.com,DIRECT
+  - DOMAIN-WILDCARD,*.awsdns-cn-??.net,DIRECT
+  - DOMAIN-WILDCARD,*.awsdns-cn-??.top,DIRECT
+
+  # 原 proxy classical 中的重要非正则规则
+  - DOMAIN-KEYWORD,anthropic,AI
+  - DOMAIN-KEYWORD,tiktok,AI
+  - DOMAIN-KEYWORD,musical.ly,AI
+  - DOMAIN-KEYWORD,developerprofiles,AI
+  - DOMAIN-KEYWORD,generativelanguage,AI
+  - DOMAIN-KEYWORD,skydrive,AI
+  - DOMAIN-KEYWORD,openaicom-api,AI
+  - DOMAIN-KEYWORD,openai,AI
+  - DOMAIN-KEYWORD,claude,AI
+  - DOMAIN-KEYWORD,onedrive,AI
+  - DOMAIN-KEYWORD,colab,AI
+  - DOMAIN-KEYWORD,1drv,AI
+  - USER-AGENT,TikTok*,AI
+
   - RULE-SET,gmoogway-proxy-domain,AI
   - RULE-SET,gmoogway-proxy-ipcidr,AI,no-resolve
-  - RULE-SET,gmoogway-proxy-classical,AI
