@@ -1,0 +1,71 @@
+name: GMOogway Daily Rules for Stash
+desc: 将 reject、direct、proxy 拆分为低内存 domain/ipcidr 规则集与少量 classical 兼容规则；proxy 规则指向 AI 策略组。
+
+rule-providers:
+  gmoogway-reject-domain:
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-reject-domain.yaml
+    path: ./rules/gmoogway/reject-domain.yaml
+    interval: 86400
+  gmoogway-reject-ipcidr:
+    behavior: ipcidr
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-reject-ipcidr.yaml
+    path: ./rules/gmoogway/reject-ipcidr.yaml
+    interval: 86400
+  gmoogway-reject-classical:
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-reject-classical.yaml
+    path: ./rules/gmoogway/reject-classical.yaml
+    interval: 86400
+
+  gmoogway-direct-domain:
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-domain.yaml
+    path: ./rules/gmoogway/direct-domain.yaml
+    interval: 86400
+  gmoogway-direct-ipcidr:
+    behavior: ipcidr
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-ipcidr.yaml
+    path: ./rules/gmoogway/direct-ipcidr.yaml
+    interval: 86400
+  gmoogway-direct-classical:
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-classical.yaml
+    path: ./rules/gmoogway/direct-classical.yaml
+    interval: 86400
+
+  gmoogway-proxy-domain:
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-domain.yaml
+    path: ./rules/gmoogway/proxy-domain.yaml
+    interval: 86400
+  gmoogway-proxy-ipcidr:
+    behavior: ipcidr
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-ipcidr.yaml
+    path: ./rules/gmoogway/proxy-ipcidr.yaml
+    interval: 86400
+  gmoogway-proxy-classical:
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-classical.yaml
+    path: ./rules/gmoogway/proxy-classical.yaml
+    interval: 86400
+
+rules:
+  - RULE-SET,gmoogway-reject-domain,REJECT
+  - RULE-SET,gmoogway-reject-ipcidr,REJECT,no-resolve
+  - RULE-SET,gmoogway-reject-classical,REJECT
+  - RULE-SET,gmoogway-direct-domain,DIRECT
+  - RULE-SET,gmoogway-direct-ipcidr,DIRECT,no-resolve
+  - RULE-SET,gmoogway-direct-classical,DIRECT
+  - RULE-SET,gmoogway-proxy-domain,AI
+  - RULE-SET,gmoogway-proxy-ipcidr,AI,no-resolve
+  - RULE-SET,gmoogway-proxy-classical,AI
