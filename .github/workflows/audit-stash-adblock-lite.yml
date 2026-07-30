@@ -1,0 +1,120 @@
+name: Audit Stash AdBlock Lite
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "5 0 * * *"
+  push:
+    branches:
+      - release/v3.1-rc2
+      - release/v3.1.1
+    paths:
+      - .github/workflows/audit-stash-adblock-lite.yml
+      - LOWERTOP-Enterprise-v3.1/modules/stash/lowertop-adblock-rewrite-lite.stoverride
+      - LOWERTOP-Enterprise-v3.1/scripts/stash/adblock/startup-ad-lite.js
+      - LOWERTOP-Enterprise-v3.1/scripts/stash/adblock/fanqie-ad-lite.js
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/v3.1.1
+          fetch-depth: 1
+
+      - name: Validate override and scripts
+        run: |
+          set -euo pipefail
+          OVERRIDE="LOWERTOP-Enterprise-v3.1/modules/stash/lowertop-adblock-rewrite-lite.stoverride"
+          STARTUP="LOWERTOP-Enterprise-v3.1/scripts/stash/adblock/startup-ad-lite.js"
+          FANQIE="LOWERTOP-Enterprise-v3.1/scripts/stash/adblock/fanqie-ad-lite.js"
+
+          test -s "$OVERRIDE"
+          test -s "$STARTUP"
+          test -s "$FANQIE"
+          node --check "$STARTUP"
+          node --check "$FANQIE"
+
+          ruby - "$OVERRIDE" <<'RUBY'
+          require "yaml"
+          path = ARGV.fetch(0)
+          data = YAML.safe_load(File.read(path))
+          http = data.fetch("http")
+          scripts = http.fetch("script")
+          rewrites = http.fetch("url-rewrite")
+          mitm = http.fetch("mitm")
+          providers = data.fetch("script-providers")
+
+          abort "expected 11 script matches" unless scripts.length == 11
+          abort "expected 2 URL rewrites" unless rewrites.length == 2
+          abort "expected 15 MitM hosts" unless mitm.length == 15
+          abort "duplicate MitM host" unless mitm.uniq.length == mitm.length
+          abort "unexpected script providers" unless providers.keys.sort == ["lowertop-fanqie-ad-lite", "lowertop-startup-ad-lite"]
+
+          prefix = "https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/scripts/stash/adblock/"
+          providers.each_value do |provider|
+            abort "untrusted script URL" unless provider.fetch("url").start_with?(prefix)
+            abort "unexpected provider interval" unless provider.fetch("interval") == 86400
+          end
+
+          scripts.each do |script|
+            abort "script must process responses" unless script.fetch("type") == "response"
+            abort "script body must be explicit" unless script.fetch("require-body") == true
+            abort "script timeout too high" unless script.fetch("timeout") <= 10
+            size = script.fetch("max-size")
+            abort "invalid body limit" unless size.positive? && size <= 2_097_152
+            abort "unknown script provider" unless providers.key?(script.fetch("name"))
+          end
+
+          abort "CA material must not be distributed" if http.key?("ca") || http.key?("ca-passphrase")
+          abort "broad MitM wildcard forbidden" if mitm.any? { |host| host == "*" || host.start_with?("*.") }
+          RUBY
+
+          if grep -Eqi '\$httpClient|\$task\.fetch|fetch\s*\(|XMLHttpRequest|eval\s*\(|new[[:space:]]+Function|require\s*\(|\$persistentStore|\$prefs|receipt|entitlement|subscription|premium|vip|unlock' "$STARTUP" "$FANQIE"; then
+            echo "Forbidden network, persistence, or entitlement logic detected" >&2
+            exit 1
+          fi
+
+          node - "$STARTUP" "$FANQIE" <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+
+          function execute(path, url, payload) {
+            let result;
+            const context = {
+              $request: { url },
+              $response: { body: JSON.stringify(payload) },
+              $done: (value) => { result = value; },
+              console: { log: () => {} },
+            };
+            vm.runInNewContext(fs.readFileSync(path, 'utf8'), context, { timeout: 1000 });
+            if (!result || typeof result.body !== 'string') throw new Error(`No rewritten body from ${path}`);
+            return JSON.parse(result.body);
+          }
+
+          const startup = process.argv[2];
+          const fanqie = process.argv[3];
+
+          const bili = execute(
+            startup,
+            'https://app.bilibili.com/x/v2/splash/list',
+            { data: { show: [{ id: 1 }], list: [{ id: 2 }], max_time: 5 } },
+          );
+          if (bili.data.show.length !== 0 || bili.data.list.length !== 0 || bili.data.max_time !== 0) {
+            throw new Error('BiliBili startup-ad test failed');
+          }
+
+          const novel = execute(
+            fanqie,
+            'https://lf-cdn-tos.bytescm.com/obj/static/ad/play-comp/playable-component-sdk/package.ugen.json',
+            { resources: [{ url: '/ad/a.js' }, { url: '/content/b.js' }] },
+          );
+          if (novel.resources.length !== 1 || novel.resources[0].url !== '/content/b.js') {
+            throw new Error('Fanqie ad filter test failed');
+          }
+          NODE
