@@ -1,0 +1,36 @@
+name: GMOogway Daily Lite Rules for Stash
+
+desc: 精简低内存版。GMOogway reject、direct、proxy 每日规则仅加载 domain/ipcidr provider；优先使用当前配置已有的 AI 规则集与 AI 策略组，其余通用代理流量交给 Global 策略组。要求主配置已定义 rule-provider AI、策略组 AI 与 Global。
+
+rule-providers:
+  gmoogway-reject-domain:
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-reject-domain.yaml
+    interval: 86400
+
+  gmoogway-direct-domain:
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-direct-domain.yaml
+    interval: 86400
+
+  gmoogway-proxy-domain:
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-domain.yaml
+    interval: 86400
+
+  gmoogway-proxy-ipcidr:
+    behavior: ipcidr
+    format: yaml
+    url: https://raw.githubusercontent.com/Dream230-1/shadowrocket/release/v3.1.1/LOWERTOP-Enterprise-v3.1/rules/stash/gmoogway-proxy-ipcidr.yaml
+    interval: 86400
+
+rules:
+  # 固定优先级：GMOogway REJECT > GMOogway DIRECT > 主配置 AI.list > GMOogway 通用代理。
+  - RULE-SET,gmoogway-reject-domain,REJECT
+  - RULE-SET,gmoogway-direct-domain,DIRECT
+  - RULE-SET,AI,AI
+  - RULE-SET,gmoogway-proxy-domain,Global
+  - RULE-SET,gmoogway-proxy-ipcidr,Global,no-resolve
