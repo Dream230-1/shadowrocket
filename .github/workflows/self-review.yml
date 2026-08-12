@@ -26,8 +26,8 @@ jobs:
       - name: Restore remote-rule cache
         uses: actions/cache@v4
         with:
-          path: .cache
-          key: lowertop-v31-self-review-${{ runner.os }}-${{ hashFiles('config/release.yaml', '../LOWERTOP-Enterprise-v3.0-RC3/manifest.yaml') }}
+          path: LOWERTOP-Enterprise-v3.1/.cache
+          key: lowertop-v31-self-review-${{ runner.os }}-${{ hashFiles('LOWERTOP-Enterprise-v3.1/config/release.yaml', 'LOWERTOP-Enterprise-v3.0-RC3/manifest.yaml') }}
       - name: Run self-review
         run: |
           python scripts/self_review.py --json-out reports/self-review.json --markdown-out reports/self-review.md
