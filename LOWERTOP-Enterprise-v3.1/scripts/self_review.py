@@ -75,6 +75,9 @@ def main():
 
 """
     for s in suggestions:
+        if "error" in s:
+            markdown += f"- **{s.get('feedback', 'error')}**: {s['error']}\n"
+            continue
         markdown += f"- **{s.get('feedback', '?')}**: {s['issue']} at `{s.get('host', '?')}`"
         if s.get("actual_rule"):
             markdown += f" (matched: `{s['actual_rule']}`)"
