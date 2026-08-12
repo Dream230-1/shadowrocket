@@ -12,6 +12,7 @@ import yaml
 
 
 def load_kernel_module(path: Path):
+    sys.path.insert(0, str(path.parent))
     spec = importlib.util.spec_from_file_location("lowertop_kernel_regression", path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"无法载入回归内核：{path}")
