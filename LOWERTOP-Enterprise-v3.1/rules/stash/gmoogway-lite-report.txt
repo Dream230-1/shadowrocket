@@ -1,10 +1,10 @@
-source_sha=48ca16f1f8b123732696085164ad5ef1987c2df5
-base_sha=531840a118b3ba0273393fc0d09580fad71d1a1d
+source_sha=2e9f173c9e7c3fcc01f21f4663f08f226de3dc46
+base_sha=82ce1c7e0a18f4763b88987557306bbeb0f24186
 base_files=22
-full_total=303525
-lite_reject_domain=116373
+full_total=304015
+lite_reject_domain=116858
 lite_direct_domain=109661
-lite_proxy_domain=9613
+lite_proxy_domain=9614
 lite_proxy_ipcidr=3
-lite_total=235650
-removed=67875
+lite_total=236136
+removed=67879
