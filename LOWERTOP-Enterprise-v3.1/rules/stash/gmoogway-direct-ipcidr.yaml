@@ -1,4 +1,4 @@
-# Source: GMOogway/shadowrocket-rules@8307ad3ada16a817f6b948397f4401b99f584dd5
+# Source: GMOogway/shadowrocket-rules@43c0a7d8ad038347d591def153d9802121520a8b
 # Input: direct.module
 # Rules: 0
 payload: []
