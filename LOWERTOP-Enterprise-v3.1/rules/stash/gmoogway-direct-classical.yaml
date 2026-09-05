@@ -1,12 +1,12 @@
-# Source: GMOogway/shadowrocket-rules@0d654222d7209981f1922b972505e7442a7d609b
+# Source: GMOogway/shadowrocket-rules@f61dc07dd92f47551584159a475aec39672340d1
 # Input: direct.module
 # Rules: 8
 payload:
   - "DOMAIN-REGEX,^.+\\.awsdns-cn-[0-9][0-9]\\.(biz|com|net|top)$"
   - "DOMAIN-REGEX,^.+-mihayo\\.akamaized\\.net$"
+  - "DOMAIN-REGEX,^epicgames-download\\d-\\d+\\.file\\.myqcloud\\.com$"
+  - "DOMAIN-REGEX,^r+[0-9]+(---|\\.)sn-(2x3|ni5|j5o)\\w{5}\\.xn--ngstr-lra8j\\.com$"
+  - "DOMAIN-REGEX,^cdn\\d-epicgames-\\d+\\.file\\.myqcloud\\.com$"
   - "DOMAIN-REGEX,^.+\\.awsdns-cn-[0-9][a-e0-9]\\.cn$"
   - "DOMAIN-REGEX,^(.+\\.)*zh\\.okaapps\\.com$"
   - "DOMAIN-REGEX,^r+[0-9]+(---|\\.)sn-(2x3|ni5|j5o)\\w{5}\\.googlevideo\\.com$"
-  - "DOMAIN-REGEX,^r+[0-9]+(---|\\.)sn-(2x3|ni5|j5o)\\w{5}\\.xn--ngstr-lra8j\\.com$"
-  - "DOMAIN-REGEX,^epicgames-download\\d-\\d+\\.file\\.myqcloud\\.com$"
-  - "DOMAIN-REGEX,^cdn\\d-epicgames-\\d+\\.file\\.myqcloud\\.com$"
