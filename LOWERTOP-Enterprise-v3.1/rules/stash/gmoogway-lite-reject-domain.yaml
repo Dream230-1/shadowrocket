@@ -1,6 +1,6 @@
-# Source: GMOogway/shadowrocket-rules@88de8a79212fc9223bba4607160b73b2f74423db
+# Source: GMOogway/shadowrocket-rules@8ddd301dc211f8cf36830fa995665370e01b2c3c
 # Input: delta:reject-domain
-# Excludes: Repcz/Tool@568f89abbe4430ccfc79ce8fdb58eabc7b316143
+# Excludes: Repcz/Tool@13977c675c1840bac08a72c1534013b203138ca7
 # Rules: 130423
 payload:
   - "+.7x.cc"
