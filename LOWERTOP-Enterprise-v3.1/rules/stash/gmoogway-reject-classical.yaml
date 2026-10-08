@@ -1,4 +1,4 @@
-# Source: GMOogway/shadowrocket-rules@291ce5cd808e849bc90a319d65912045cdc9070c
+# Source: GMOogway/shadowrocket-rules@4b92e7e1c583af2d90c8721b265e60946c5fde0e
 # Input: reject.module
 # Rules: 0
 payload: []
