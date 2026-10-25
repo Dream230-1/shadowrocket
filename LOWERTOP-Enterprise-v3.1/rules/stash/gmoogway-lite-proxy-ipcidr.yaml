@@ -1,6 +1,6 @@
-# Source: GMOogway/shadowrocket-rules@9125aea2cf23874928c5b5be46d72c513e11c96f
+# Source: GMOogway/shadowrocket-rules@9548ccf31f81938e7be94d34f0b5d52c86c55f5c
 # Input: delta:proxy-ipcidr
-# Excludes: Repcz/Tool@5c0bc981405a8a9ed64b6f2fecdc2ea791388110
+# Excludes: Repcz/Tool@792b350fc1f9a9b494e4a38dc3b0aa14784742d8
 # Rules: 3
 payload:
   - "34.224.0.0/12"
